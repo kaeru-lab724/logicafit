@@ -266,12 +266,15 @@ export default function App() {
   const [spellSuccess, setSpellSuccess] = useState(false);
 
   useEffect(() => {
+    // 簡易スキャナー起動時はチュートリアルガイドの自動ポップアップを抑制
+    if (activeGame === 'harassmentScanner') return;
+
     const seen = localStorage.getItem('logifit_seen_guide');
     if (gameState.xp === 0 && !seen) {
       setShowGuideModal(true);
       localStorage.setItem('logifit_seen_guide', 'true');
     }
-  }, [gameState.xp]);
+  }, [gameState.xp, activeGame]);
 
   // Google Analytics ゲーム開始の計測
   useEffect(() => {
