@@ -1347,6 +1347,9 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
           transition: border-color 0.5s ease, box-shadow 0.5s ease;
           font-size: 28px;
         }
+        body.light-theme .avatar-neon-ring {
+          background: #ffffff;
+        }
         .dot-blink {
           width: 6px; height: 6px;
           background: var(--text-muted);
@@ -1442,6 +1445,59 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
           0% { transform: scale(1); opacity: 1; filter: hue-rotate(0deg); }
           50% { transform: scale(1.1); opacity: 0.8; filter: hue-rotate(90deg); }
           100% { transform: scale(1.3); opacity: 0; filter: hue-rotate(180deg); }
+        }
+        .eq-chat-log {
+          height: 300px;
+          background: rgba(0, 0, 0, 0.25);
+          border-radius: 12px;
+          border: 1px solid var(--border-color);
+          padding: 16px;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+        body.light-theme .eq-chat-log {
+          background: rgba(15, 23, 42, 0.03);
+        }
+        .eq-msg-me {
+          background: linear-gradient(135deg, var(--color-primary) 0%, #6d28d9 100%);
+          color: #ffffff !important;
+          box-shadow: 0 4px 10px rgba(139, 92, 246, 0.15);
+        }
+        .eq-msg-them {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid var(--border-color);
+          color: var(--text-primary);
+        }
+        body.light-theme .eq-msg-them {
+          background: #ffffff;
+        }
+        .eq-msg-system {
+          background: rgba(239, 68, 68, 0.08);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          color: #fca5a5;
+        }
+        body.light-theme .eq-msg-system {
+          color: #b91c1c;
+          background: rgba(239, 68, 68, 0.05);
+        }
+        .eq-msg-typing {
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid var(--border-color);
+        }
+        body.light-theme .eq-msg-typing {
+          background: #ffffff;
+        }
+        .eq-choice-btn {
+          background: rgba(255, 255, 255, 0.01) !important;
+          border: 1px solid var(--border-color) !important;
+          color: var(--text-primary) !important;
+        }
+        body.light-theme .eq-choice-btn {
+          background: rgba(15, 23, 42, 0.03) !important;
+          border-color: rgba(15, 23, 42, 0.08) !important;
         }
       `}</style>
 
@@ -1599,20 +1655,7 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
           </div>
 
           {/* メッセンジャーチャットログ */}
-          <div 
-            style={{
-              height: '300px',
-              background: 'rgba(0, 0, 0, 0.25)',
-              borderRadius: '12px',
-              border: '1px solid var(--border-color)',
-              padding: '16px',
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              marginBottom: '20px'
-            }}
-          >
+          <div className="eq-chat-log">
             {chatLog.map((msg, index) => {
               const isMe = msg.sender === 'me';
               const isSystem = msg.sender === 'system';
@@ -1633,24 +1676,15 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
                       </span>
                     )}
                     <div 
+                      className={isSystem ? 'eq-msg-system' : (isMe ? 'eq-msg-me' : 'eq-msg-them')}
                       style={{
                         padding: isSystem ? '8px 16px' : '10px 14px',
                         borderRadius: isSystem ? '8px' : '14px',
                         borderTopLeftRadius: isSystem ? '8px' : (isMe ? '14px' : '2px'),
                         borderTopRightRadius: isSystem ? '8px' : (isMe ? '2px' : '14px'),
-                        background: isSystem
-                          ? 'rgba(239, 68, 68, 0.08)'
-                          : (isMe 
-                              ? 'linear-gradient(135deg, var(--color-primary) 0%, #6d28d9 100%)' 
-                              : 'rgba(255, 255, 255, 0.04)'),
-                        border: isSystem 
-                          ? '1px solid rgba(239, 68, 68, 0.3)'
-                          : (isMe ? 'none' : '1px solid var(--border-color)'),
-                        color: isSystem ? '#fca5a5' : 'var(--text-primary)',
                         fontSize: isSystem ? '12px' : '13.5px',
                         lineHeight: '1.45',
-                        textAlign: isSystem ? 'center' : 'left',
-                        boxShadow: isMe ? '0 4px 10px rgba(139, 92, 246, 0.15)' : 'none'
+                        textAlign: isSystem ? 'center' : 'left'
                       }}
                     >
                       {msg.text}
@@ -1667,7 +1701,7 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
                   <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '2px' }}>
                     入力中...
                   </span>
-                  <div style={{ padding: '10px 16px', borderRadius: '12px', borderTopLeftRadius: '2px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', display: 'flex', gap: '3px', alignItems: 'center' }}>
+                  <div className="eq-msg-typing" style={{ padding: '10px 16px', borderRadius: '12px', borderTopLeftRadius: '2px', display: 'flex', gap: '3px', alignItems: 'center' }}>
                     <span className="dot-blink" />
                     <span className="dot-blink" />
                     <span className="dot-blink" />
@@ -1684,15 +1718,13 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
               <button
                 key={idx}
                 onClick={() => handleAnswer(idx, choice)}
-                className="btn btn-secondary"
+                className="btn btn-secondary eq-choice-btn"
                 style={{
                   padding: '12px 16px',
                   borderRadius: '10px',
                   textAlign: 'left',
                   fontSize: '13px',
                   lineHeight: '1.4',
-                  backgroundColor: 'rgba(255,255,255,0.01)',
-                  border: '1px solid var(--border-color)',
                   transition: 'all 0.2s',
                   display: 'flex',
                   gap: '8px'

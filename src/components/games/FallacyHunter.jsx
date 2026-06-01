@@ -870,6 +870,10 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.05);
           overflow: hidden;
         }
+        body.light-theme .monster-box {
+          background: radial-gradient(circle, rgba(248, 250, 252, 0.95) 0%, rgba(226, 232, 240, 0.98) 100%);
+          box-shadow: inset 0 0 30px rgba(15, 23, 42, 0.04), 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
         .grid-bg {
           position: absolute;
           width: 100%; height: 100%;
@@ -879,6 +883,11 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
           top: 0; left: 0;
           z-index: 1;
+        }
+        body.light-theme .grid-bg {
+          background-image: 
+            linear-gradient(to right, rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
         }
         .monster-sprite {
           z-index: 2;
@@ -936,6 +945,9 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           overflow: hidden;
           width: 100%;
         }
+        body.light-theme .hp-bar-outer {
+          background: rgba(15, 23, 42, 0.06);
+        }
         .hp-bar-inner {
           height: 100%;
           transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -946,6 +958,9 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           background: rgba(255, 255, 255, 0.05);
           overflow: hidden;
           width: 100%;
+        }
+        body.light-theme .timer-bar-outer {
+          background: rgba(15, 23, 42, 0.06);
         }
         .timer-bar-inner {
           height: 100%;

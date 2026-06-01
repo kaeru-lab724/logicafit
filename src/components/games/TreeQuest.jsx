@@ -518,6 +518,10 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
           overflow: hidden;
           margin-bottom: 24px;
         }
+        body.light-theme .tree-lab {
+          background: radial-gradient(circle, rgba(248, 250, 252, 0.95) 0%, rgba(226, 232, 240, 0.98) 100%);
+          box-shadow: inset 0 0 40px rgba(15, 23, 42, 0.04), 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
         .grid-overlay {
           position: absolute;
           width: 100%; height: 100%;
@@ -527,6 +531,31 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
             linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
           top: 0; left: 0;
           z-index: 1;
+        }
+        body.light-theme .grid-overlay {
+          background-image: 
+            linear-gradient(to right, rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+        }
+        .slot-hint-tooltip {
+          position: absolute;
+          bottom: 80px;
+          left: 10px;
+          background: #0f172a;
+          border: 1px solid var(--color-amber);
+          border-radius: 8px;
+          padding: 10px 14px;
+          font-size: 11.5px;
+          color: var(--text-primary);
+          width: 220px;
+          z-index: 200;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+          line-height: 1.4;
+        }
+        body.light-theme .slot-hint-tooltip {
+          background: #ffffff;
+          color: #0f172a;
+          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
         }
         
         /* レーザースキャナーアニメーション */
@@ -841,7 +870,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                 </div>
 
                 {activeHintSlot === 'root' && (
-                  <div className="fade-in" style={{ position: 'absolute', bottom: '80px', left: '10px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
+                  <div className="slot-hint-tooltip fade-in">
                     💡 {currentStage.correctStructure.slots[0].hint}
                   </div>
                 )}
@@ -897,7 +926,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                 </div>
 
                 {activeHintSlot === currentStage.correctStructure.slots[1].id && (
-                  <div className="fade-in" style={{ position: 'absolute', bottom: '80px', left: '10px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
+                  <div className="slot-hint-tooltip fade-in">
                     💡 {currentStage.correctStructure.slots[1].hint}
                   </div>
                 )}
@@ -952,7 +981,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                 </div>
 
                 {activeHintSlot === currentStage.correctStructure.slots[2].id && (
-                  <div className="fade-in" style={{ position: 'absolute', bottom: '80px', left: '10px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
+                  <div className="slot-hint-tooltip fade-in">
                     💡 {currentStage.correctStructure.slots[2].hint}
                   </div>
                 )}

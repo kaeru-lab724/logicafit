@@ -300,16 +300,14 @@ export default function MindTuning({ onBack, playSound, onSaveLog }) {
               <button
                 key={key}
                 onClick={() => handleSelectVibe(key)}
-                className="btn btn-secondary hover-lift"
+                className="btn btn-secondary hover-lift mind-vibe-btn"
                 style={{
                   padding: '16px 24px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '16px',
                   borderRadius: '12px',
-                  border: `1px solid rgba(255, 255, 255, 0.05)`,
                   borderLeft: `5px solid ${info.themeColor}`,
-                  background: 'rgba(255, 255, 255, 0.01)',
                   textAlign: 'left',
                   transition: 'all 0.3s ease'
                 }}
@@ -319,7 +317,7 @@ export default function MindTuning({ onBack, playSound, onSaveLog }) {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.borderColor = '';
                 }}
               >
                 <span style={{ fontSize: '24px' }}>{info.emoji}</span>
@@ -371,14 +369,13 @@ export default function MindTuning({ onBack, playSound, onSaveLog }) {
               value={rawText}
               onChange={handleTextChange}
               placeholder={currentVibeInfo.placeholder}
+              className="mind-textarea"
               style={{
                 width: '100%',
                 minHeight: '140px',
-                background: 'rgba(10, 11, 16, 0.6)',
                 border: `1px solid ${charLimitWarning ? 'var(--color-amber)' : 'var(--border-color)'}`,
                 borderRadius: '8px',
                 padding: '16px',
-                color: '#fff',
                 fontSize: '14px',
                 lineHeight: '1.6',
                 outline: 'none',
@@ -588,14 +585,12 @@ export default function MindTuning({ onBack, playSound, onSaveLog }) {
                 }
               }}
               placeholder="【事実】〇〇。【対策/現実的な見解】〇〇。"
+              className="mind-textarea"
               style={{
                 width: '100%',
                 minHeight: '100px',
-                background: 'rgba(10, 11, 16, 0.6)',
-                border: '1px solid var(--border-color)',
                 borderRadius: '8px',
                 padding: '16px',
-                color: '#fff',
                 fontSize: '14px',
                 lineHeight: '1.6',
                 outline: 'none',
@@ -810,6 +805,24 @@ export default function MindTuning({ onBack, playSound, onSaveLog }) {
         @keyframes pulse {
           0%, 100% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .mind-vibe-btn {
+          border: 1px solid rgba(255, 255, 255, 0.05) !important;
+          background: rgba(255, 255, 255, 0.01) !important;
+        }
+        body.light-theme .mind-vibe-btn {
+          border-color: rgba(15, 23, 42, 0.08) !important;
+          background: #ffffff !important;
+        }
+        .mind-textarea {
+          background: rgba(10, 11, 16, 0.6) !important;
+          color: #ffffff !important;
+          border: 1px solid var(--border-color) !important;
+        }
+        body.light-theme .mind-textarea {
+          background: #ffffff !important;
+          color: var(--text-primary) !important;
+          border: 1px solid rgba(15, 23, 42, 0.12) !important;
         }
         @keyframes scanner-beam-vertical {
           0%, 100% { top: 0%; }
