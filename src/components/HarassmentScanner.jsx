@@ -273,13 +273,13 @@ export default function HarassmentScanner({ onSaveDiagnostic, onSelectGame, play
     
     const { type, breakdown } = diagnosticResult;
     
-    // アスキーアート風グラフの作成
+    // 文字数節約のため5段階メーターに変更
     const getBar = (pct) => {
-      const filled = Math.round(pct / 10);
-      return '■'.repeat(filled) + '□'.repeat(10 - filled);
+      const filled = Math.round(pct / 20);
+      return '■'.repeat(filled) + '□'.repeat(5 - filled);
     };
 
-    const shareText = `【脳内摩擦スキャン結果】\n私の脳内バグタイプは【${type.emoji} ${type.name}】でした！\n\n[${getBar(breakdown.rojiha)}] ロジハラ度 (${breakdown.rojiha}%)\n[${getBar(breakdown.showa)}] 昭和バイアス (${breakdown.showa}%)\n[${getBar(breakdown.empathy)}] 共感シンクロ (${breakdown.empathy}%)\n\n言っていることは正しいのに、なぜか人が離れていく脳内バグを検知しました。\n#LogiFit #脳内摩擦スキャナー #正論モンスター診断\n\n`;
+    const shareText = `【脳内摩擦スキャン】私のバグタイプは【${type.emoji}${type.name}】！\n\nロジハラ度：${breakdown.rojiha}% [${getBar(breakdown.rojiha)}]\n昭和バイアス：${breakdown.showa}% [${getBar(breakdown.showa)}]\n\n正論で人をフリーズさせているバグを検知。\n#LogiFit #脳内摩擦スキャナー\n`;
     
     const appUrl = 'https://www.logifit.site/?mode=scan';
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(appUrl)}`;
