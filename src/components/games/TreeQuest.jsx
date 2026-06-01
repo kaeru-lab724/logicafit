@@ -422,7 +422,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
 
   // SVG接続線のクラス名を取得する
   const getPathClass = (slotId) => {
-    if (isScanning) return '';
+    if (isScanning) return 'scanning';
     if (scanResult === 'success') return 'connected';
     if (scanResult === 'fail') {
       const error = getSlotError(slotId);
@@ -534,12 +534,12 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
           position: absolute;
           left: 0;
           width: 100%;
-          height: 12px;
-          background: linear-gradient(180deg, transparent, rgba(6, 182, 212, 0.5), rgba(6, 182, 212, 0.8), transparent);
-          box-shadow: 0 0 15px var(--color-cyan-glow);
+          height: 4px;
+          background: linear-gradient(90deg, transparent, #fff, var(--color-cyan), #fff, transparent);
+          box-shadow: 0 0 20px var(--color-cyan), 0 0 40px var(--color-cyan);
           z-index: 10;
           pointer-events: none;
-          animation: scan-move 2s ease-in-out infinite;
+          animation: scan-move 2s ease-in-out forwards;
         }
         @keyframes scan-move {
           0% { top: 0%; opacity: 0; }
@@ -554,6 +554,12 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
           stroke-width: 2.5;
           fill: none;
           transition: stroke 0.5s ease;
+        }
+        .neon-line.scanning {
+          stroke: var(--color-cyan);
+          filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.9));
+          stroke-dasharray: 12, 6;
+          animation: pulse-flow 15s linear infinite;
         }
         .neon-line.connected {
           stroke: var(--color-amber);
@@ -809,9 +815,21 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
               </div>
 
               {/* 第1階層スロット (Root) */}
-              <div style={{ position: 'absolute', left: '250px', top: '120px', width: '240px', height: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 5 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>
+              <div style={{ position: 'absolute', left: '250px', top: '140px', width: '240px', height: '60px', zIndex: 5 }}>
+                <div 
+                  style={{ 
+                    position: 'absolute', 
+                    bottom: '64px', 
+                    left: 0, 
+                    width: '100%',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    gap: '4px',
+                    lineHeight: '1.2'
+                  }}
+                >
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: 'center' }}>
                     {currentStage.correctStructure.slots[0].label}
                   </span>
                   <button 
@@ -823,7 +841,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                 </div>
 
                 {activeHintSlot === 'root' && (
-                  <div className="fade-in" style={{ position: 'absolute', bottom: '75px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
+                  <div className="fade-in" style={{ position: 'absolute', bottom: '80px', left: '10px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
                     💡 {currentStage.correctStructure.slots[0].hint}
                   </div>
                 )}
@@ -833,7 +851,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, 'root')}
                   className={`slot-box ${placedItems['root'] ? 'placed' : ''} ${scanResult === 'success' ? 'success' : scanResult === 'fail' ? `failed-${getSlotError('root')}-node` : ''}`}
-                  style={{ width: '100%', height: '60px', boxSizing: 'border-box' }}
+                  style={{ width: '100%', height: '100%', boxSizing: 'border-box' }}
                 >
                   {placedItems['root'] ? (
                     <>
@@ -853,9 +871,21 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
 
               {/* 第2階層スロット (Sub1 / Sub2) */}
               {/* Sub1 (上) */}
-              <div style={{ position: 'absolute', left: '520px', top: '30px', width: '240px', height: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 5 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>
+              <div style={{ position: 'absolute', left: '520px', top: '50px', width: '240px', height: '60px', zIndex: 5 }}>
+                <div 
+                  style={{ 
+                    position: 'absolute', 
+                    bottom: '64px', 
+                    left: 0, 
+                    width: '100%',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    gap: '4px',
+                    lineHeight: '1.2'
+                  }}
+                >
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: 'center' }}>
                     {currentStage.correctStructure.slots[1].label}
                   </span>
                   <button 
@@ -867,7 +897,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                 </div>
 
                 {activeHintSlot === currentStage.correctStructure.slots[1].id && (
-                  <div className="fade-in" style={{ position: 'absolute', bottom: '75px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
+                  <div className="fade-in" style={{ position: 'absolute', bottom: '80px', left: '10px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
                     💡 {currentStage.correctStructure.slots[1].hint}
                   </div>
                 )}
@@ -877,7 +907,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, currentStage.correctStructure.slots[1].id)}
                   className={`slot-box ${placedItems[currentStage.correctStructure.slots[1].id] ? 'placed' : ''} ${scanResult === 'success' ? 'success' : scanResult === 'fail' ? `failed-${getSlotError(currentStage.correctStructure.slots[1].id)}-node` : ''}`}
-                  style={{ width: '100%', height: '60px', boxSizing: 'border-box' }}
+                  style={{ width: '100%', height: '100%', boxSizing: 'border-box' }}
                 >
                   {placedItems[currentStage.correctStructure.slots[1].id] ? (
                     <>
@@ -896,9 +926,21 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
               </div>
 
               {/* Sub2 (下) */}
-              <div style={{ position: 'absolute', left: '520px', top: '210px', width: '240px', height: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 5 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>
+              <div style={{ position: 'absolute', left: '520px', top: '230px', width: '240px', height: '60px', zIndex: 5 }}>
+                <div 
+                  style={{ 
+                    position: 'absolute', 
+                    bottom: '64px', 
+                    left: 0, 
+                    width: '100%',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    gap: '4px',
+                    lineHeight: '1.2'
+                  }}
+                >
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', textAlign: 'center' }}>
                     {currentStage.correctStructure.slots[2].label}
                   </span>
                   <button 
@@ -910,7 +952,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                 </div>
 
                 {activeHintSlot === currentStage.correctStructure.slots[2].id && (
-                  <div className="fade-in" style={{ position: 'absolute', bottom: '75px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
+                  <div className="fade-in" style={{ position: 'absolute', bottom: '80px', left: '10px', background: '#0f172a', border: '1px solid var(--color-amber)', borderRadius: '8px', padding: '10px 14px', fontSize: '11.5px', color: 'var(--text-primary)', width: '220px', zIndex: 200, boxShadow: '0 4px 20px rgba(0,0,0,0.7)', lineHeight: '1.4' }}>
                     💡 {currentStage.correctStructure.slots[2].hint}
                   </div>
                 )}
@@ -920,7 +962,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={(e) => handleDrop(e, currentStage.correctStructure.slots[2].id)}
                   className={`slot-box ${placedItems[currentStage.correctStructure.slots[2].id] ? 'placed' : ''} ${scanResult === 'success' ? 'success' : scanResult === 'fail' ? `failed-${getSlotError(currentStage.correctStructure.slots[2].id)}-node` : ''}`}
-                  style={{ width: '100%', height: '60px', boxSizing: 'border-box' }}
+                  style={{ width: '100%', height: '100%', boxSizing: 'border-box' }}
                 >
                   {placedItems[currentStage.correctStructure.slots[2].id] ? (
                     <>
