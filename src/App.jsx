@@ -15,6 +15,7 @@ import TreeQuest from './components/games/TreeQuest';
 import EqSimulator from './components/games/EqSimulator';
 import StrategicCompiler from './components/games/StrategicCompiler';
 import DiagnosticContainer from './components/DiagnosticContainer';
+import HarassmentScanner from './components/HarassmentScanner';
 import RakutenWidget from './components/common/RakutenWidget';
 import Dashboard from './components/Dashboard';
 import DebugLab from './components/DebugLab';
@@ -170,6 +171,15 @@ export default function App() {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const search = window.location.search;
+    const hash = window.location.hash;
+    const params = new URLSearchParams(search || (hash.includes('?') ? hash.substring(hash.indexOf('?')) : ''));
+    if (params.get('mode') === 'scan' || params.has('scan')) {
+      setActiveGame('harassmentScanner');
+    }
   }, []);
 
   useEffect(() => {
@@ -1179,6 +1189,13 @@ export default function App() {
             onSaveDiagnostic={handleSaveDiagnostic}
             myBrainCode={currentSpell}
             onUnlockType={handleUnlockType}
+          />
+        )}
+        {activeGame === 'harassmentScanner' && (
+          <HarassmentScanner
+            onSaveDiagnostic={handleSaveDiagnostic}
+            onSelectGame={setActiveGame}
+            playSound={playSound}
           />
         )}
 
