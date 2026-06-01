@@ -523,10 +523,11 @@ const labQuestions = [
 ];
 
 // デバッグ対象（思考バグ・コード）の定義
-const monsters = [
+// デバッグ対象（思考バグ・コード）の定義
+const bugTargets = [
   {
     name: 'ストローマン・バグ',
-    emoji: '👾',
+    emoji: '🔌',
     maxHp: 40,
     timeLimit: 20,
     dmgPerHit: 20,
@@ -536,7 +537,7 @@ const monsters = [
   },
   {
     name: 'キベン・ブロック',
-    emoji: '🧱',
+    emoji: '💾',
     maxHp: 60,
     timeLimit: 15,
     dmgPerHit: 20,
@@ -569,7 +570,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
   // ゲーム進行用ステート
   const [gameStatus, setGameStatus] = useState('tutorial'); // 'tutorial' | 'playing' | 'clear'
   const [wave, setWave] = useState(1); // 1, 2, 3 (モンスター/デバッグ対象の難易度レベル)
-  const [monsterHp, setMonsterHp] = useState(100); // 難易度ビジュアル用進捗(2問正解で討伐)
+  const [monsterHp, setMonsterHp] = useState(100); // 難易度ビジュアル用進捗(2問正解で完了)
 
   // 問題管理 (1セッションあたり6問)
   const [questions, setQuestions] = useState([]);
@@ -581,7 +582,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
 
   // タイマー＆診断測定管理
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef(null);
   const startTimeRef = useRef(0);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0); // 累計思考時間 (秒)
@@ -629,7 +630,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
     setTotalTimeSpent(0);
     setShowaStats({ correct: 0, total: 0 });
     setReiwaStats({ correct: 0, total: 0 });
-    setTimeLeft(20);
+    setElapsedTime(0);
     setScreenEffect(null);
     setDamageNumber(null);
     setAtkEffect(false);
@@ -654,18 +655,10 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
       return;
     }
 
-    const currentMonster = monsters[wave - 1] || monsters[0];
-    setTimeLeft(currentMonster.timeLimit);
+    setElapsedTime(0);
 
     timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          handleTimeOut();
-          return 0;
-        }
-        return prev - 1;
-      });
+      setElapsedTime((prev) => prev + 1);
     }, 1000);
 
     return () => {
@@ -673,7 +666,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
     };
   }, [gameStatus, currentQuestionIdx, isAnswered]);
 
-  const currentMonster = monsters[wave - 1] || monsters[0];
+  const currentMonster = bugTargets[wave - 1] || bugTargets[0];
   const currentQuestion = questions[currentQuestionIdx];
 
   const triggerDamageNum = (val, target) => {
@@ -681,34 +674,6 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
     setTimeout(() => {
       setDamageNumber(null);
     }, 1200);
-  };
-
-  // 4. 時間切れの処理
-  const handleTimeOut = () => {
-    playSound('incorrect');
-    setIsAnswered(true);
-    setCombo(0);
-
-    // 警告エフェクト
-    setScreenEffect('shake');
-    triggerDamageNum('TIMEOUT', 'player');
-    setTimeout(() => setScreenEffect(null), 500);
-
-    // 思考時間を加算 (最大制限時間分)
-    const currentMonster = monsters[wave - 1] || monsters[0];
-    setTotalTimeSpent(prev => prev + currentMonster.timeLimit);
-
-    if (onLogBug && !reviewQuestionId) {
-      onLogBug('fallacyHunter', currentQuestion.id, `時間切れ`);
-    }
-
-    // 世代バイアス統計の更新
-    const bias = currentQuestion.biasType;
-    if (bias === 'showa') {
-      setShowaStats(prev => ({ ...prev, total: prev.total + 1 }));
-    } else {
-      setReiwaStats(prev => ({ ...prev, total: prev.total + 1 }));
-    }
   };
 
   // 統計データの更新
@@ -753,10 +718,10 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
       });
       setTotalCorrectAnswers(prev => prev + 1);
 
-      // 斬撃エフェクト
+      // スキャンレーザーエフェクト
       setAtkEffect(true);
       setTimeout(() => setAtkEffect(false), 600);
-      triggerDamageNum('DEBUGGED', 'monster');
+      triggerDamageNum('[DECRYPTED]', 'monster');
 
       // モンスターHP（デバッグ進捗）を減らす
       setMonsterHp(prev => Math.max(0, prev - 50));
@@ -765,7 +730,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
       playSound('incorrect');
       setCombo(0);
       setScreenEffect('shake');
-      triggerDamageNum('WARNING', 'player');
+      triggerDamageNum('[BIAS DETECTED]', 'player');
       setTimeout(() => setScreenEffect(null), 500);
 
       if (onLogBug && !reviewQuestionId) {
@@ -781,7 +746,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
     setSelectedChoiceIdx(null);
     setIsAnswered(false);
 
-    // 2問ごとにモンスター（難易度）を切り替える
+    // 2問ごとに難易度（対象）を切り替える
     // 6問中の進行具合から wave を判定
     const nextQuestionIdx = currentQuestionIdx + 1;
     if (nextQuestionIdx < questions.length) {
@@ -824,12 +789,8 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
     return null;
   }
 
-  const getTimerColor = () => {
-    const ratio = timeLeft / currentMonster.timeLimit;
-    if (ratio <= 0.25) return '#ef4444'; // 赤
-    if (ratio <= 0.5) return '#f59e0b'; // 黄
-    return 'var(--color-cyan)'; // シアン
-  };
+
+
 
   // 診断データ集計
   const showaDebRate = showaStats.total > 0 ? Math.round((showaStats.correct / showaStats.total) * 100) : 100;
@@ -872,27 +833,28 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           transition: transform 0.1s ease;
         }
         .shake-active {
-          animation: lab-shake 0.4s ease-in-out;
+          animation: warning-glitch 0.4s ease-in-out;
           position: relative;
         }
         .shake-active::before {
           content: "";
-          position: fixed;
+          position: absolute;
           top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(239, 68, 68, 0.15);
-          border: 4px solid #ef4444;
-          z-index: 9999;
+          background: rgba(245, 158, 11, 0.05);
+          border: 2px solid #f59e0b;
+          border-radius: 16px;
+          z-index: 10;
           pointer-events: none;
-          animation: damage-flash-ani 0.4s ease;
+          animation: warning-flash-ani 0.4s ease;
         }
-        @keyframes lab-shake {
-          0%, 100% { transform: translate(0, 0); }
-          10%, 90% { transform: translate(-4px, 2px); }
-          20%, 80% { transform: translate(4px, -2px); }
-          30%, 50%, 70% { transform: translate(-6px, -4px); }
-          40%, 60% { transform: translate(6px, 4px); }
+        @keyframes warning-glitch {
+          0%, 100% { transform: translate(0, 0); filter: brightness(1); }
+          20% { transform: translate(-2px, 0); filter: brightness(1.2) contrast(1.1); }
+          40% { transform: translate(2px, 0); }
+          60% { transform: translate(-1px, 0); filter: brightness(0.9); }
+          80% { transform: translate(1px, 0); }
         }
-        @keyframes damage-flash-ani {
+        @keyframes warning-flash-ani {
           0%, 100% { opacity: 0; }
           50% { opacity: 1; }
         }
@@ -903,9 +865,9 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           justify-content: center;
           height: 180px;
           border-radius: 16px;
-          background: radial-gradient(circle, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.95) 100%);
+          background: radial-gradient(circle, rgba(15, 23, 42, 0.85) 0%, rgba(20, 27, 41, 0.98) 100%);
           border: 1px solid var(--border-color);
-          box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+          box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.05);
           overflow: hidden;
         }
         .grid-bg {
@@ -938,32 +900,33 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
         }
         .slash-line {
           width: 100%;
-          height: 4px;
-          background: linear-gradient(90deg, transparent, #fff, var(--color-rose), transparent);
-          box-shadow: 0 0 15px var(--color-rose);
+          height: 3px;
+          background: linear-gradient(90deg, transparent, #fff, var(--color-emerald), transparent);
+          box-shadow: 0 0 15px var(--color-emerald);
           position: absolute;
           left: 0;
-          animation: slash-animation 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+          animation: scan-animation 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
-        @keyframes slash-animation {
+        @keyframes scan-animation {
           0% { top: 0%; opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
           100% { top: 100%; opacity: 0; }
         }
         .dmg-number {
           position: absolute;
           font-family: var(--font-display);
-          font-weight: 900;
-          font-size: 28px;
-          text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+          font-weight: 800;
+          font-size: 22px;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
           z-index: 10;
+          letter-spacing: 1px;
           animation: dmg-float 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
         @keyframes dmg-float {
-          0% { transform: translateY(0) scale(0.6); opacity: 0; }
-          20% { transform: translateY(-10px) scale(1.2); opacity: 1; }
-          100% { transform: translateY(-40px) scale(1); opacity: 0; }
+          0% { transform: translateY(0) scale(0.8); opacity: 0; }
+          20% { transform: translateY(-10px) scale(1.1); opacity: 1; }
+          100% { transform: translateY(-30px) scale(1); opacity: 0; }
         }
         .hp-bar-outer {
           height: 10px;
@@ -988,6 +951,13 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           height: 100%;
           transition: width 1s linear, background-color 0.3s ease;
         }
+        .scanning-pulse {
+          animation: scan-pulse-ani 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes scan-pulse-ani {
+          0% { opacity: 0.3; }
+          100% { opacity: 1; filter: brightness(1.2); }
+        }
       `}</style>
 
       {/* 1. チュートリアル / 導入画面 */}
@@ -1009,17 +979,17 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
               </strong>
               <ul style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px', paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <li><strong>世代バイアスのスキャン</strong>: 出題される6つのバグ主張には、それぞれ「昭和脳（精神論や伝統）」または「令和脳（過度なタイパや自己防衛）」の歪みバイアスが隠されています。</li>
-                <li><strong>スキャンタイム（思考速度）測定</strong>: 各回答の決定にかかった時間を診断指標として正確に記録します。</li>
-                <li><strong>誤バグ警告演出</strong>: 不正解や時間切れはペナルティ（ゲームオーバー）にはならず、詳細なデバッグ解説が表示されます。内容を納得した上で次の問題へ進んでください。</li>
+                <li><strong>レスポンスタイム測定</strong>: 各回答の決定にかかった時間を診断指標として正確に記録します（時間制限はありませんので、ご自身のペースで回答してください）。</li>
+                <li><strong>診断シミュレーション</strong>: 不正解によるゲームオーバーはありません。詳細なデバッグ解説を確認しながら、ロジックの改善プロセスを進めてください。</li>
               </ul>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-              {monsters.map((m, idx) => (
+              {bugTargets.map((m, idx) => (
                 <div key={idx} style={{ padding: '12px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-color)', textAlign: 'center' }}>
                   <div style={{ fontSize: '28px', marginBottom: '4px' }}>{m.emoji}</div>
                   <div style={{ fontSize: '11px', fontWeight: 'bold' }}>{m.name}</div>
-                  <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>危険度Lv.{idx + 1}</div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>汚染深度Lv.{idx + 1}</div>
                 </div>
               ))}
             </div>
@@ -1029,7 +999,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             <button onClick={onBack} className="btn btn-secondary" style={{ flex: 1 }}>ラボに戻る</button>
             <button onClick={startDiagnostics} className="btn btn-primary" style={{ flex: 2, background: 'linear-gradient(135deg, var(--color-rose) 0%, #e11d48 100%)', boxShadow: '0 4px 15px var(--color-rose-glow)' }}>
               <Play size={16} style={{ marginRight: '6px' }} />
-              診断を開始する
+              システムスキャナーを起動
             </button>
           </div>
         </div>
@@ -1046,7 +1016,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
                 SCAN PROGRESS {currentQuestionIdx + 1} / 6
               </span>
               <h2 style={{ fontSize: '18px', fontWeight: 'bold', margin: '2px 0 0 0', color: currentMonster.color }}>
-                {currentMonster.name} のコードを解析中
+                {currentMonster.name} をスキャン中...
               </h2>
             </div>
             
@@ -1070,7 +1040,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
 
           {/* デバッグ進捗 & スキャンタイムリミット */}
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
-            {/* モンスター（バグ）の残りHP（デバッグ完了への進捗） */}
+            {/* デバッグ完了への進捗 */}
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                 <span>ANALYSIS COMPLETE RATE</span>
@@ -1091,14 +1061,15 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             <div style={{ width: '120px', position: 'relative' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}><Timer size={10} /> SCAN TIME</span>
-                <span style={{ color: getTimerColor(), fontWeight: 'bold' }}>{timeLeft}s</span>
+                <span style={{ color: 'var(--color-cyan)', fontWeight: 'bold' }}>{elapsedTime}s</span>
               </div>
               <div className="timer-bar-outer">
                 <div 
-                  className="timer-bar-inner" 
+                  className="timer-bar-inner scanning-pulse" 
                   style={{ 
-                    width: `${(timeLeft / currentMonster.timeLimit) * 100}%`, 
-                    backgroundColor: getTimerColor()
+                    width: '100%', 
+                    backgroundColor: 'var(--color-cyan)',
+                    boxShadow: '0 0 10px var(--color-cyan)'
                   }} 
                 />
               </div>
@@ -1111,17 +1082,17 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             
             {/* ポップアップ表示 */}
             {damageNumber && damageNumber.target === 'monster' && (
-              <span className="dmg-number" style={{ color: 'var(--color-emerald)', textShadow: '0 0 10px rgba(16, 185, 129, 0.6)', left: '50%', top: '35%', transform: 'translateX(-50%)' }}>
+              <span className="dmg-number" style={{ color: 'var(--color-emerald)', textShadow: '0 0 15px rgba(16, 185, 129, 0.8)', left: '50%', top: '35%', transform: 'translateX(-50%)' }}>
                 {damageNumber.val}
               </span>
             )}
             {damageNumber && damageNumber.target === 'player' && (
-              <span className="dmg-number" style={{ color: '#ef4444', textShadow: '0 0 10px rgba(239, 68, 68, 0.6)', left: '50%', top: '35%', transform: 'translateX(-50%)' }}>
+              <span className="dmg-number" style={{ color: '#f59e0b', textShadow: '0 0 15px rgba(245, 158, 11, 0.8)', left: '50%', top: '35%', transform: 'translateX(-50%)' }}>
                 {damageNumber.val}
               </span>
             )}
 
-            {/* 斬撃エフェクト */}
+            {/* スキャンレーザーエフェクト */}
             {atkEffect && (
               <div className="atk-slash">
                 <div className="slash-line" />
@@ -1133,20 +1104,20 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
               className={`monster-sprite ${monsterHp > 0 ? 'float-ani' : ''}`}
               style={{
                 fontSize: wave === 3 ? '84px' : '72px',
-                filter: damageNumber && damageNumber.target === 'monster' ? 'brightness(2) drop-shadow(0 0 20px #ef4444)' : `drop-shadow(0 0 24px ${currentMonster.color})`,
+                filter: damageNumber && damageNumber.target === 'monster' ? 'brightness(1.5) drop-shadow(0 0 20px var(--color-emerald))' : `drop-shadow(0 0 24px ${currentMonster.color})`,
                 transition: 'transform 0.1s ease, opacity 0.5s ease',
                 opacity: monsterHp <= 0 ? 0.3 : 1,
-                transform: damageNumber && damageNumber.target === 'monster' ? 'scale(0.9) rotate(-5deg)' : 'scale(1)'
+                transform: damageNumber && damageNumber.target === 'monster' ? 'scale(1.05)' : 'scale(1)'
               }}
             >
               {currentMonster.emoji}
             </div>
 
-            {/* コンボ */}
+            {/* 連続解読 */}
             {combo >= 2 && (
-              <div style={{ position: 'absolute', left: '16px', top: '16px', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', color: '#ff8a8a', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px', zIndex: 10 }}>
-                <Flame size={12} fill="#ef4444" style={{ color: '#ef4444' }} />
-                {combo} COMBO!
+              <div style={{ position: 'absolute', left: '16px', top: '16px', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid var(--color-emerald)', color: 'var(--color-emerald)', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px', zIndex: 10 }}>
+                <Zap size={12} fill="var(--color-emerald)" style={{ color: 'var(--color-emerald)' }} />
+                {combo} DECRYPT STREAK
               </div>
             )}
           </div>
@@ -1166,7 +1137,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           >
             <div style={{ position: 'absolute', top: '-10px', left: '30px', width: 0, height: 0, borderStyle: 'solid', borderWidth: '0 10px 10px 10px', borderColor: `transparent transparent ${currentMonster.color} transparent` }} />
             <span style={{ fontSize: '10px', color: currentMonster.color, fontWeight: 'bold', display: 'block', marginBottom: '6px', letterSpacing: '0.5px' }}>
-              解析中のバグ主張（属性: {currentQuestion.biasType === 'showa' ? '昭和バイアス' : '令和バイアス'}）：
+              スキャン対象データ（属性: {currentQuestion.biasType === 'showa' ? '昭和バイアス' : '令和バイアス'}）：
             </span>
             <p style={{ fontSize: '14.5px', lineHeight: '1.6', color: 'var(--text-primary)', margin: 0, fontWeight: '500' }}>
               {currentQuestion.scenario}
@@ -1258,10 +1229,10 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', fontWeight: 'bold', color: selectedChoiceIdx !== null && currentQuestion.choices[selectedChoiceIdx].isCorrect ? 'var(--color-emerald)' : '#ef4444' }}>
-                  {selectedChoiceIdx === null 
-                    ? '⚠️ タイムアップ（診断：思考遅延バグ）' 
-                    : currentQuestion.choices[selectedChoiceIdx].isCorrect ? '🎯 デバッグ完了（バグの無効化に成功）' : '⚠️ 誤バグ検知（バグの隔離に失敗）'
+                <span style={{ fontSize: '13px', fontWeight: 'bold', color: selectedChoiceIdx !== null && currentQuestion.choices[selectedChoiceIdx].isCorrect ? 'var(--color-emerald)' : '#f59e0b' }}>
+                  {selectedChoiceIdx !== null && currentQuestion.choices[selectedChoiceIdx].isCorrect 
+                    ? '🎯 スキャン成功（バイアス分離完了）' 
+                    : '⚠️ デコード警告（バイアス検出）'
                   }
                 </span>
                 <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>
@@ -1278,7 +1249,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {isAnswered && (
               <button onClick={handleNext} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, var(--color-rose) 0%, #e11d48 100%)', boxShadow: '0 4px 15px var(--color-rose-glow)' }}>
-                {currentQuestionIdx < 5 ? '次のコードへ' : '診断結果を表示'}
+                {currentQuestionIdx < 5 ? '次のノードへ' : '診断ログを出力'}
                 <ChevronRight size={16} style={{ marginLeft: '4px' }} />
               </button>
             )}
@@ -1291,10 +1262,10 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
         <div className="glass-panel fade-in" style={{ padding: '40px 32px', textAlign: 'center', borderLeft: '4px solid var(--color-emerald)' }}>
           <Award size={64} style={{ color: 'var(--color-emerald)', marginBottom: '20px', margin: '0 auto' }} />
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '26px', margin: '16px 0 12px 0' }}>
-            デバッグ診断 完了
+            SYSTEM DIAGNOSTICS COMPLETED
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '14.5px', marginBottom: '24px' }}>
-            見事にすべてのバグコードのスキャンが終了しました。あなたの脳内デバッグ精度とバイアス比率は以下の通りです。
+            全セグメントのスキャン及びバイアス検出処理が完了しました。診断データは以下の通りです。
           </p>
 
           {/* 診断タイトルと説明 */}
@@ -1306,9 +1277,9 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
 
           {/* 診断詳細スタッツ */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
-            {/* 昭和脳デバッグ率 */}
+            {/* 昭和脳バイアス検出率 */}
             <div style={{ background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '10px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>昭和脳 デバッグ率</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>昭和脳 バイアス検出率</div>
               <div style={{ fontSize: '24px', fontFamily: 'var(--font-display)', fontWeight: 'bold', color: 'var(--color-amber)' }}>{showaDebRate}%</div>
               <div className="hp-bar-outer" style={{ marginTop: '8px', height: '6px' }}>
                 <div className="hp-bar-inner" style={{ width: `${showaDebRate}%`, background: 'var(--color-amber)' }} />
@@ -1316,9 +1287,9 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
               <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>（精神論・伝統バイアス）</span>
             </div>
 
-            {/* 令和脳デバッグ率 */}
+            {/* 令和脳バイアス検出率 */}
             <div style={{ background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '10px' }}>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>令和脳 デバッグ率</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>令和脳 バイアス検出率</div>
               <div style={{ fontSize: '24px', fontFamily: 'var(--font-display)', fontWeight: 'bold', color: 'var(--color-rose)' }}>{reiwaDebRate}%</div>
               <div className="hp-bar-outer" style={{ marginTop: '8px', height: '6px' }}>
                 <div className="hp-bar-inner" style={{ width: `${reiwaDebRate}%`, background: 'var(--color-rose)' }} />
@@ -1329,16 +1300,16 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
 
           <div style={{ display: 'flex', gap: '32px', justifyContent: 'center', marginBottom: '32px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
             <div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>平均スキャン速度</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>平均応答レイテンシ</div>
               <div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', fontWeight: 'bold', color: 'var(--color-cyan)', marginTop: '4px' }}>
-                {avgScanTime} 秒 / 問
+                {avgScanTime} 秒 / セグメント
               </div>
             </div>
             <div style={{ borderLeft: '1px solid var(--border-color)' }}></div>
             <div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>デバッグ成功数</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>パッチ適用成功数</div>
               <div style={{ fontSize: '22px', fontFamily: 'var(--font-display)', fontWeight: 'bold', color: 'var(--color-emerald)', marginTop: '4px' }}>
-                {totalCorrectAnswers} / {questions.length} 問
+                {totalCorrectAnswers} / {questions.length} ノード
               </div>
             </div>
           </div>
@@ -1346,7 +1317,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
             <button onClick={handleRetry} className="btn btn-secondary">
               <RotateCcw size={16} style={{ marginRight: '6px' }} />
-              もう一度診断
+              もう一度スキャン
             </button>
             <button 
               onClick={handleFinishGame} 
@@ -1357,7 +1328,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
                 boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)' 
               }}
             >
-              結果を記録して戻る
+              ログをセーブして戻る
               <ArrowRight size={16} style={{ marginLeft: '6px' }} />
             </button>
           </div>
