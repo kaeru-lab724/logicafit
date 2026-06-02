@@ -637,7 +637,7 @@ export const logicTreesBusiness = [
       { id: 'opb1', text: '客数 × 客単価', correctSlot: 'root', weight: 1 },
       { id: 'opb2', text: '新規顧客 + リピート顧客', correctSlot: 'sub1', weight: 2 },
       { id: 'opb3', text: '注文数 × 平均注文単価', correctSlot: 'sub2', weight: 2 },
-      { id: 'opb4', text: '朝の売上 + 昼 of 売上 + 夜の売上', correctSlot: 'alternative', weight: 99 },
+      { id: 'opb4', text: '朝の売上 + 昼の売上 + 夜の売上', correctSlot: 'alternative', weight: 99 },
       { id: 'opb5', text: 'コーヒーの売上 + ケーキの売上', correctSlot: 'alternative2', weight: 99 }
     ],
     correctStructure: {
@@ -1111,7 +1111,7 @@ export const empathyDialoguesDaily = [
     id: 'edd8',
     scenario: 'パートナー：「子供の夜泣きが続いて全然眠れない…。私の育て方が悪いのかなって不安になっちゃう。」',
     choices: [
-      { text: '「夜泣き対策の育児本に、睡眠環境 of 整え方が書いてあったから、その通りに実践してみて。」', isCorrect: false },
+      { text: '「夜泣き対策の育児本に、睡眠環境の整え方が書いてあったから、その通りに実践してみて。」', isCorrect: false },
       { text: '「全然眠れない中で毎日一生懸命向き合ってるんだから、不安になるのも当然だよ。あなたの育て方のせいじゃなくて、赤ちゃん自身の成長のプロセスだから、自分を責めないでね。」', isCorrect: true },
       { text: '「育て方が悪いなんて気にしすぎだよ。そのうち泣き止むんだから、もっと気楽に考えなよ。」', isCorrect: false },
       { text: '「じゃあ、今日の夜は私が別室で子供を見るから、あなただけ耳栓をして寝ればいいよ。」', isCorrect: false }
@@ -1196,7 +1196,7 @@ export const empathyDialoguesBusiness = [
       { text: '「そんな被害妄想みたいなことを言っていては、この先リーダーとしてやっていけないよ。もっと自信を持ちなさい。」', isCorrect: false },
       { text: '「反対しているメンバーを集めて、私から施策の必要性を説得してあげるから、君は心配しなくていいよ。」', isCorrect: false }
     ],
-    explanation: '仕事上の反対意見を「人格否定」として受け止めてしまい、孤独感や恐怖を感じている部下に対して、Bはまず「そのように感じてしまう辛い気持ち」を全面的に受容・肯定し、安心感を与えた上で、仕事の内容の整理（課題 of 分離）へと優しく促しています。AやCのように「混同するな」「被害妄想だ」と正論でぶった斬るのは、部下の自己否定感をさらに強めるだけであり、心理的安全性を損ないます。'
+    explanation: '仕事上の反対意見を「人格否定」として受け止めてしまい、孤独感や恐怖を感じている部下に対して、Bはまず「そのように感じてしまう辛い気持ち」を全面的に受容・肯定し、安心感を与えた上で、仕事の内容の整理（課題の分離）へと優しく促しています。AやCのように「混同するな」「被害妄想だ」と正論でぶった斬るのは、部下の自己否定感をさらに強めるだけであり、心理的安全性を損ないます。'
   },
   {
     id: 'edb6',

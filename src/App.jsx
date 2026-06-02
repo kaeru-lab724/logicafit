@@ -1240,7 +1240,9 @@ export default function App() {
             spellInput={spellInput}
             setSpellInput={setSpellInput}
             spellError={spellError}
+            setSpellError={setSpellError}
             spellSuccess={spellSuccess}
+            setSpellSuccess={setSpellSuccess}
             handleRestoreSpell={handleRestoreSpell}
             handleCopySpell={handleCopySpell}
             currentSpell={currentSpell}
@@ -1364,6 +1366,9 @@ export default function App() {
               onClick={() => {
                 playSound('correct');
                 setShowUnlockModal(false);
+                setTimeout(() => {
+                  document.getElementById('training-menu')?.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
               }} 
               className="btn btn-primary" 
               style={{ 

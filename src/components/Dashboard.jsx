@@ -19,6 +19,56 @@ import RakutenWidget from './common/RakutenWidget';
 import { decodeState, calculateFriction } from '../data/spellHelper';
 import { diagnosticTypes } from '../data/diagnosticData';
 import { useSound } from '../hooks/useSound';
+// 自動推奨ゲームのキー選定
+const getRecommendedGameKey = (scores) => {
+  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic'];
+  
+  // 1. 未プレイ（0%）を優先
+  for (const key of keys) {
+    if ((scores[key] || 0) === 0) {
+      return key;
+    }
+  }
+  
+  // 2. 100%未満で最もスコアが低いもの
+  let minScore = 101;
+  let recommendedKey = keys[0];
+  let hasIncomplete = false;
+  
+  for (const key of keys) {
+    const score = scores[key] || 0;
+    if (score < 100) {
+      hasIncomplete = true;
+      if (score < minScore) {
+        minScore = score;
+        recommendedKey = key;
+      }
+    }
+  }
+  
+  // 3. 全て100%の場合は最初のゲーム
+  if (!hasIncomplete) {
+    return 'factsOpinions';
+  }
+  
+  return recommendedKey;
+};
+
+// ゲームキーから表示名へのマッピング
+const getGameName = (key) => {
+  const names = {
+    factsOpinions: '事実 vs 意見',
+    logicalValidity: '論理の妥当性',
+    logicTree: 'ロジックツリー',
+    fallacy: '論理的誤謬の特定',
+    hiddenAssumption: '前提のデバッグ',
+    causalLoop: '因果ループ',
+    assertiveRewrite: 'アサーティブ',
+    strategic: '戦略コンパイラー',
+    empathyDialogue: '共感対話'
+  };
+  return names[key] || '';
+};
 
 export default function Dashboard({
   isNewUser,
@@ -36,7 +86,9 @@ export default function Dashboard({
   spellInput,
   setSpellInput,
   spellError,
+  setSpellError,
   spellSuccess,
+  setSpellSuccess,
   handleRestoreSpell,
   handleCopySpell,
   currentSpell,
@@ -56,6 +108,7 @@ export default function Dashboard({
   const [showIntroduction, setShowIntroduction] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [librarySubTab, setLibrarySubTab] = useState('bug'); // 'bug' or 'skill'
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const { 
@@ -343,7 +396,7 @@ export default function Dashboard({
                   actions: (
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                       <button 
-                        onClick={() => { playSound('click'); setActiveTab('bugEncyclopedia'); }} 
+                        onClick={() => { playSound('click'); setActiveTab('encyclopedia'); setLibrarySubTab('bug'); }} 
                         className="btn btn-secondary"
                         style={{
                           flex: 1,
@@ -476,23 +529,23 @@ export default function Dashboard({
                               </button>
                             </div>
                           </div>
-                        ) : (
+                         ) : (
                           <button 
                             onClick={() => { playSound('click'); setActiveGame('mindTuning'); }} 
-                            className="btn btn-primary hover-lift"
+                            className="btn btn-primary hover-lift tuning-btn-glow"
                             style={{ 
                               flex: 1, 
                               fontSize: '13.5px', 
                               padding: '10px 18px', 
                               background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                              boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               gap: '6px'
                             }}
                           >
-                            <span>🧠 本日の思考調律を起動 (未) [+100 XP]</span>
+                            <span>🧠 本日の思考調律を起動 (未)</span>
+                            <span className="xp-gold-badge">+100 XP</span>
                           </button>
                         );
                       })()}
@@ -671,6 +724,135 @@ export default function Dashboard({
               );
             })()}
 
+            {/* Quick Actions Area */}
+            {(() => {
+              const recGameKey = getRecommendedGameKey(gameState.scores);
+              const recGameName = getGameName(recGameKey);
+              const todayStr = new Date().toLocaleDateString('sv');
+              const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
+
+              return (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                  gap: '16px',
+                  marginTop: '20px',
+                  marginBottom: '8px'
+                }}>
+                  {/* Left: Recommended Game Action */}
+                  <div 
+                    className="glass-panel hover-lift"
+                    onClick={() => {
+                      playSound('click');
+                      setActiveGame(recGameKey);
+                    }}
+                    style={{
+                      padding: '16px 20px',
+                      background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%)',
+                      border: '1px solid rgba(6, 182, 212, 0.2)',
+                      borderRadius: '16px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                      <div style={{
+                        background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 0 10px rgba(6, 182, 212, 0.2)'
+                      }}>
+                        <Award size={20} color="#fff" />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                          🎯 推奨トレーニングを再開
+                        </span>
+                        <span style={{ fontSize: '14.5px', fontWeight: '800', color: 'var(--text-primary)' }}>
+                          「{recGameName}」をプレイ
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronRight size={18} style={{ color: 'var(--text-muted)', opacity: 0.7 }} />
+                  </div>
+
+                  {/* Right: Daily Mind Tuning Action */}
+                  <div 
+                    className={`glass-panel hover-lift ${!isTuningCompletedToday ? 'tuning-btn-glow' : ''}`}
+                    onClick={() => {
+                      playSound('click');
+                      setActiveGame('mindTuning');
+                    }}
+                    style={{
+                      padding: '16px 20px',
+                      background: isTuningCompletedToday 
+                        ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%)'
+                        : 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(244, 63, 94, 0.06) 100%)',
+                      border: isTuningCompletedToday
+                        ? '1px solid rgba(16, 185, 129, 0.2)'
+                        : '1px solid rgba(139, 92, 246, 0.3)',
+                      borderRadius: '16px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                      <div style={{
+                        background: isTuningCompletedToday 
+                          ? 'linear-gradient(135deg, #10b981 0%, var(--color-cyan) 100%)'
+                          : 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: isTuningCompletedToday 
+                          ? '0 0 10px rgba(16, 185, 129, 0.2)'
+                          : '0 0 12px rgba(139, 92, 246, 0.3)'
+                      }}>
+                        <Brain size={20} color="#fff" />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span style={{ 
+                          fontSize: '11px', 
+                          color: isTuningCompletedToday ? '#10b981' : 'var(--color-primary)', 
+                          fontWeight: 'bold', 
+                          letterSpacing: '0.5px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}>
+                          🧠 本日の思考調律
+                          {!isTuningCompletedToday && (
+                            <span className="xp-gold-badge" style={{ fontSize: '9px', padding: '1px 4px' }}>+100 XP</span>
+                          )}
+                        </span>
+                        <span style={{ fontSize: '14.5px', fontWeight: '800', color: 'var(--text-primary)' }}>
+                          {isTuningCompletedToday ? '本日完了（再調律する）' : '思考調律を起動（未完了）'}
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronRight size={18} style={{ color: 'var(--text-muted)', opacity: 0.7 }} />
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Tab Navigation */}
             <div 
               style={{ 
@@ -687,11 +869,10 @@ export default function Dashboard({
                 { id: 'training', label: '🎯 トレーニングルーム', count: null },
                 { id: 'bugNote', label: '🐛 脳内バグノート', count: (gameState.bugNote || []).filter(b => !b.solved).length },
                 { id: 'mindTuningLog', label: '🧠 思考調律ログ', count: (gameState.tuningLog || []).length },
-                { id: 'encyclopedia', label: '📖 思考スキル図鑑', count: Object.values(gameState.scores).filter(s => s >= 80).length },
-                { id: 'bugEncyclopedia', label: '👾 脳内バグ図鑑', count: `${(gameState.unlockedTypes || ["balancedThinker"]).length}/12` },
+                { id: 'encyclopedia', label: '📖 脳内図鑑', count: `${(gameState.unlockedTypes || ["balancedThinker"]).length}/12` },
                 { id: 'achievements', label: '🏆 獲得実績', count: gameState.badges.filter(Boolean).length }
               ].map(tab => {
-                const isTabLocked = !isFullUnlocked && tab.id !== 'training' && tab.id !== 'bugEncyclopedia' && tab.id !== 'bugNote' && tab.id !== 'mindTuningLog';
+                const isTabLocked = !isFullUnlocked && tab.id !== 'training' && tab.id !== 'encyclopedia' && tab.id !== 'bugNote' && tab.id !== 'mindTuningLog';
                 return (
                   <button
                     key={tab.id}
@@ -1012,217 +1193,249 @@ export default function Dashboard({
 
             {activeTab === 'encyclopedia' && (
               <div className="fade-in" style={{ marginTop: '16px' }}>
-                {/* Skills Encyclopedia */}
                 <section style={{ textAlign: 'left' }}>
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: '0' }}>
-                    <BookOpen size={20} style={{ color: 'var(--color-primary)' }} />
-                    思考スキル図鑑
-                  </h2>
-
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', margin: '12px 0 20px 0' }}>
-                    習得した思考スキルの概念と、それを日常生活や仕事でどう活用すべきかの実践的なアプローチを学べる解説書です。
-                    各スキルのトレーニングでベストスコア80%以上を獲得すると、解説ページがアンロックされます。
-                  </p>
-
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
-                    {skillsData.map((skill) => {
-                      const score = gameState.scores[skill.id] || 0;
-                      const isUnlocked = score >= 80;
-
-                      return (
-                        <div 
-                          key={skill.id}
-                          className={`glass-panel skill-card ${isUnlocked ? 'unlocked' : ''}`}
-                          style={{ 
-                            borderLeftColor: isUnlocked ? 'var(--color-primary)' : 'var(--border-color)',
-                            opacity: isUnlocked ? 1 : 0.6
-                          }}
-                        >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '10px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              {isUnlocked ? (
-                                <Unlock size={18} style={{ color: 'var(--color-primary)' }} />
-                              ) : (
-                                <Lock size={18} style={{ color: 'var(--text-muted)' }} />
-                              )}
-                              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: isUnlocked ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                                {skill.name}
-                              </h3>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '220px' }}>
-                              <div style={{ flex: 1, height: '6px', background: 'var(--bg-inner-box)', borderRadius: '3px', overflow: 'hidden' }}>
-                                <div 
-                                  style={{ 
-                                    height: '100%', 
-                                    width: `${score}%`, 
-                                    background: isUnlocked ? 'var(--color-primary)' : 'var(--text-muted)',
-                                    borderRadius: '3px'
-                                  }} 
-                                />
-                              </div>
-                              <span style={{ fontSize: '12px', fontWeight: 'bold', color: isUnlocked ? 'var(--color-primary)' : 'var(--text-muted)', width: '80px', textAlign: 'right' }}>
-                                {isUnlocked ? '習得完了' : `進捗 ${score}/80%`}
-                              </span>
-                            </div>
-                          </div>
-
-                          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '12px' }}>
-                            {skill.desc}
-                          </p>
-
-                          {isUnlocked ? (
-                            <div 
-                              className="fade-in"
-                              style={{ 
-                                background: 'rgba(139, 92, 246, 0.03)', 
-                                border: '1px solid rgba(139, 92, 246, 0.1)', 
-                                borderRadius: '8px', 
-                                padding: '12px 16px', 
-                                fontSize: '13px',
-                                lineHeight: '1.5'
-                              }}
-                            >
-                              <strong style={{ color: 'var(--color-primary)', display: 'block', marginBottom: '6px' }}>
-                                💡 現実社会での具体的な活かし方:
-                              </strong>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
-                                <div>
-                                  <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '12px' }}>【仕事・学業】</span>
-                                  <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '12px' }}>{skill.lifeApplication.work}</p>
-                                </div>
-                                <div>
-                                  <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '12px' }}>【プライベート】</span>
-                                  <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '12px' }}>{skill.lifeApplication.private}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ) : (
-                            <p style={{ color: 'var(--text-muted)', fontSize: '11px', fontStyle: 'italic' }}>
-                              ※このスキルトレーニングで80%以上のベストスコアを獲得すると、解説書がアンロックされます。
-                            </p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </section>
-              </div>
-            )}
-
-            {activeTab === 'bugEncyclopedia' && (
-              <div className="fade-in" style={{ marginTop: '16px' }}>
-                <section style={{ textAlign: 'left' }}>
+                  {/* Title of 脳内図鑑 */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                      <Brain size={20} style={{ color: 'var(--color-primary)' }} />
-                      脳内バグ図鑑
+                      <BookOpen size={20} style={{ color: 'var(--color-primary)' }} />
+                      脳内図鑑
                     </h2>
-                    <span style={{ fontSize: '13px', color: 'var(--text-muted)', background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '4px 12px', borderRadius: '12px', fontWeight: 'bold' }}>
-                      アンロック進捗: {(gameState.unlockedTypes || ["balancedThinker"]).length} / 12
-                    </span>
+                    
+                    {/* Sub-tab Navigation */}
+                    <div style={{ display: 'inline-flex', padding: '4px', borderRadius: '12px', background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)' }}>
+                      <button
+                        onClick={() => { playSound('click'); setLibrarySubTab('bug'); }}
+                        className={`btn ${librarySubTab === 'bug' ? 'btn-primary' : 'btn-secondary'}`}
+                        style={{
+                          borderRadius: '8px',
+                          padding: '6px 14px',
+                          fontSize: '12.5px',
+                          fontWeight: 'bold',
+                          background: librarySubTab === 'bug' ? 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)' : 'transparent',
+                          color: librarySubTab === 'bug' ? '#fff' : 'var(--text-secondary)',
+                          border: 'none',
+                          boxShadow: librarySubTab === 'bug' ? '0 0 10px rgba(6, 182, 212, 0.3)' : 'none',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                      >
+                        🐛 脳内バグ ({ (gameState.unlockedTypes || ["balancedThinker"]).length }/12)
+                      </button>
+                      <button
+                        onClick={() => { playSound('click'); setLibrarySubTab('skill'); }}
+                        className={`btn ${librarySubTab === 'skill' ? 'btn-primary' : 'btn-secondary'}`}
+                        style={{
+                          borderRadius: '8px',
+                          padding: '6px 14px',
+                          fontSize: '12.5px',
+                          fontWeight: 'bold',
+                          background: librarySubTab === 'skill' ? 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)' : 'transparent',
+                          color: librarySubTab === 'skill' ? '#fff' : 'var(--text-secondary)',
+                          border: 'none',
+                          boxShadow: librarySubTab === 'skill' ? '0 0 10px rgba(6, 182, 212, 0.3)' : 'none',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}
+                      >
+                        💡 思考スキル ({ skillsData.filter(skill => (gameState.scores[skill.id] || 0) >= 80).length }/{ skillsData.length })
+                      </button>
+                    </div>
                   </div>
 
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '24px' }}>
-                    診断や他人のスキャン、相性チェック（コード共有）によって見つかった思考バグのタイプがここに記録されます。
-                    他人のブレインコードを入力するか、他者スキャンを行うことで図鑑が埋まっていきます。
-                  </p>
+                  {librarySubTab === 'bug' ? (
+                    /* 脳内バグ図鑑のコンテンツ */
+                    <div className="fade-in">
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '24px' }}>
+                        診断や他人のスキャン、相性チェック（コード共有）によって見つかった思考バグのタイプがここに記録されます。
+                        他人のブレインコードを入力するか、他者スキャンを行うことで図鑑が埋まっていきます。
+                      </p>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-                    {Object.values(diagnosticTypes).map((type) => {
-                      const isUnlocked = (gameState.unlockedTypes || ["balancedThinker"]).includes(type.id);
-                      const isSelected = selectedBugId === type.id;
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                        {Object.values(diagnosticTypes).map((type) => {
+                          const isUnlocked = (gameState.unlockedTypes || ["balancedThinker"]).includes(type.id);
+                          const isSelected = selectedBugId === type.id;
 
-                      return (
-                        <div 
-                          key={type.id}
-                          className="glass-panel"
-                          style={{
-                            padding: '20px',
-                            background: isUnlocked 
-                              ? (isSelected ? 'rgba(139, 92, 246, 0.08)' : 'var(--glass-bg)')
-                              : 'var(--bg-badge-locked)',
-                            border: `1px solid ${isUnlocked ? (isSelected ? 'var(--color-primary)' : 'var(--border-color)') : 'var(--border-color)'}`,
-                            borderLeft: isUnlocked ? `4px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-cyan)'}` : '4px solid var(--border-color)',
-                            opacity: isUnlocked ? 1 : 0.45,
-                            borderRadius: '12px',
-                            transition: 'all 0.3s ease',
-                            cursor: isUnlocked ? 'pointer' : 'default'
-                          }}
-                          onClick={() => {
-                            if (isUnlocked) {
-                              playSound('click');
-                              setSelectedBugId(isSelected ? null : type.id);
-                            }
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                            <span style={{ fontSize: '32px', filter: isUnlocked ? 'none' : 'grayscale(100%) opacity(0.3)' }}>
-                              {isUnlocked ? type.emoji : '🔒'}
-                            </span>
-                            <div>
-                              <h3 style={{ fontSize: '15px', fontWeight: 'bold', color: isUnlocked ? 'var(--text-primary)' : 'var(--text-muted)', margin: 0 }}>
-                                {isUnlocked ? type.name : '未確認の脳内バグ (???)'}
-                              </h3>
-                              {isUnlocked && (
-                                <p style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', margin: '2px 0 0 0' }}>
-                                  {type.tagline}
+                          return (
+                            <div 
+                              key={type.id}
+                              className="glass-panel"
+                              style={{
+                                padding: '20px',
+                                background: isUnlocked 
+                                  ? (isSelected ? 'rgba(139, 92, 246, 0.08)' : 'var(--glass-bg)')
+                                  : 'var(--bg-badge-locked)',
+                                border: `1px solid ${isUnlocked ? (isSelected ? 'var(--color-primary)' : 'var(--border-color)') : 'var(--border-color)'}`,
+                                borderLeft: isUnlocked ? `4px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-cyan)'}` : '4px solid var(--border-color)',
+                                opacity: isUnlocked ? 1 : 0.45,
+                                borderRadius: '12px',
+                                transition: 'all 0.3s ease',
+                                cursor: isUnlocked ? 'pointer' : 'default'
+                              }}
+                              onClick={() => {
+                                if (isUnlocked) {
+                                  playSound('click');
+                                  setSelectedBugId(isSelected ? null : type.id);
+                                }
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                                <span style={{ fontSize: '32px', filter: isUnlocked ? 'none' : 'grayscale(100%) opacity(0.3)' }}>
+                                  {isUnlocked ? type.emoji : '🔒'}
+                                </span>
+                                <div>
+                                  <h3 style={{ fontSize: '15px', fontWeight: 'bold', color: isUnlocked ? 'var(--text-primary)' : 'var(--text-muted)', margin: 0 }}>
+                                    {isUnlocked ? type.name : '未確認の脳内バグ (???)'}
+                                  </h3>
+                                  {isUnlocked && (
+                                    <p style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', margin: '2px 0 0 0' }}>
+                                      {type.tagline}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+
+                              <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', lineHeight: '1.6', margin: 0 }}>
+                                {isUnlocked 
+                                  ? (type.description.length > 80 && !isSelected ? `${type.description.slice(0, 80)}...` : type.description)
+                                  : '他人のスキャンやコード入力（相性チェック）を行うとアンロックされます。'
+                                }
+                              </p>
+
+                              {/* アコーディオン詳細情報 */}
+                              {isUnlocked && isSelected && (
+                                <div 
+                                  className="fade-in"
+                                  style={{ 
+                                    marginTop: '16px', 
+                                    paddingTop: '16px', 
+                                    borderTop: '1px solid rgba(255,255,255,0.06)',
+                                    display: 'flex', 
+                                    flexDirection: 'column', 
+                                    gap: '12px' 
+                                  }}
+                                  onClick={(e) => e.stopPropagation()} // 親のクリックイベントを防ぐ
+                                >
+                                  <div style={{ background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
+                                    <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold' }}>💼 仕事でのバグ</span>
+                                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.workBug}</p>
+                                  </div>
+                                  <div style={{ background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
+                                    <span style={{ fontSize: '11px', color: '#f43f5e', fontWeight: 'bold' }}>🏡 私生活でのバグ</span>
+                                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.privateBug}</p>
+                                  </div>
+                                  <div style={{ background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
+                                    <span style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 'bold' }}>⚡ ふとした瞬間のクセ</span>
+                                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.dailyHabit}</p>
+                                  </div>
+                                  <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
+                                    <span style={{ display: 'block', fontSize: '11px', color: '#10b981', fontWeight: 'bold', marginBottom: '4px' }}>📋 取扱説明書</span>
+                                    <span style={{ display: 'block', fontSize: '10px', color: '#f43f5e', fontWeight: 'bold' }}>● 地雷ポイント</span>
+                                    <p style={{ margin: '2px 0 6px 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.torisetsu.jealousPoint}</p>
+                                    <span style={{ display: 'block', fontSize: '10px', color: '#10b981', fontWeight: 'bold' }}>● デバッグコマンド</span>
+                                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.torisetsu.debugSpell}</p>
+                                  </div>
+                                  {type.recommendedGame && (
+                                    <div style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
+                                      <span style={{ fontSize: '11px', color: 'var(--color-primary)', fontWeight: 'bold' }}>🎯 推奨デバッグトレーニング</span>
+                                      <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.recommendedReason}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    /* 思考スキル図鑑のコンテンツ */
+                    <div className="fade-in">
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '20px' }}>
+                        習得した思考スキルの概念と、それを日常生活や仕事でどう活用すべきかの実践的なアプローチを学べる解説書です。
+                        各スキルのトレーニングでベストスコア80%以上を獲得すると、解説ページがアンロックされます。
+                      </p>
+
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+                        {skillsData.map((skill) => {
+                          const score = gameState.scores[skill.id] || 0;
+                          const isUnlocked = score >= 80;
+
+                          return (
+                            <div 
+                              key={skill.id}
+                              className={`glass-panel skill-card ${isUnlocked ? 'unlocked' : ''}`}
+                              style={{ 
+                                borderLeftColor: isUnlocked ? 'var(--color-primary)' : 'var(--border-color)',
+                                opacity: isUnlocked ? 1 : 0.6
+                              }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '10px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  {isUnlocked ? (
+                                    <Unlock size={18} style={{ color: 'var(--color-primary)' }} />
+                                  ) : (
+                                    <Lock size={18} style={{ color: 'var(--text-muted)' }} />
+                                  )}
+                                  <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: isUnlocked ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                                    {skill.name}
+                                  </h3>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '220px' }}>
+                                  <div style={{ flex: 1, height: '6px', background: 'var(--bg-inner-box)', borderRadius: '3px', overflow: 'hidden' }}>
+                                    <div 
+                                      style={{ 
+                                        height: '100%', 
+                                        width: `${score}%`, 
+                                        background: isUnlocked ? 'var(--color-primary)' : 'var(--text-muted)',
+                                        borderRadius: '3px'
+                                      }} 
+                                    />
+                                  </div>
+                                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: isUnlocked ? 'var(--color-primary)' : 'var(--text-muted)', width: '80px', textAlign: 'right' }}>
+                                    {isUnlocked ? '習得完了' : `進捗 ${score}/80%`}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '12px' }}>
+                                {skill.desc}
+                              </p>
+
+                              {isUnlocked ? (
+                                <div 
+                                  className="fade-in"
+                                  style={{ 
+                                    background: 'rgba(139, 92, 246, 0.03)', 
+                                    border: '1px solid rgba(139, 92, 246, 0.1)', 
+                                    borderRadius: '8px', 
+                                    padding: '12px 16px', 
+                                    fontSize: '13px',
+                                    lineHeight: '1.5'
+                                  }}
+                                >
+                                  <strong style={{ color: 'var(--color-primary)', display: 'block', marginBottom: '6px' }}>
+                                    💡 現実社会での具体的な活かし方:
+                                  </strong>
+                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                                    <div>
+                                      <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '12px' }}>【仕事・学業】</span>
+                                      <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '12px' }}>{skill.lifeApplication.work}</p>
+                                    </div>
+                                    <div>
+                                      <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '12px' }}>【プライベート】</span>
+                                      <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '12px' }}>{skill.lifeApplication.private}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <p style={{ color: 'var(--text-muted)', fontSize: '11px', fontStyle: 'italic' }}>
+                                  ※このスキルトレーニングで80%以上のベストスコアを獲得すると、解説書がアンロックされます。
                                 </p>
                               )}
                             </div>
-                          </div>
-
-                          <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', lineHeight: '1.6', margin: 0 }}>
-                            {isUnlocked 
-                              ? (type.description.length > 80 && !isSelected ? `${type.description.slice(0, 80)}...` : type.description)
-                              : '他人のスキャンやコード入力（相性チェック）を行うとアンロックされます。'
-                            }
-                          </p>
-
-                          {/* アコーディオン詳細情報 */}
-                          {isUnlocked && isSelected && (
-                            <div 
-                              className="fade-in"
-                              style={{ 
-                                marginTop: '16px', 
-                                paddingTop: '16px', 
-                                borderTop: '1px solid rgba(255,255,255,0.06)',
-                                display: 'flex', 
-                                flexDirection: 'column', 
-                                gap: '12px' 
-                              }}
-                              onClick={(e) => e.stopPropagation()} // 親のクリックイベントを防ぐ
-                            >
-                              <div style={{ background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
-                                <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold' }}>💼 仕事でのバグ</span>
-                                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.workBug}</p>
-                              </div>
-                              <div style={{ background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
-                                <span style={{ fontSize: '11px', color: '#f43f5e', fontWeight: 'bold' }}>🏡 私生活でのバグ</span>
-                                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.privateBug}</p>
-                              </div>
-                              <div style={{ background: 'var(--bg-inner-box)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
-                                <span style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 'bold' }}>⚡ ふとした瞬間のクセ</span>
-                                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.dailyHabit}</p>
-                              </div>
-                              <div style={{ background: 'rgba(16, 185, 129, 0.05)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
-                                <span style={{ display: 'block', fontSize: '11px', color: '#10b981', fontWeight: 'bold', marginBottom: '4px' }}>📋 取扱説明書</span>
-                                <span style={{ display: 'block', fontSize: '10px', color: '#f43f5e', fontWeight: 'bold' }}>● 地雷ポイント</span>
-                                <p style={{ margin: '2px 0 6px 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.torisetsu.jealousPoint}</p>
-                                <span style={{ display: 'block', fontSize: '10px', color: '#10b981', fontWeight: 'bold' }}>● デバッグコマンド</span>
-                                <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.torisetsu.debugSpell}</p>
-                              </div>
-                              {type.recommendedGame && (
-                                <div style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px' }}>
-                                  <span style={{ fontSize: '11px', color: 'var(--color-primary)', fontWeight: 'bold' }}>🎯 推奨デバッグトレーニング</span>
-                                  <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{type.recommendedReason}</p>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </section>
               </div>
             )}
@@ -2014,6 +2227,9 @@ export default function Dashboard({
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '12px', lineHeight: '1.4', marginBottom: '16px' }}>
                 データを他の端末と同期・復元できます（英数字12文字のコードです）。
+                <span style={{ display: 'block', fontSize: '11px', color: 'var(--color-amber)', marginTop: '6px', fontWeight: '500' }}>
+                  ⚠️ キャッシュクリアで学習データが消去されるため、コードを手元に保存しておくと安心です。
+                </span>
               </p>
               <div 
                 onClick={onCopyClick}
@@ -2048,7 +2264,11 @@ export default function Dashboard({
                   <input 
                     type="text" 
                     value={spellInput}
-                    onChange={(e) => setSpellInput(e.target.value)}
+                    onChange={(e) => {
+                      setSpellInput(e.target.value);
+                      if (setSpellError) setSpellError('');
+                      if (setSpellSuccess) setSpellSuccess(false);
+                    }}
                     placeholder="英数字12文字を入力"
                     style={{
                       flex: 1,
