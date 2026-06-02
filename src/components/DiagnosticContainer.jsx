@@ -15,6 +15,8 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
   const [frictionResult, setFrictionResult] = useState(null);
   const [frictionError, setFrictionError] = useState("");
   const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [finalCalculatedScores, setFinalCalculatedScores] = useState(null);
+  const [finalCalculatedType, setFinalCalculatedType] = useState(null);
 
   const scanMessages = [
     "🧠 脳内ログをスキャン中...",
@@ -103,25 +105,23 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
   // Effect for analyzing phase animation
   useEffect(() => {
     let interval;
-    if (step === "analyzing") {
+    if (step === "analyzing" && finalCalculatedScores && finalCalculatedType) {
       interval = setInterval(() => {
         setScanMessageIndex((prev) => {
           if (prev >= scanMessages.length - 1) {
             clearInterval(interval);
-            // Complete analysis
-            const finalScores = calculateFinalScores();
-            setScores(finalScores);
-            const finalType = determineDiagnosticType(finalScores);
-            setResultType(finalType);
+            // Complete analysis animation, set pre-calculated results
+            setScores(finalCalculatedScores);
+            setResultType(finalCalculatedType);
             setStep("result");
             
             // 図鑑にタイプをアンロック追加
             if (onUnlockType) {
-              onUnlockType(finalType.id);
+              onUnlockType(finalCalculatedType.id);
             }
             
             if (onSaveDiagnostic && targetType === "self") {
-              onSaveDiagnostic(finalScores, finalType);
+              onSaveDiagnostic(finalCalculatedScores, finalCalculatedType);
             }
             return prev;
           }
@@ -130,7 +130,7 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
       }, 700);
     }
     return () => clearInterval(interval);
-  }, [step]);
+  }, [step, finalCalculatedScores, finalCalculatedType, targetType, onUnlockType, onSaveDiagnostic]);
 
   const shuffleArray = (array) => {
     const arr = [...array];
@@ -170,6 +170,19 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
     if (currentQuestionIndex < selectedQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
+      // Calculate final scores synchronously upon the 7th (last) question to avoid React async state batching lag
+      const total = { L: 0, C: 0, R: 0, E: 0 };
+      newAnswers.forEach((ans) => {
+        total.L += ans.L;
+        total.C += ans.C;
+        total.R += ans.R;
+        total.E += ans.E;
+      });
+      
+      const finalType = determineDiagnosticType(total);
+      setFinalCalculatedScores(total);
+      setFinalCalculatedType(finalType);
+
       // Move to analyzing
       setScanMessageIndex(0);
       setStep("analyzing");
