@@ -895,7 +895,7 @@ export default function Dashboard({
                     }}
                     className={`btn ${isActive ? 'btn-primary' : 'btn-secondary'}`}
                     style={{
-                      padding: '12px 20px',
+                      padding: isActive ? '10px 20px 12px 20px' : '12px 20px',
                       borderTopLeftRadius: '12px',
                       borderTopRightRadius: '12px',
                       borderBottomLeftRadius: '0px',
@@ -904,18 +904,20 @@ export default function Dashboard({
                       fontWeight: 'bold',
                       background: isActive 
                         ? 'var(--glass-bg)' 
-                        : 'rgba(10, 11, 16, 0.4)',
-                      color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        : 'rgba(255, 255, 255, 0.02)',
+                      color: isActive ? 'var(--color-primary)' : 'var(--text-secondary)',
+                      textShadow: isActive ? '0 0 8px var(--color-primary-glow)' : 'none',
                       border: '1px solid var(--border-color)',
-                      borderBottom: isActive ? '1px solid var(--glass-bg)' : '1px solid var(--border-color)',
-                      boxShadow: isActive ? '0 -4px 12px rgba(139, 92, 246, 0.05)' : 'none',
+                      borderTop: isActive ? '3px solid var(--color-primary)' : '1px solid var(--border-color)',
+                      borderBottom: isActive ? '1px solid transparent' : '1px solid var(--border-color)',
+                      boxShadow: isActive ? '0 -4px 12px rgba(139, 92, 246, 0.1)' : 'none',
                       marginBottom: '-1px',
                       zIndex: isActive ? 3 : 1,
                       display: 'flex',
                       alignItems: 'center',
                       gap: '6px',
                       cursor: isTabLocked ? 'not-allowed' : 'pointer',
-                      opacity: isTabLocked ? 0.5 : 1,
+                      opacity: isTabLocked ? 0.5 : (isActive ? 1 : 0.65),
                       transition: 'all 0.15s ease-in-out',
                       whiteSpace: 'nowrap'
                     }}
@@ -926,12 +928,13 @@ export default function Dashboard({
                       <span 
                         style={{ 
                           fontSize: '11px', 
-                          background: isActive ? 'rgba(139, 92, 246, 0.15)' : 'rgba(255,255,255,0.05)',
+                          background: isActive ? 'var(--color-primary-soft)' : 'rgba(255, 255, 255, 0.05)',
                           color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
                           padding: '2px 6px',
                           borderRadius: '6px',
                           marginLeft: '4px',
-                          fontWeight: 'bold'
+                          fontWeight: 'bold',
+                          border: isActive ? '1px solid rgba(139, 92, 246, 0.15)' : 'none'
                         }}
                       >
                         {tab.count}
