@@ -858,14 +858,19 @@ export default function Dashboard({
 
             {/* Tab Navigation */}
             <div 
+              className="hide-scrollbar"
               style={{ 
                 display: 'flex', 
-                gap: '12px', 
-                borderBottom: '1px solid var(--border-color)',
-                paddingBottom: '12px',
-                marginBottom: '8px',
-                marginTop: '16px',
-                flexWrap: 'wrap'
+                gap: '4px', 
+                paddingLeft: '16px',
+                zIndex: 2,
+                position: 'relative',
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                flexWrap: 'nowrap',
+                WebkitOverflowScrolling: 'touch',
+                marginTop: '24px'
               }}
             >
               {[
@@ -876,6 +881,7 @@ export default function Dashboard({
                 { id: 'achievements', label: '🏆 獲得実績', count: gameState.badges.filter(Boolean).length }
               ].map(tab => {
                 const isTabLocked = !isFullUnlocked && tab.id !== 'training' && tab.id !== 'encyclopedia' && tab.id !== 'bugNote' && tab.id !== 'mindTuningLog';
+                const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
@@ -887,24 +893,31 @@ export default function Dashboard({
                       playSound('click'); 
                       setActiveTab(tab.id); 
                     }}
-                    className={`btn ${activeTab === tab.id ? 'btn-primary' : 'btn-secondary'}`}
+                    className={`btn ${isActive ? 'btn-primary' : 'btn-secondary'}`}
                     style={{
-                      padding: '10px 18px',
-                      borderRadius: '12px',
+                      padding: '12px 20px',
+                      borderTopLeftRadius: '12px',
+                      borderTopRightRadius: '12px',
+                      borderBottomLeftRadius: '0px',
+                      borderBottomRightRadius: '0px',
                       fontSize: '13.5px',
                       fontWeight: 'bold',
-                      background: activeTab === tab.id 
-                        ? 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)' 
-                        : 'var(--bg-inner-box)',
-                      color: activeTab === tab.id ? '#fff' : 'var(--text-secondary)',
-                      border: activeTab === tab.id ? 'none' : '1px solid var(--border-color)',
-                      boxShadow: activeTab === tab.id ? '0 0 12px var(--color-primary-glow)' : 'none',
+                      background: isActive 
+                        ? 'var(--glass-bg)' 
+                        : 'rgba(10, 11, 16, 0.4)',
+                      color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                      border: '1px solid var(--border-color)',
+                      borderBottom: isActive ? '1px solid var(--glass-bg)' : '1px solid var(--border-color)',
+                      boxShadow: isActive ? '0 -4px 12px rgba(139, 92, 246, 0.05)' : 'none',
+                      marginBottom: '-1px',
+                      zIndex: isActive ? 3 : 1,
                       display: 'flex',
                       alignItems: 'center',
                       gap: '6px',
                       cursor: isTabLocked ? 'not-allowed' : 'pointer',
                       opacity: isTabLocked ? 0.5 : 1,
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                      transition: 'all 0.15s ease-in-out',
+                      whiteSpace: 'nowrap'
                     }}
                     title={isTabLocked ? "最初のゲームクリアで解放されます" : tab.label}
                   >
@@ -913,11 +926,12 @@ export default function Dashboard({
                       <span 
                         style={{ 
                           fontSize: '11px', 
-                          background: activeTab === tab.id ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)',
-                          color: activeTab === tab.id ? '#fff' : 'var(--text-muted)',
+                          background: isActive ? 'rgba(139, 92, 246, 0.15)' : 'rgba(255,255,255,0.05)',
+                          color: isActive ? 'var(--color-primary)' : 'var(--text-muted)',
                           padding: '2px 6px',
                           borderRadius: '6px',
-                          marginLeft: '4px'
+                          marginLeft: '4px',
+                          fontWeight: 'bold'
                         }}
                       >
                         {tab.count}
@@ -929,8 +943,23 @@ export default function Dashboard({
             </div>
 
             {/* Tab Contents */}
+            <div 
+              className="glass-panel"
+              style={{
+                borderTopLeftRadius: '0px',
+                borderTopRightRadius: '16px',
+                borderBottomLeftRadius: '16px',
+                borderBottomRightRadius: '16px',
+                border: '1px solid var(--border-color)',
+                background: 'var(--glass-bg)',
+                padding: isMobile ? '20px 16px' : '32px 28px',
+                position: 'relative',
+                zIndex: 1,
+                marginTop: '-1px'
+              }}
+            >
             {activeTab === 'training' && (
-              <div className="fade-in" style={{ marginTop: '16px' }}>
+              <div className="fade-in" style={{ marginTop: '0px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                   <h2 id="training-menu" style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
                     <TrendingUp size={20} style={{ color: 'var(--color-primary)' }} />
@@ -1195,7 +1224,7 @@ export default function Dashboard({
             )}
 
             {activeTab === 'encyclopedia' && (
-              <div className="fade-in" style={{ marginTop: '16px' }}>
+              <div className="fade-in" style={{ marginTop: '0px' }}>
                 <section style={{ textAlign: 'left' }}>
                   {/* Title of 脳内図鑑 */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
@@ -1444,7 +1473,7 @@ export default function Dashboard({
             )}
 
             {activeTab === 'bugNote' && (
-              <div className="fade-in" style={{ marginTop: '16px' }}>
+              <div className="fade-in" style={{ marginTop: '0px' }}>
                 <section style={{ textAlign: 'left' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
@@ -1685,7 +1714,7 @@ export default function Dashboard({
             )}
 
             {activeTab === 'mindTuningLog' && (
-              <div id="tuning-log-section" className="fade-in" style={{ marginTop: '16px' }}>
+              <div id="tuning-log-section" className="fade-in" style={{ marginTop: '0px' }}>
                 <section style={{ textAlign: 'left' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
@@ -1797,7 +1826,7 @@ export default function Dashboard({
             )}
 
             {activeTab === 'achievements' && (
-              <div className="fade-in" style={{ marginTop: '16px' }}>
+              <div className="fade-in" style={{ marginTop: '0px' }}>
                 {/* Achievements Section */}
                 <section style={{ textAlign: 'left' }}>
                   <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: '0' }}>
@@ -1867,6 +1896,7 @@ export default function Dashboard({
                 </section>
               </div>
             )}
+            </div>
 
           </div>
 
