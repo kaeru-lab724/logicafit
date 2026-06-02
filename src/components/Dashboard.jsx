@@ -213,7 +213,7 @@ export default function Dashboard({
     : (gameState.diagnosticType || null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }} className="fade-in">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} className="fade-in">
       {isNewUser ? (
         /* ========================================================
            ① 新規未受診フェーズ（診断ファースト誘導）
@@ -969,7 +969,10 @@ export default function Dashboard({
                 padding: isMobile ? '16px 10px' : '32px 28px',
                 position: 'relative',
                 zIndex: 1,
-                marginTop: '-1px'
+                marginTop: '-1px',
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box'
               }}
             >
             {activeTab === 'training' && (
@@ -1131,7 +1134,7 @@ export default function Dashboard({
                       <div 
                         className="glass-panel lab-banner-active"
                         style={{
-                           padding: '24px 32px',
+                           padding: isMobile ? '20px 16px' : '24px 32px',
                            background: 'linear-gradient(135deg, var(--color-primary-soft) 0%, var(--glass-bg) 100%)',
                            border: '1px solid var(--color-primary)',
                            borderLeft: '5px solid var(--color-primary)',
@@ -1143,7 +1146,9 @@ export default function Dashboard({
                            gap: '20px',
                            boxShadow: 'var(--glass-shadow)',
                            position: 'relative',
-                           overflow: 'hidden'
+                           overflow: 'hidden',
+                           width: '100%',
+                           boxSizing: 'border-box'
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -1188,7 +1193,7 @@ export default function Dashboard({
                         onClick={() => playSound('incorrect')}
                         className="glass-panel"
                         style={{
-                          padding: '24px 32px',
+                          padding: isMobile ? '20px 16px' : '24px 32px',
                           background: 'var(--bg-badge-locked)',
                           border: '1px solid var(--border-color)',
                           borderLeft: '5px solid var(--border-color)',
@@ -1199,7 +1204,9 @@ export default function Dashboard({
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           flexWrap: 'wrap',
-                          gap: '20px'
+                          gap: '20px',
+                          width: '100%',
+                          boxSizing: 'border-box'
                         }}
                         title="レベル5に到達すると解放されます"
                       >
@@ -1313,7 +1320,9 @@ export default function Dashboard({
                                 opacity: isUnlocked ? 1 : 0.45,
                                 borderRadius: '12px',
                                 transition: 'all 0.3s ease',
-                                cursor: isUnlocked ? 'pointer' : 'default'
+                                cursor: isUnlocked ? 'pointer' : 'default',
+                                width: '100%',
+                                boxSizing: 'border-box'
                               }}
                               onClick={() => {
                                 if (isUnlocked) {
@@ -1410,7 +1419,9 @@ export default function Dashboard({
                               className={`glass-panel skill-card ${isUnlocked ? 'unlocked' : ''}`}
                               style={{ 
                                 borderLeftColor: isUnlocked ? 'var(--color-primary)' : 'var(--border-color)',
-                                opacity: isUnlocked ? 1 : 0.6
+                                opacity: isUnlocked ? 1 : 0.6,
+                                width: '100%',
+                                boxSizing: 'border-box'
                               }}
                             >
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '10px' }}>
@@ -1629,7 +1640,9 @@ export default function Dashboard({
                                   borderLeft: `5px solid ${bug.solved ? 'var(--text-muted)' : cat.color}`,
                                   borderRadius: '12px',
                                   transition: 'all 0.3s ease',
-                                  opacity: bug.solved ? 0.7 : 1
+                                  opacity: bug.solved ? 0.7 : 1,
+                                  width: '100%',
+                                  boxSizing: 'border-box'
                                 }}
                               >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
@@ -1684,6 +1697,8 @@ export default function Dashboard({
                                       fontSize: '12px', 
                                       color: bug.solved ? 'var(--text-muted)' : 'var(--color-cyan)', 
                                       whiteSpace: 'pre-wrap',
+                                      wordBreak: 'break-word',
+                                      overflowWrap: 'break-word',
                                       lineHeight: '1.5'
                                     }}
                                   >
@@ -1780,12 +1795,14 @@ export default function Dashboard({
                             key={log.id} 
                             className="glass-panel" 
                             style={{ 
-                              padding: '20px', 
+                              padding: isMobile ? '16px 12px' : '20px', 
                               background: 'var(--glass-bg)',
                               border: '1px solid var(--border-color)',
                               borderLeft: `5px solid ${log.vibe === 'anxious' ? 'var(--color-cyan)' : log.vibe === 'irritated' ? 'var(--color-rose)' : log.vibe === 'sad' ? '#818cf8' : log.vibe === 'rushed' ? 'var(--color-amber)' : '#10b981'}`,
                               borderRadius: '12px',
-                              transition: 'all 0.3s ease'
+                              transition: 'all 0.3s ease',
+                              width: '100%',
+                              boxSizing: 'border-box'
                             }}
                           >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
@@ -1819,13 +1836,13 @@ export default function Dashboard({
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                               <div style={{ background: 'rgba(244, 63, 94, 0.02)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #f43f5e' }}>
                                 <span style={{ display: 'block', fontSize: '10.5px', color: '#f43f5e', fontWeight: 'bold', marginBottom: '4px' }}>🔴 デバッグ前 (生の本音)</span>
-                                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', fontStyle: 'italic' }}>
+                                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', fontStyle: 'italic', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                   「{log.rawText}」
                                 </p>
                               </div>
                               <div style={{ background: 'rgba(16, 185, 129, 0.04)', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #10b981' }}>
                                 <span style={{ display: 'block', fontSize: '10.5px', color: '#10b981', fontWeight: 'bold', marginBottom: '4px' }}>🟢 デバッグ後 (事実ベース)</span>
-                                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.5', fontWeight: '500' }}>
+                                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.5', fontWeight: '500', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                                   「{log.refactoredText}」
                                 </p>
                               </div>
@@ -1879,7 +1896,9 @@ export default function Dashboard({
                             boxShadow: isUnlocked 
                               ? `0 8px 24px rgba(0, 0, 0, 0.08), 0 0 15px rgba(${badge.colorRgb}, 0.08)` 
                               : 'none',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            width: '100%',
+                            boxSizing: 'border-box'
                           }}
                         >
                           <div 
@@ -1931,7 +1950,8 @@ export default function Dashboard({
                 borderRadius: '16px',
                 width: '100%',
                 maxWidth: '450px',
-                margin: '0 auto'
+                margin: '0 auto',
+                boxSizing: 'border-box'
               }}
             >
               <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-secondary)', marginBottom: '16px' }}>
@@ -2056,7 +2076,7 @@ export default function Dashboard({
             <div 
               className="glass-panel"
               style={{
-                padding: '24px',
+                padding: isMobile ? '20px 16px' : '24px',
                 borderLeft: '4px solid #10b981',
                 background: 'rgba(16, 185, 129, 0.01)',
                 display: 'flex',
@@ -2166,7 +2186,7 @@ export default function Dashboard({
             <div 
               className="glass-panel" 
               style={{  
-                padding: '32px 24px', 
+                padding: isMobile ? '20px 16px' : '32px 24px', 
                 borderLeft: '4px solid var(--color-cyan)',
                 background: 'rgba(6, 182, 212, 0.01)',
                 display: 'flex',
