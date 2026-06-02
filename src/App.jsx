@@ -893,7 +893,9 @@ export default function App() {
           padding: isMobile ? '14px 16px' : '16px 24px',
           marginTop: '24px',
           borderRadius: '16px',
-          borderWidth: '1px'
+          borderWidth: '1px',
+          width: '100%',
+          boxSizing: 'border-box'
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto' }}>

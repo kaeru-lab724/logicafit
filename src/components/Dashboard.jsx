@@ -263,7 +263,7 @@ export default function Dashboard({
                   tagline: currentType?.tagline || '思考のデバッグジムへようこそ',
                   desc: (
                     <>
-                      <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px' }}>
+                      <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                         {currentType?.description || charClass?.desc}
                       </p>
                       
@@ -359,7 +359,7 @@ export default function Dashboard({
                   title: "認知のバグを暴く思考ジム",
                   tagline: "なぜか話が噛み合わない…そのアタマの偏りをデバッグする",
                   desc: (
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px' }}>
+                    <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                       LogiFitは、3分間のレントゲン（思考診断）であなたの認知の偏りを暴き、4つの思考ルーム（ロジカル、クリティカル、ラディカル、エモーショナル）でゲーム感覚で思考力をデバッグ・強化するジムです。
                     </p>
                   ),
@@ -392,7 +392,7 @@ export default function Dashboard({
                   title: "「脳内デバッグ・ラボ」へ進化",
                   tagline: "HPや制限時間によるゲームオーバーを撤廃しました",
                   desc: (
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px' }}>
+                    <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                       『へりくつ魔獣討伐』を廃止し、本質的な思考デバッグへリニューアル！HP・制限時間によるゲームオーバーをなくし、納得いくまで解説を読んで思考力を磨ける仕様になりました。
                     </p>
                   ),
@@ -438,7 +438,7 @@ export default function Dashboard({
                   title: "脳のメモリを解放する「思考調律」",
                   tagline: "モヤモヤ・イライラをデバッグする、3分の新習慣",
                   desc: (
-                    <div style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '14px', textAlign: 'left' }}>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '14px', textAlign: 'left', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                       <p style={{ margin: '0 0 8px 0' }}>
                         日常生活や仕事でのモヤモヤ・イライラは脳のメモリ（RAM）を浪費し、集中力や判断力を低下させます。
                       </p>
@@ -579,7 +579,10 @@ export default function Dashboard({
                     minHeight: isMobile ? 'auto' : '370px',
                     height: (isAccordionOpen || activeSlide === 3 || isMobile) ? 'auto' : '370px',
                     overflow: 'visible',
-                    transition: 'border-left-color 0.3s ease'
+                    transition: 'border-left-color 0.3s ease',
+                    width: '100%',
+                    maxWidth: '100%',
+                    boxSizing: 'border-box'
                   }}
                 >
                   <div 
@@ -589,7 +592,11 @@ export default function Dashboard({
                       display: 'flex', 
                       flexDirection: 'column', 
                       flexGrow: 1,
-                      justifyContent: 'space-between'
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      maxWidth: '100%',
+                      boxSizing: 'border-box',
+                      minWidth: 0
                     }}
                   >
                     <div>
