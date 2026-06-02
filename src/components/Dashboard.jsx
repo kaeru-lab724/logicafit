@@ -955,7 +955,7 @@ export default function Dashboard({
                 borderBottomRightRadius: '16px',
                 border: '1px solid var(--border-color)',
                 background: 'var(--glass-bg)',
-                padding: isMobile ? '20px 16px' : '32px 28px',
+                padding: isMobile ? '16px 10px' : '32px 28px',
                 position: 'relative',
                 zIndex: 1,
                 marginTop: '-1px'
@@ -986,7 +986,7 @@ export default function Dashboard({
                           key={room.id}
                           className="glass-panel"
                           style={{
-                            padding: '24px',
+                            padding: isMobile ? '16px 12px' : '24px',
                             border: `1px solid var(--border-color)`,
                             borderLeft: `5px solid ${room.borderColor}`,
                             background: isRoomUnlocked ? 'var(--glass-bg)' : 'var(--bg-badge-locked)',
@@ -1044,8 +1044,8 @@ export default function Dashboard({
                           {/* Room Content (Games & Spinoffs) */}
                           <div style={{ 
                             display: 'grid', 
-                            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-                            gap: '20px' 
+                            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', 
+                            gap: isMobile ? '12px' : '20px' 
                           }}>
                             {/* Active Games */}
                             {room.games.map(game => {
@@ -1063,7 +1063,7 @@ export default function Dashboard({
                                   }}
                                   className={`glass-panel ${isRoomUnlocked ? 'hover-lift' : ''} room-${room.id}`}
                                   style={{ 
-                                    padding: '20px', 
+                                    padding: isMobile ? '16px 12px' : '20px', 
                                     cursor: isRoomUnlocked ? 'pointer' : 'not-allowed',
                                     border: '1px solid var(--border-color)',
                                     borderRadius: '12px',
@@ -1283,7 +1283,7 @@ export default function Dashboard({
                         他人のブレインコードを入力するか、他者スキャンを行うことで図鑑が埋まっていきます。
                       </p>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', gap: isMobile ? '12px' : '20px' }}>
                         {Object.values(diagnosticTypes).map((type) => {
                           const isUnlocked = (gameState.unlockedTypes || ["balancedThinker"]).includes(type.id);
                           const isSelected = selectedBugId === type.id;
@@ -1293,7 +1293,7 @@ export default function Dashboard({
                               key={type.id}
                               className="glass-panel"
                               style={{
-                                padding: '20px',
+                                padding: isMobile ? '16px 12px' : '20px',
                                 background: isUnlocked 
                                   ? (isSelected ? 'rgba(139, 92, 246, 0.08)' : 'var(--glass-bg)')
                                   : 'var(--bg-badge-locked)',
@@ -1388,7 +1388,7 @@ export default function Dashboard({
                         各スキルのトレーニングでベストスコア80%以上を獲得すると、解説ページがアンロックされます。
                       </p>
 
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(320px, 1fr))", gap: isMobile ? "12px" : "20px" }}>
                         {skillsData.map((skill) => {
                           const score = gameState.scores[skill.id] || 0;
                           const isUnlocked = score >= 80;
@@ -1449,7 +1449,7 @@ export default function Dashboard({
                                   <strong style={{ color: 'var(--color-primary)', display: 'block', marginBottom: '6px' }}>
                                     💡 現実社会での具体的な活かし方:
                                   </strong>
-                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
                                     <div>
                                       <span style={{ color: 'var(--text-primary)', fontWeight: 'bold', fontSize: '12px' }}>【仕事・学業】</span>
                                       <p style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '12px' }}>{skill.lifeApplication.work}</p>
@@ -1566,11 +1566,11 @@ export default function Dashboard({
                     return (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                         {/* カテゴリー別集計バー */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))', gap: isMobile ? '12px' : '16px' }}>
                           {Object.entries(categoryCounts).map(([key, value]) => {
                             const percent = value.total > 0 ? Math.round(((value.total - value.active) / value.total) * 100) : 100;
                             return (
-                              <div key={key} className="glass-panel" style={{ padding: '16px', background: 'var(--glass-bg)', border: '1px solid var(--border-color)', borderRadius: '12px' }}>
+                              <div key={key} className="glass-panel" style={{ padding: isMobile ? '12px' : '16px', background: 'var(--glass-bg)', border: '1px solid var(--border-color)', borderRadius: '12px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                   <span style={{ fontSize: '13px', fontWeight: 'bold', color: value.color }}>{value.name}</span>
                                   <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>デバッグ率: {percent}%</span>
@@ -1612,7 +1612,7 @@ export default function Dashboard({
                                 key={bug.id} 
                                 className="glass-panel" 
                                 style={{ 
-                                  padding: '20px', 
+                                  padding: isMobile ? '16px 12px' : '20px', 
                                   background: bug.solved ? 'rgba(255,255,255,0.01)' : 'var(--glass-bg)',
                                   border: bug.solved ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${cat.color}`,
                                   borderLeft: `5px solid ${bug.solved ? 'var(--text-muted)' : cat.color}`,
@@ -1842,7 +1842,7 @@ export default function Dashboard({
                     さらに高いスコアや多様なトレーニングの全制覇を目指して、すべてのバッジをアンロックしましょう！
                   </p>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(130px, 1fr))' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: isMobile ? '10px' : '16px' }}>
                     {badgeDetails.map((badge, idx) => {
                       const isUnlocked = gameState.badges[idx];
                       return (
@@ -1855,7 +1855,7 @@ export default function Dashboard({
                             setShowBadgeModal(true);
                           }}
                           style={{
-                            padding: '16px',
+                            padding: isMobile ? '10px' : '16px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '14px',
