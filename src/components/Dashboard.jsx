@@ -958,7 +958,7 @@ export default function Dashboard({
 
             {/* Tab Contents */}
             <div 
-              className="glass-panel"
+              className="glass-panel tab-content-responsive"
               style={{
                 borderTopLeftRadius: '0px',
                 borderTopRightRadius: '16px',
@@ -966,13 +966,9 @@ export default function Dashboard({
                 borderBottomRightRadius: '16px',
                 border: '1px solid var(--border-color)',
                 background: 'var(--glass-bg)',
-                padding: isMobile ? '16px 10px' : '32px 28px',
                 position: 'relative',
                 zIndex: 1,
-                marginTop: '-1px',
-                width: '100%',
-                maxWidth: '100%',
-                boxSizing: 'border-box'
+                marginTop: '-1px'
               }}
             >
             {activeTab === 'training' && (
@@ -998,9 +994,8 @@ export default function Dashboard({
                       return (
                         <div 
                           key={room.id}
-                          className="glass-panel"
+                          className="glass-panel dashboard-responsive-panel"
                           style={{
-                            padding: isMobile ? '16px 12px' : '24px',
                             border: `1px solid var(--border-color)`,
                             borderLeft: `5px solid ${room.borderColor}`,
                             background: isRoomUnlocked ? 'var(--glass-bg)' : 'var(--bg-badge-locked)',
@@ -1056,11 +1051,7 @@ export default function Dashboard({
                           </div>
 
                           {/* Room Content (Games & Spinoffs) */}
-                          <div style={{ 
-                            display: 'grid', 
-                            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', 
-                            gap: isMobile ? '12px' : '20px' 
-                          }}>
+                          <div className="grid-training-responsive">
                             {/* Active Games */}
                             {room.games.map(game => {
                               const score = gameState.scores[game.scoreKey] || 0;
@@ -1075,9 +1066,8 @@ export default function Dashboard({
                                     playSound('click');
                                     setActiveGame(game.id);
                                   }}
-                                  className={`glass-panel ${isRoomUnlocked ? 'hover-lift' : ''} room-${room.id}`}
+                                  className={`glass-panel ${isRoomUnlocked ? 'hover-lift' : ''} room-${room.id} dashboard-responsive-panel`}
                                   style={{ 
-                                    padding: isMobile ? '16px 12px' : '20px', 
                                     cursor: isRoomUnlocked ? 'pointer' : 'not-allowed',
                                     border: '1px solid var(--border-color)',
                                     borderRadius: '12px',
@@ -1301,7 +1291,7 @@ export default function Dashboard({
                         他人のブレインコードを入力するか、他者スキャンを行うことで図鑑が埋まっていきます。
                       </p>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))', gap: isMobile ? '12px' : '20px' }}>
+                      <div className="grid-training-responsive">
                         {Object.values(diagnosticTypes).map((type) => {
                           const isUnlocked = (gameState.unlockedTypes || ["balancedThinker"]).includes(type.id);
                           const isSelected = selectedBugId === type.id;
@@ -1309,9 +1299,8 @@ export default function Dashboard({
                           return (
                             <div 
                               key={type.id}
-                              className="glass-panel"
+                              className="glass-panel dashboard-responsive-panel"
                               style={{
-                                padding: isMobile ? '16px 12px' : '20px',
                                 background: isUnlocked 
                                   ? (isSelected ? 'rgba(139, 92, 246, 0.08)' : 'var(--glass-bg)')
                                   : 'var(--bg-badge-locked)',
@@ -1320,9 +1309,7 @@ export default function Dashboard({
                                 opacity: isUnlocked ? 1 : 0.45,
                                 borderRadius: '12px',
                                 transition: 'all 0.3s ease',
-                                cursor: isUnlocked ? 'pointer' : 'default',
-                                width: '100%',
-                                boxSizing: 'border-box'
+                                cursor: isUnlocked ? 'pointer' : 'default'
                               }}
                               onClick={() => {
                                 if (isUnlocked) {
@@ -1408,7 +1395,7 @@ export default function Dashboard({
                         各スキルのトレーニングでベストスコア80%以上を獲得すると、解説ページがアンロックされます。
                       </p>
 
-                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(320px, 1fr))", gap: isMobile ? "12px" : "20px" }}>
+                      <div className="grid-skills-responsive">
                         {skillsData.map((skill) => {
                           const score = gameState.scores[skill.id] || 0;
                           const isUnlocked = score >= 80;
@@ -1416,12 +1403,10 @@ export default function Dashboard({
                           return (
                             <div 
                               key={skill.id}
-                              className={`glass-panel skill-card ${isUnlocked ? 'unlocked' : ''}`}
+                              className={`glass-panel skill-card ${isUnlocked ? 'unlocked' : ''} dashboard-responsive-panel`}
                               style={{ 
                                 borderLeftColor: isUnlocked ? 'var(--color-primary)' : 'var(--border-color)',
-                                opacity: isUnlocked ? 1 : 0.6,
-                                width: '100%',
-                                boxSizing: 'border-box'
+                                opacity: isUnlocked ? 1 : 0.6
                               }}
                             >
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '10px' }}>
@@ -1588,11 +1573,11 @@ export default function Dashboard({
                     return (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                         {/* カテゴリー別集計バー */}
-                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))', gap: isMobile ? '12px' : '16px' }}>
+                        <div className="grid-summary-responsive">
                           {Object.entries(categoryCounts).map(([key, value]) => {
                             const percent = value.total > 0 ? Math.round(((value.total - value.active) / value.total) * 100) : 100;
                             return (
-                              <div key={key} className="glass-panel" style={{ padding: isMobile ? '12px' : '16px', background: 'var(--glass-bg)', border: '1px solid var(--border-color)', borderRadius: '12px' }}>
+                              <div key={key} className="glass-panel dashboard-responsive-panel" style={{ background: 'var(--glass-bg)', border: '1px solid var(--border-color)', borderRadius: '12px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                   <span style={{ fontSize: '13px', fontWeight: 'bold', color: value.color }}>{value.name}</span>
                                   <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>デバッグ率: {percent}%</span>
@@ -1632,17 +1617,14 @@ export default function Dashboard({
                             return (
                               <div 
                                 key={bug.id} 
-                                className="glass-panel" 
+                                className="glass-panel dashboard-responsive-panel" 
                                 style={{ 
-                                  padding: isMobile ? '16px 12px' : '20px', 
                                   background: bug.solved ? 'rgba(255,255,255,0.01)' : 'var(--glass-bg)',
                                   border: bug.solved ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${cat.color}`,
                                   borderLeft: `5px solid ${bug.solved ? 'var(--text-muted)' : cat.color}`,
                                   borderRadius: '12px',
                                   transition: 'all 0.3s ease',
-                                  opacity: bug.solved ? 0.7 : 1,
-                                  width: '100%',
-                                  boxSizing: 'border-box'
+                                  opacity: bug.solved ? 0.7 : 1
                                 }}
                               >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
@@ -1793,16 +1775,13 @@ export default function Dashboard({
                         return (
                           <div 
                             key={log.id} 
-                            className="glass-panel" 
+                            className="glass-panel dashboard-responsive-panel" 
                             style={{ 
-                              padding: isMobile ? '16px 12px' : '20px', 
                               background: 'var(--glass-bg)',
                               border: '1px solid var(--border-color)',
                               borderLeft: `5px solid ${log.vibe === 'anxious' ? 'var(--color-cyan)' : log.vibe === 'irritated' ? 'var(--color-rose)' : log.vibe === 'sad' ? '#818cf8' : log.vibe === 'rushed' ? 'var(--color-amber)' : '#10b981'}`,
                               borderRadius: '12px',
-                              transition: 'all 0.3s ease',
-                              width: '100%',
-                              boxSizing: 'border-box'
+                              transition: 'all 0.3s ease'
                             }}
                           >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
@@ -1870,20 +1849,19 @@ export default function Dashboard({
                     さらに高いスコアや多様なトレーニングの全制覇を目指して、すべてのバッジをアンロックしましょう！
                   </p>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(130px, 1fr))' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: isMobile ? '10px' : '16px' }}>
+                  <div className="grid-badges-responsive">
                     {badgeDetails.map((badge, idx) => {
                       const isUnlocked = gameState.badges[idx];
                       return (
                         <div 
                           key={idx}
-                          className="glass-panel hover-lift"
+                          className="glass-panel hover-lift dashboard-responsive-panel"
                           onClick={() => {
                             playSound('click');
                             setSelectedBadgeIndex(idx);
                             setShowBadgeModal(true);
                           }}
                           style={{
-                            padding: isMobile ? '10px' : '16px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '14px',
@@ -1896,9 +1874,7 @@ export default function Dashboard({
                             boxShadow: isUnlocked 
                               ? `0 8px 24px rgba(0, 0, 0, 0.08), 0 0 15px rgba(${badge.colorRgb}, 0.08)` 
                               : 'none',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            width: '100%',
-                            boxSizing: 'border-box'
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                           }}
                         >
                           <div 
@@ -1938,9 +1914,8 @@ export default function Dashboard({
             
             {/* ① 思考力パラメーター (Radar Chart Panel) */}
             <div 
-              className="glass-panel"
+              className="glass-panel dashboard-responsive-panel"
               style={{
-                padding: isMobile ? '20px 16px' : '24px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -1948,10 +1923,8 @@ export default function Dashboard({
                 background: 'var(--glass-bg)',
                 border: '1px solid var(--border-color)',
                 borderRadius: '16px',
-                width: '100%',
                 maxWidth: '450px',
-                margin: '0 auto',
-                boxSizing: 'border-box'
+                margin: '0 auto'
               }}
             >
               <div style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-secondary)', marginBottom: '16px' }}>
@@ -2074,9 +2047,8 @@ export default function Dashboard({
 
             {/* ② 環境音・ASMR設定 (Sound Environment Panel) */}
             <div 
-              className="glass-panel"
+              className="glass-panel dashboard-responsive-panel"
               style={{
-                padding: isMobile ? '20px 16px' : '24px',
                 borderLeft: '4px solid #10b981',
                 background: 'rgba(16, 185, 129, 0.01)',
                 display: 'flex',
@@ -2184,9 +2156,8 @@ export default function Dashboard({
 
             {/* ③ 脳内摩擦係数（相性）チェック (Friction Coefficient Matcher) */}
             <div 
-              className="glass-panel" 
+              className="glass-panel matcher-panel-responsive" 
               style={{  
-                padding: isMobile ? '20px 16px' : '32px 24px', 
                 borderLeft: '4px solid var(--color-cyan)',
                 background: 'rgba(6, 182, 212, 0.01)',
                 display: 'flex',
@@ -2294,7 +2265,7 @@ export default function Dashboard({
             </div>
 
             {/* ③ ブレインコード（同期・復元）(Alphanumeric Brain Code Backup Box) */}
-            <div className="glass-panel" style={{ padding: '20px' }}>
+            <div className="glass-panel dashboard-responsive-panel" style={{ background: 'var(--glass-bg)' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <KeyRound size={18} style={{ color: 'var(--color-primary)' }} />
                 ブレインコード（同期・復元）
@@ -2373,7 +2344,9 @@ export default function Dashboard({
                 background: 'rgba(16, 185, 129, 0.01)',
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                width: '100%',
+                boxSizing: 'border-box'
               }}
             >
               {/* アイキャッチ画像 */}

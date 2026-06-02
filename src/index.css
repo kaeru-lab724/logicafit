@@ -957,3 +957,127 @@ body.light-theme .lab-banner-active:hover {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* ==========================================================================
+   PURE CSS RESPONSIVE REFACTORING (ダッシュボード用レスポンシブ大改修)
+   ========================================================================== */
+
+/* 全パネル共通のモバイル強制制約 */
+.dashboard-responsive-panel {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 16px 12px !important; /* モバイルの基本パディング */
+}
+
+@media (min-width: 768px) {
+  .dashboard-responsive-panel {
+    padding: 24px !important;
+  }
+}
+
+/* ラボバナー用の特別なレスポンシブパディング */
+.lab-banner-responsive {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 20px 16px !important;
+}
+
+@media (min-width: 768px) {
+  .lab-banner-responsive {
+    padding: 24px 32px !important;
+  }
+}
+
+/* タブコンテンツ全体の親コンテナ用 */
+.tab-content-responsive {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 16px 10px !important;
+}
+
+@media (min-width: 768px) {
+  .tab-content-responsive {
+    padding: 32px 28px !important;
+  }
+}
+
+/* 相性チェックパネル等の大きめのパディング */
+.matcher-panel-responsive {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 20px 16px !important;
+}
+
+@media (min-width: 768px) {
+  .matcher-panel-responsive {
+    padding: 32px 24px !important;
+  }
+}
+
+/* グリッドレイアウト（トレーニングカード等） */
+.grid-training-responsive {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 768px) {
+  .grid-training-responsive {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+  }
+}
+
+/* グリッドレイアウト（実績バッジ等） */
+.grid-badges-responsive {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 768px) {
+  .grid-badges-responsive {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
+
+/* グリッドレイアウト（スキル進捗カード等） */
+.grid-skills-responsive {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 768px) {
+  .grid-skills-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+    gap: 20px !important;
+  }
+}
+
+/* グリッドレイアウト（バグノートのサマリー等） */
+.grid-summary-responsive {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 768px) {
+  .grid-summary-responsive {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
