@@ -110,6 +110,9 @@ export default function Dashboard({
   const [isHovered, setIsHovered] = useState(false);
   const [librarySubTab, setLibrarySubTab] = useState('bug'); // 'bug' or 'skill'
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showBadgeModal, setShowBadgeModal] = useState(false);
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = useState(null);
+  const [copiedBadgeIdx, setCopiedBadgeIdx] = useState(null);
 
   const { 
     bgmType, 
@@ -1813,20 +1816,27 @@ export default function Dashboard({
                       return (
                         <div 
                           key={idx}
-                          className="glass-panel"
+                          className="glass-panel hover-lift"
+                          onClick={() => {
+                            playSound('click');
+                            setSelectedBadgeIndex(idx);
+                            setShowBadgeModal(true);
+                          }}
                           style={{
                             padding: '16px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '14px',
                             opacity: isUnlocked ? 1 : 0.4,
+                            cursor: 'pointer',
                             background: isUnlocked 
                               ? 'var(--bg-badge-unlocked)' 
                               : 'var(--bg-badge-locked)',
                             border: isUnlocked ? `1px solid ${badge.color}` : '1px solid var(--border-badge-locked)',
                             boxShadow: isUnlocked 
                               ? `0 8px 24px rgba(0, 0, 0, 0.08), 0 0 15px rgba(${badge.colorRgb}, 0.08)` 
-                              : 'none'
+                              : 'none',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                           }}
                         >
                           <div 
@@ -2421,6 +2431,181 @@ export default function Dashboard({
           </div>
         </div>
       </>)}
+      {showBadgeModal && selectedBadgeIndex !== null && (() => {
+        const badge = badgeDetails[selectedBadgeIndex];
+        const isUnlocked = gameState.badges[selectedBadgeIndex];
+
+        return (
+          <div className="modal-overlay" onClick={() => setShowBadgeModal(false)}>
+            <div 
+              className="modal-content glass-panel" 
+              onClick={(e) => e.stopPropagation()}
+              style={{ 
+                maxWidth: '520px', 
+                padding: '32px',
+                textAlign: 'center',
+                boxShadow: isUnlocked 
+                  ? `0 20px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(${badge.colorRgb}, 0.15)` 
+                  : '0 20px 40px rgba(0, 0, 0, 0.55)'
+              }}
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setShowBadgeModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background 0.2s'
+                }}
+              >
+                &times;
+              </button>
+
+              {/* Badge Icon */}
+              <div 
+                style={{ 
+                  background: isUnlocked ? `rgba(${badge.colorRgb}, 0.08)` : 'rgba(255, 255, 255, 0.02)',
+                  border: isUnlocked ? `1px solid ${badge.color}` : '1px solid var(--border-color)',
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '24px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 20px',
+                  boxShadow: isUnlocked ? `0 0 20px rgba(${badge.colorRgb}, 0.25)` : 'none',
+                  color: isUnlocked ? badge.color : 'var(--text-badge-locked)'
+                }}
+              >
+                {isUnlocked ? <Sparkles size={36} /> : <Lock size={36} />}
+              </div>
+
+              {/* Badge Title */}
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800', marginBottom: '6px', color: 'var(--text-primary)' }}>
+                {isUnlocked ? badge.title : '未確認の実績バッジ'}
+              </h2>
+              
+              <span style={{ 
+                fontSize: '11px', 
+                color: isUnlocked ? badge.color : 'var(--text-muted)', 
+                background: isUnlocked ? `rgba(${badge.colorRgb}, 0.1)` : 'rgba(255,255,255,0.05)',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                fontWeight: 'bold',
+                display: 'inline-block',
+                marginBottom: '16px'
+              }}>
+                {isUnlocked ? badge.tagline : 'ロックされています'}
+              </span>
+
+              {/* Condition / How to Unlock */}
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', margin: '0 auto 24px', maxWidth: '400px' }}>
+                解放条件：<strong>{badge.desc}</strong>
+              </p>
+
+              {isUnlocked ? (
+                /* Unlocked: Show Real-world meaning & Cheat Sheet phrase */
+                <div style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '16px', animation: 'fadeIn 0.3s ease' }}>
+                  {/* Real-world Benefit */}
+                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '14px 16px', borderRadius: '10px' }}>
+                    <span style={{ display: 'block', fontSize: '11.5px', color: badge.color, fontWeight: 'bold', marginBottom: '6px' }}>
+                      💼 現実世界での効果・戦闘力：
+                    </span>
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                      {badge.benefit}
+                    </p>
+                  </div>
+
+                  {/* Cheat Sheet copy card */}
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: `1px dashed ${badge.color}`, padding: '16px', borderRadius: '12px', position: 'relative' }}>
+                    <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', marginBottom: '8px' }}>
+                      💬 日常のコミュニケーションでそのまま使える特効薬ワード：
+                    </span>
+                    <p style={{ margin: '0 0 16px 0', fontSize: '13.5px', color: 'var(--text-primary)', lineHeight: '1.6', fontWeight: 'bold', fontStyle: 'italic' }}>
+                      {badge.template}
+                    </p>
+                    
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(badge.template);
+                          playSound('correct');
+                          setCopiedBadgeIdx(selectedBadgeIndex);
+                          setTimeout(() => setCopiedBadgeIdx(null), 2000);
+                        }}
+                        className="btn btn-primary"
+                        style={{
+                          flex: 1.2,
+                          padding: '10px',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          background: `linear-gradient(135deg, ${badge.color} 0%, var(--color-primary) 100%)`,
+                          border: 'none',
+                          boxShadow: `0 4px 12px rgba(${badge.colorRgb}, 0.2)`
+                        }}
+                      >
+                        {copiedBadgeIdx === selectedBadgeIndex ? '✅ コピー完了！' : '📋 テンプレートをコピー'}
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          const tweetText = `🏆 思考ジム「LogiFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogiFit #思考デバッグ`;
+                          handleShareToX(tweetText);
+                        }}
+                        className="btn btn-secondary"
+                        style={{
+                          flex: 0.8,
+                          padding: '10px',
+                          fontSize: '12px',
+                          border: '1px solid var(--border-color)',
+                          background: 'rgba(255,255,255,0.03)'
+                        }}
+                      >
+                        𝕏 でシェアする
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Locked: Show shortcut to play the game */
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+                  <button
+                    onClick={() => {
+                      playSound('click');
+                      setShowBadgeModal(false);
+                      document.getElementById('training-menu')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="btn btn-primary"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      fontSize: '13.5px',
+                      background: 'var(--bg-inner-box)',
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-secondary)'
+                    }}
+                  >
+                    🎯 トレーニングメニューに移動する
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
       {showToast && (
         <div className="copy-toast">
           <Sparkles size={16} style={{ color: 'var(--color-primary)' }} />
