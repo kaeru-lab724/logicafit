@@ -24,8 +24,8 @@ export default function LandingPage({
           「なぜか話が噛み合わない…」<br />その脳内のバグ、スキャンしませんか？
         </h1>
         <p className="landing-desc">
-          LogiFit（ロジフィット）は、アタマのレントゲン（思考診断）であなたの認知の偏りを暴き、<br className="desktop-only" />
-          ゲーム感覚で脳内OSをアップデートする総合思考トレーニングジムです。
+          LogiFit（ロジフィット）は、思考スキャン診断であなたの認知の偏りを可視化し、<br className="desktop-only" />
+          ゲーム感覚で脳内OSをアップデートする総合思考トレーニングシステムです。
         </p>
         {showCTA && (
           <div className="landing-cta-wrapper">
@@ -33,7 +33,7 @@ export default function LandingPage({
               onClick={() => { playSound('click'); setActiveGame('diagnostic'); }} 
               className="btn btn-primary landing-cta-btn"
             >
-              <span>🧠 思考のレントゲン（診断）をはじめる</span>
+              <span>🧠 思考スキャン診断をはじめる</span>
             </button>
           </div>
         )}
@@ -87,7 +87,7 @@ export default function LandingPage({
           LogiFitでデバッグする「4つの論理・感情回路」
         </h2>
         <p className="landing-section-subtitle">
-          診断結果からアタマの傾向をレーダー可視化。偏りを見極め、4つのルームでデバッグ学習を行います。
+          診断結果から思考力パラメーターをレーダーチャートで可視化。偏りを見極め、各ルームでデバッグ学習を行います。
         </p>
         
         <div className="landing-features-grid">
@@ -138,10 +138,10 @@ export default function LandingPage({
               STEP 01
             </div>
             <h3 className="landing-step-title">
-              🧠 アタマをスキャンする
+              🧠 思考をスキャンする
             </h3>
             <p className="landing-step-desc">
-              「アタマのレントゲン（診断）」を受け、あなたの思考の偏り（ロジカル、クリティカル、ラディカル、エモーショナル）を暴きます。
+              「思考スキャン診断」を受け、あなたの思考の偏り（ロジカル、クリティカル、ラディカル、エモーショナル）を可視化します。
             </p>
           </div>
 

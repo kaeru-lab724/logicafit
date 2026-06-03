@@ -276,7 +276,7 @@ export default function MobileDashboard({
               style={{ width: '100%', justifyContent: 'center' }}
             >
               <ChevronLeft size={16} />
-              <span>← 統合ハブに戻る</span>
+              <span>← ダッシュボードに戻る</span>
             </button>
           </div>
         )}
@@ -289,13 +289,13 @@ export default function MobileDashboard({
             
             {/* 脳内デバッグ統合ハブ */}
             <div className="department-lobby-wrapper">
-              <h2 className="department-lobby-title" style={{ fontSize: '20px' }}>🧠 統合ハブ / CONTROL HUB</h2>
+              <h2 className="department-lobby-title" style={{ fontSize: '20px' }}>🧠 ダッシュボード / DASHBOARD</h2>
               <p className="department-lobby-desc" style={{ fontSize: '12px', marginBottom: '16px' }}>
-                LogiFitシステムハブ。モジュールを起動し、認知回路の調整、ブレインコード分析、思考バグ検出を実行します。
+                LogiFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考バグのチェックを実行できます。
               </p>
               
               <div className="tenants-grid" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {/* 1. トレーニングジム */}
+                {/* 1. 思考力トレーニング */}
                 <div 
                   className="tenant-card gym-tenant"
                   onClick={() => { playSound('click'); setActiveTab('training'); }}
@@ -305,17 +305,17 @@ export default function MobileDashboard({
                     <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>🏋️</div>
                     <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>MODULE 01</span>
                   </div>
-                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考力トレーニングジム</h3>
-                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>論理 ＆ クリティカル思考強化</p>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考力トレーニング</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>事実・推論・論理エラーの特定</p>
                   <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
-                    事実と意見の選別や論理妥当性の検証など、脳の論理回路を鍛え上げるトレーニングエリア。
+                    事実と意見の選別や論理前置の検証など、クイズ形式のゲームで思考の基礎力を高めるトレーニングエリア。
                   </p>
                   <div className="tenant-footer" style={{ paddingTop: '8px' }}>
                     <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>セッション起動 <ChevronRight size={12} /></span>
                   </div>
                 </div>
 
-                {/* 2. 思考調律クリニック */}
+                {/* 2. 思考調律・復習 */}
                 <div 
                   className="tenant-card tuning-tenant"
                   onClick={() => { playSound('click'); setActiveTab('bugNote'); }}
@@ -325,17 +325,17 @@ export default function MobileDashboard({
                     <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>🧠</div>
                     <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>MODULE 02</span>
                   </div>
-                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考調律クリニック</h3>
-                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>脳内ノイズの検出とデバッグ</p>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考調律・復習</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>認知ノイズの除去 ＆ 弱点克服</p>
                   <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
-                    日常の主観的な偏りや感情逆転ノイズを排出し、認知バイアスを検知して客観的な事実コードへ調律。
+                    トレーニングで間違えた問題（脳内バグ）の復習や、主観的バイアスを調整して客観的思考に整える調律を行います。
                   </p>
                   <div className="tenant-footer" style={{ paddingTop: '8px' }}>
                     <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>調律セッション起動 <ChevronRight size={12} /></span>
                   </div>
                 </div>
 
-                {/* 3. 脳内レントゲン ＆ 摩擦研究所 */}
+                {/* 3. 思考パラメーター ＆ 相性診断 */}
                 <div 
                   className="tenant-card lab-tenant"
                   onClick={() => { playSound('click'); setActiveTab('diagnostics'); }}
@@ -345,17 +345,17 @@ export default function MobileDashboard({
                     <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>📊</div>
                     <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>MODULE 03</span>
                   </div>
-                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>脳内レントゲン ＆ 摩擦研究所</h3>
-                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>ブレインコード解析 ＆ 思考摩擦測定</p>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考パラメーター ＆ 相性診断</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>自己パラメータ分析 ＆ 相性摩擦チェック</p>
                   <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
-                    診断結果のスキャンマップ（五角形パラメーター）分析や、他者のブレインコードとの相性摩擦を測定。
+                    思考スキャン診断の結果から「思考力パラメーター」を可視化し、自分や他者のブレインコードを用いた相性チェックを行います。
                   </p>
                   <div className="tenant-footer" style={{ paddingTop: '8px' }}>
                     <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>ラボラトリーにアクセス <ChevronRight size={12} /></span>
                   </div>
                 </div>
 
-                {/* 4. 脳内バグ博物館 */}
+                {/* 4. 思考バグ図鑑 */}
                 <div 
                   className="tenant-card museum-tenant"
                   onClick={() => { playSound('click'); setActiveTab('encyclopedia'); setLibrarySubTab('bug'); }}
@@ -365,10 +365,10 @@ export default function MobileDashboard({
                     <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>📖</div>
                     <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>MODULE 04</span>
                   </div>
-                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>脳内バグ博物館</h3>
-                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>認知バイアス・データベース（全30種）</p>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考バグ図鑑</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>認知バイアスデータベース（全30種）</p>
                   <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
-                    無意識に陥る思考のバグ（認知バイアス）全30種を、具体例と改善プロセスと共に展示・解説。
+                    人間が無意識に陥りやすい「思考のバグ（認知バイアス）」全30種を、具体的な事例や対策フレーズと共に体系的に解説。
                   </p>
                   <div className="tenant-footer" style={{ paddingTop: '8px' }}>
                     <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>データベースを表示 <ChevronRight size={12} /></span>
@@ -923,7 +923,7 @@ export default function MobileDashboard({
           style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isLobbyFlowActive ? 'var(--color-cyan)' : 'var(--text-secondary)', cursor: 'pointer', flex: 1, height: '100%', justifyContent: 'center' }}
         >
           <Home size={20} />
-          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>🧠 統合ハブ</span>
+          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>🧠 ダッシュボード</span>
         </button>
         <button 
           onClick={() => handleNavClick('achievements')}

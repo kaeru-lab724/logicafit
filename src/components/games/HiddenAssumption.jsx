@@ -442,7 +442,7 @@ export default function HiddenAssumption({ onFinish, playSound, muted, toggleMut
               className="btn btn-primary"
               style={{ width: '100%', maxWidth: '320px', padding: '14px', background: 'linear-gradient(135deg, var(--color-rose) 0%, #be123c 100%)', border: 'none' }}
             >
-              ダッシュボードへ戻る
+              ← ダッシュボードに戻る
             </button>
           </div>
         ) : (

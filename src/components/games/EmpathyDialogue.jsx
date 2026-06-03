@@ -584,7 +584,7 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
                   boxShadow: '0 4px 15px var(--color-primary-glow)' 
                 }}
               >
-                ダッシュボードへ戻る
+                ← ダッシュボードに戻る
               </button>
             </div>
 

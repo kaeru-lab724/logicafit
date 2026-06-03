@@ -463,7 +463,7 @@ export default function FallacyDetective({ onFinish, playSound, muted, toggleMut
                 𝕏 でシェア
               </button>
               <button onClick={() => onFinish('fallacy', Math.round((score / questions.length) * 100))} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, var(--color-rose) 0%, #e11d48 100%)', boxShadow: '0 4px 15px var(--color-rose-glow)' }}>
-                ダッシュボードへ戻る
+                ← ダッシュボードに戻る
               </button>
             </div>
           </div>

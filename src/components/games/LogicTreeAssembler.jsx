@@ -609,7 +609,7 @@ export default function LogicTreeAssembler({ onFinish, playSound, muted, toggleM
                 𝕏 でシェア
               </button>
               <button onClick={() => onFinish('logicTree', Math.round((score / questions.length) * 100))} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, var(--color-amber) 0%, #d97706 100%)', boxShadow: '0 4px 15px var(--color-amber-glow)' }}>
-                ダッシュボードへ戻る
+                ← ダッシュボードに戻る
               </button>
             </div>
           </div>

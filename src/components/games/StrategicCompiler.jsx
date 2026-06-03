@@ -436,7 +436,7 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
             }}
           >
             <ChevronLeft size={16} />
-            ダッシュボードへ戻る
+            ← ダッシュボードに戻る
           </button>
         </div>
       )}
@@ -873,7 +873,7 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
                   boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)'
                 }}
               >
-                ダッシュボードへ戻る
+                ← ダッシュボードに戻る
               </button>
             </div>
           </div>

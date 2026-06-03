@@ -386,7 +386,7 @@ export default function AssertiveRewrite({ onFinish, playSound, muted, toggleMut
               className="btn btn-primary"
               style={{ width: '100%', maxWidth: '320px', padding: '14px', background: 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)', border: 'none' }}
             >
-              ダッシュボードへ戻る
+              ← ダッシュボードに戻る
             </button>
           </div>
         ) : (

@@ -220,18 +220,18 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
 
     let shareText = "";
     if (targetType === "self") {
-      shareText = `【LogiFit 思考のレントゲン診断】
+      shareText = `【LogiFit 思考スキャン診断】
 私の愛すべき脳内バグは…
 🧠 ${resultType.name} ${resultType.emoji}
 ～ ${resultType.tagline} ～
 
-📊 思考バランス：
+📊 思考力パラメーター：
 ・ロジカル　　　：${bar(pL)} ${pL}%
 ・クリティカル　：${bar(pC)} ${pC}%
 ・ラディカル　　：${bar(pR)} ${pR}%
 ・エモーショナル：${bar(pE)} ${pE}%
 
-#LogiFit思考診断 #愛すべき脳内バグ #アたまのレントゲン
+#LogiFit思考スキャン診断 #愛すべき脳内バグ #思考力パラメーター
 https://www.logifit.site/`;
     } else {
       const targetLabel = {
@@ -246,12 +246,12 @@ https://www.logifit.site/`;
       }
 
       shareText = `【LogiFit 他者脳内スキャン】
-${targetLabel}の脳内バグをスキャンしました！
+あの人の脳内バグをスキャンしました！
 🧠 タイプ：${resultType.name} ${resultType.emoji}
 ～ ${resultType.tagline} ～
 ${frictionSnippet}
 あの人の攻略トリセツと相性はこちら👇
-#脳内摩擦係数 #取扱説明書 #アたまのレントゲン #LogiFit
+#脳内摩擦係数 #取扱説明書 #思考力パラメーター #LogiFit
 https://www.logifit.site/`;
     }
 
@@ -300,11 +300,11 @@ https://www.logifit.site/`;
           </div>
 
           <h1 className="text-glow" style={{ fontFamily: "var(--font-display)", fontSize: "36px", fontWeight: "800", marginBottom: "16px", color: "var(--text-primary)" }}>
-            アタマのレントゲン
+            思考スキャン診断
           </h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "16px", lineHeight: "1.6", maxWidth: "540px", margin: "0 auto 32px auto" }}>
             日常の判断や行動から、あなたの思考の「偏り（クセ）」をスキャンします。<br />
-            ロジカル、クリティカル、ラディカル、エモーショナルのバランスをグラフ化し、あなたの脳内キャラクターを診断！
+            事実分析、演繹・推論、戦略思考、構造化、批判思考のバランスを可視化し、あなたの思考タイプを診断！
           </p>
 
           {/* Brain SVG graphic with scan line effect */}
@@ -331,7 +331,7 @@ https://www.logifit.site/`;
           {/* Target selector cards */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", maxWidth: "480px", margin: "0 auto 32px auto" }}>
             {[
-              { id: "self", label: "自分をレントゲン", emoji: "🧠" },
+              { id: "self", label: "自分をスキャン診断", emoji: "🧠" },
               { id: "spouse", label: "パートナーをスキャン", emoji: "💑" },
               { id: "boss", label: "上司/部下をスキャン", emoji: "👔" },
               { id: "friend", label: "友達をスキャン", emoji: "🎒" }
@@ -363,7 +363,7 @@ https://www.logifit.site/`;
           </div>
 
           <button className="btn btn-primary" onClick={handleStart} style={{ fontSize: "16px", padding: "14px 36px" }}>
-            {targetType === "self" ? "レントゲン検査をはじめる" : "あの人をスキャンする"}（全7問）
+            {targetType === "self" ? "思考スキャン診断をはじめる" : "あの人をスキャンする"}（全7問）
           </button>
         </div>
       )}
@@ -730,7 +730,7 @@ https://www.logifit.site/`;
                             friend: "友達"
                           }[targetType] || "あの人";
 
-                          const text = `⚡ ${targetLabel}との「脳内摩擦係数」をスキャンしました！\n結果：【${frictionResult.pairName}】\n摩擦係数：【${frictionResult.friction}%】\n\n診断＆相性チェックはこちら👇\n#脳内摩擦係数 #アたまのレントゲン #ブレインコード #LogiFit`;
+                          const text = `⚡ ${targetLabel}との「脳内摩擦係数」をスキャンしました！\n結果：【${frictionResult.pairName}】\n摩擦係数：【${frictionResult.friction}%】\n\n診断＆相性チェックはこちら👇\n#脳内摩擦係数 #思考スキャン診断 #ブレインコード #LogiFit`;
                           const appUrl = 'https://www.logifit.site/';
                           const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
                           window.open(shareUrl, '_blank', 'noopener,noreferrer');
@@ -761,7 +761,7 @@ https://www.logifit.site/`;
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
-              {targetType === "self" ? "レントゲン写真をXにポストする" : "あの人のトリセツをXにポストする"}
+              {targetType === "self" ? "診断結果をXにポストする" : "あの人のトリセツをXにポストする"}
             </button>
           </div>
 
@@ -854,7 +854,7 @@ https://www.logifit.site/`;
                 onClick={() => onSelectGame(null)}
                 style={{ flex: 0.5, minWidth: "120px" }}
               >
-                ダッシュボードへ戻る
+                ← ダッシュボードに戻る
               </button>
               <button 
                 className="btn btn-secondary" 
