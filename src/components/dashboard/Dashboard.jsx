@@ -247,7 +247,7 @@ export default function Dashboard({
             </div>
           )}
 
-          <div className="dashboard-grid-layout" style={{ display: 'flex', gap: '24px', maxWidth: '1200px', margin: '0 auto', alignItems: 'flex-start' }}>
+          <div className="dashboard-grid-layout" style={{ display: 'flex', flexDirection: 'row', gap: '24px', maxWidth: '1200px', margin: '0 auto', alignItems: 'flex-start' }}>
           
             {/* メインカラム（全情報を中央寄せ1カラムに統合） */}
             <div className="dashboard-main-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
@@ -1417,7 +1417,7 @@ export default function Dashboard({
                         </div>
                         
                         <p className="kaeru-widget-desc" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                          皐月のもう一つの人格「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
+                          「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
                         </p>
                         
                         <div className="kaeru-widget-buttons" style={{ display: 'flex', gap: '8px' }}>

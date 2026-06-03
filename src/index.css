@@ -4679,6 +4679,15 @@ body.light-theme .lab-banner-active:hover {
   .mobile-only-layout {
     display: none !important;
   }
+  
+  /* PC用グリッドレイアウトの強制2カラム化と幅制限 */
+  .pc-only-layout .dashboard-grid-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
 }
 
 /* モバイル専用のスタイル調整 */
