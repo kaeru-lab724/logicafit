@@ -17,7 +17,7 @@ import StrategicCompiler from './components/games/StrategicCompiler';
 import DiagnosticContainer from './components/DiagnosticContainer';
 import HarassmentScanner from './components/HarassmentScanner';
 import RakutenWidget from './components/common/RakutenWidget';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/dashboard/Dashboard';
 import DebugLab from './components/DebugLab';
 import MindTuning from './components/games/MindTuning';
 import { 
