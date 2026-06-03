@@ -1488,6 +1488,7 @@ body.light-theme .lab-banner-active:hover {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  padding: 24px;
 }
 
 .carousel-slide-container {
@@ -1920,8 +1921,8 @@ body.light-theme .lab-banner-active:hover {
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
-  padding: 10px 14px;
-  font-size: 13.5px;
+  padding: 10px 12px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1977,6 +1978,7 @@ body.light-theme .lab-banner-active:hover {
   text-align: left;
   box-sizing: border-box;
   width: 100%;
+  padding: 20px 24px;
 }
 .training-room-card.locked {
   background: var(--bg-badge-locked);
@@ -2477,6 +2479,7 @@ body.light-theme .lab-banner-active:hover {
   border-radius: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
+  padding: 16px 20px;
 }
 .badge-card.locked {
   opacity: 0.4;
@@ -2734,6 +2737,7 @@ body.light-theme .lab-banner-active:hover {
   justify-content: space-between;
   box-sizing: border-box;
   text-align: left;
+  padding: 24px;
 }
 
 .matcher-badge {
@@ -2934,6 +2938,7 @@ body.light-theme .lab-banner-active:hover {
   background: var(--glass-bg);
   box-sizing: border-box;
   text-align: left;
+  padding: 24px;
 }
 
 .backup-title {
@@ -3407,6 +3412,7 @@ body.light-theme .lab-banner-active:hover {
   transition: all 0.3s ease;
   box-sizing: border-box;
   width: 100%;
+  padding: 20px;
 }
 .library-bug-card.locked {
   background: var(--bg-badge-locked);
@@ -4702,4 +4708,15 @@ body.light-theme .lab-banner-active:hover {
 }
 .sub-tab-btn:active {
   transform: scale(0.97);
+}
+
+@keyframes pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.25));
+  }
 }

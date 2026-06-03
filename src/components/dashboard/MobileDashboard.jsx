@@ -642,7 +642,7 @@ export default function MobileDashboard({
             <div className="glass-panel" style={{ padding: '12px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  📊 診断結果 ＆ ブレインコード
+                  📊 レントゲン結果 ＆ コード
                 </span>
                 <button 
                   onClick={() => { playSound('click'); setActiveTab('diagnostics'); }}
@@ -697,10 +697,10 @@ export default function MobileDashboard({
         {activeTab === 'diagnostics' && (
           <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-              <button onClick={() => playSound('click')} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px 0' }} onClick={() => setActiveTab('home')}>
+              <button onClick={() => { playSound('click'); setActiveTab('home'); }} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px 0' }}>
                 <ChevronLeft size={16} />
               </button>
-              <h2 style={{ fontSize: '15px', fontWeight: 'bold', margin: 0 }}>📊 診断結果 ＆ ブレインコード</h2>
+              <h2 style={{ fontSize: '15px', fontWeight: 'bold', margin: 0 }}>📊 レントゲン結果 ＆ ブレインコード</h2>
             </div>
             
             <div className="glass-panel" style={{ padding: '12px', borderRadius: '12px', boxSizing: 'border-box' }}>

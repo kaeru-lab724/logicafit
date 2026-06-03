@@ -256,11 +256,11 @@ export default function Dashboard({
               <div className="dashboard-tab-navigation" id="training-menu">
                 {[
                   { id: 'home', label: '🏠 ホーム' },
-                  { id: 'training', label: '🏋️ トレーニング' },
-                  { id: 'diagnostics', label: '📊 診断結果 ＆ ブレインコード' },
-                  { id: 'bugNote', label: '🧠 脳内バグノート' },
-                  { id: 'encyclopedia', label: '📖 脳内図鑑・解説' },
-                  { id: 'achievements', label: '🏆 実績 ＆ ログ' }
+                  { id: 'training', label: '🏋️ 思考練習' },
+                  { id: 'diagnostics', label: '📊 レントゲン結果 ＆ コード' },
+                  { id: 'bugNote', label: '🧠 バグノート' },
+                  { id: 'encyclopedia', label: '📖 バグ図鑑' },
+                  { id: 'achievements', label: '🏆 実績' }
                 ].map(tab => {
                   const isActive = activeTab === tab.id;
                   return (
@@ -556,83 +556,105 @@ export default function Dashboard({
                     <div 
                       key={activeSlide} 
                       className="fade-in carousel-slide-container"
+                      style={{ display: 'flex', flexDirection: 'row', gap: '24px', alignItems: 'stretch' }}
                     >
-                      <div>
-                        <div className="carousel-slide-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div className="carousel-badge-group">
-                            <span 
-                              className="carousel-slide-badge"
-                              style={{ 
-                                color: slides[activeSlide].badgeTextColor, 
-                                background: slides[activeSlide].badgeColor, 
-                                border: `1px solid ${slides[activeSlide].badgeBorder}` 
-                              }}
-                            >
-                              {slides[activeSlide].badge}
-                            </span>
-                            {slides[activeSlide].level && (
-                              <span className="carousel-slide-level" style={{ marginLeft: '8px' }}>
-                                {slides[activeSlide].level}
+                      {/* Left Column: Text & Buttons */}
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
+                        <div>
+                          <div className="carousel-slide-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div className="carousel-badge-group">
+                              <span 
+                                className="carousel-slide-badge"
+                                style={{ 
+                                  color: slides[activeSlide].badgeTextColor, 
+                                  background: slides[activeSlide].badgeColor, 
+                                  border: `1px solid ${slides[activeSlide].badgeBorder}` 
+                                }}
+                              >
+                                {slides[activeSlide].badge}
                               </span>
-                            )}
-                          </div>
-
-                          {/* Dot & Arrow Indicators */}
-                          <div className="carousel-indicators-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <button
-                              onClick={() => {
-                                playSound('click');
-                                setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
-                              }}
-                              className="carousel-arrow-btn"
-                              title="前へ"
-                            >
-                              <ChevronLeft size={16} />
-                            </button>
-
-                            <div className="carousel-dots-group" style={{ display: 'flex', gap: '4px' }}>
-                              {slides.map((_, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => { playSound('click'); setActiveSlide(idx); }}
-                                  className={`carousel-dot-btn ${idx === activeSlide ? 'active' : ''}`}
-                                  title={slides[idx].badge}
-                                />
-                              ))}
+                              {slides[activeSlide].level && (
+                                <span className="carousel-slide-level" style={{ marginLeft: '8px' }}>
+                                  {slides[activeSlide].level}
+                                </span>
+                              )}
                             </div>
 
-                            <button
-                              onClick={() => {
-                                playSound('click');
-                                setActiveSlide((prev) => (prev + 1) % slides.length);
-                              }}
-                              className="carousel-arrow-btn"
-                              title="次へ"
-                            >
-                              <ChevronRight size={16} />
-                            </button>
+                            {/* Dot & Arrow Indicators */}
+                            <div className="carousel-indicators-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <button
+                                onClick={() => {
+                                  playSound('click');
+                                  setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
+                                }}
+                                className="carousel-arrow-btn"
+                                title="前へ"
+                              >
+                                <ChevronLeft size={16} />
+                              </button>
+
+                              <div className="carousel-dots-group" style={{ display: 'flex', gap: '4px' }}>
+                                {slides.map((_, idx) => (
+                                  <button
+                                    key={idx}
+                                    onClick={() => { playSound('click'); setActiveSlide(idx); }}
+                                    className={`carousel-dot-btn ${idx === activeSlide ? 'active' : ''}`}
+                                    title={slides[idx].badge}
+                                  />
+                                ))}
+                              </div>
+
+                              <button
+                                onClick={() => {
+                                  playSound('click');
+                                  setActiveSlide((prev) => (prev + 1) % slides.length);
+                                }}
+                                className="carousel-arrow-btn"
+                                title="次へ"
+                              >
+                                <ChevronRight size={16} />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="carousel-title-row" style={{ display: 'flex', gap: '12px', marginTop: '16px', alignItems: 'center' }}>
+                            <div>
+                              <h2 className="text-glow carousel-slide-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0 }}>
+                                {slides[activeSlide].title}
+                              </h2>
+                              <p className="carousel-slide-tagline" style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+                                {slides[activeSlide].tagline}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div style={{ marginTop: '12px' }}>
+                            {slides[activeSlide].desc}
                           </div>
                         </div>
 
-                        <div className="carousel-title-row" style={{ display: 'flex', gap: '12px', marginTop: '12px', alignItems: 'center' }}>
-                          <span className="carousel-emoji-icon" style={{ fontSize: '28px' }}>{slides[activeSlide].icon}</span>
-                          <div>
-                            <h2 className="text-glow carousel-slide-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0 }}>
-                              {slides[activeSlide].title}
-                            </h2>
-                            <p className="carousel-slide-tagline" style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
-                              {slides[activeSlide].tagline}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div style={{ marginTop: '12px' }}>
-                          {slides[activeSlide].desc}
+                        <div className="carousel-actions-wrapper" style={{ marginTop: '20px' }}>
+                          {slides[activeSlide].actions}
                         </div>
                       </div>
 
-                      <div className="carousel-actions-wrapper" style={{ marginTop: '16px' }}>
-                        {slides[activeSlide].actions}
+                      {/* Right Column: Visual theme illustration */}
+                      <div className="carousel-visual-column" style={{ width: '130px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="carousel-emoji-glowing-circle" style={{
+                          width: '100px',
+                          height: '100px',
+                          borderRadius: '50%',
+                          background: slides[activeSlide].badgeColor || 'rgba(255,255,255,0.02)',
+                          border: `1px solid ${slides[activeSlide].badgeBorder || 'var(--border-color)'}`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '44px',
+                          boxShadow: `0 0 25px ${slides[activeSlide].badgeBorder ? slides[activeSlide].badgeBorder.replace('0.15', '0.45').replace('0.2', '0.45') : 'rgba(255,255,255,0.1)'}`,
+                          animation: 'pulse-scale 3s infinite ease-in-out'
+                        }}>
+                          {slides[activeSlide].icon}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -647,55 +669,93 @@ export default function Dashboard({
                 const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
 
                 return (
-                  <div className="quick-actions-row" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {/* Recommended Game Action */}
+                  <div className="quick-actions-row" style={{ display: 'flex', flexDirection: 'row', gap: '16px', width: '100%', boxSizing: 'border-box' }}>
+                    {/* Recommended Game Action Card */}
                     <div 
                       className="glass-panel hover-lift quick-action-card recom-card"
                       onClick={() => {
                         playSound('click');
                         setActiveGame(recGameKey);
                       }}
-                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px' }}
+                      style={{ 
+                        cursor: 'pointer', 
+                        flex: 1, 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        justifyContent: 'space-between', 
+                        padding: '20px', 
+                        minHeight: '140px',
+                        borderLeft: '4px solid var(--color-cyan)',
+                        boxSizing: 'border-box'
+                      }}
                     >
-                      <div className="quick-action-content" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div className="quick-action-icon-bg cyan-primary-bg" style={{ width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary-soft)' }}>
-                          <Award size={18} className="color-primary" />
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div className="quick-action-icon-bg cyan-primary-bg" style={{ width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary-soft)' }}>
+                            <Award size={18} className="color-primary" />
+                          </div>
+                          <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--color-cyan)', background: 'rgba(6, 182, 212, 0.05)', padding: '2px 8px', borderRadius: '12px', border: '1px solid rgba(6, 182, 212, 0.15)' }}>RECOMMENDED</span>
                         </div>
-                        <div className="quick-action-text-group" style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span className="quick-action-label color-cyan" style={{ fontSize: '11px', fontWeight: 'bold' }}>
-                            🎯 推奨トレーニングを再開
-                          </span>
-                          <span className="quick-action-value" style={{ fontSize: '13px', color: 'var(--text-primary)' }}>
-                            「{recGameName}」をプレイ
-                          </span>
-                        </div>
+                        <h3 style={{ fontSize: '14.5px', fontWeight: 'bold', margin: '0 0 6px 0', color: 'var(--text-primary)' }}>思考練習を再開する</h3>
+                        <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                          現在のパラメータに基づき、「{recGameName}」の練習を推奨します。
+                        </p>
                       </div>
-                      <ChevronRight size={18} className="arrow-muted-icon" />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--color-cyan)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          「{recGameName}」をプレイする
+                        </span>
+                        <ChevronRight size={16} className="color-cyan" />
+                      </div>
                     </div>
 
-                    {/* Daily Mind Tuning Action */}
+                    {/* Daily Tuning Action Card */}
                     <div 
                       className={`glass-panel hover-lift quick-action-card tuning-card ${!isTuningCompletedToday ? 'tuning-btn-glow' : ''}`}
                       onClick={() => {
                         playSound('click');
                         setActiveGame('mindTuning');
                       }}
-                      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px' }}
+                      style={{ 
+                        cursor: 'pointer', 
+                        flex: 1, 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        justifyContent: 'space-between', 
+                        padding: '20px', 
+                        minHeight: '140px',
+                        borderLeft: '4px solid #10b981',
+                        boxSizing: 'border-box'
+                      }}
                     >
-                      <div className="quick-action-content" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div className="quick-action-icon-bg emerald-bg" style={{ width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.1)' }}>
-                          <Brain size={18} className="color-emerald" />
-                        </div>
-                        <div className="quick-action-text-group" style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span className="quick-action-label color-emerald" style={{ fontSize: '11px', fontWeight: 'bold' }}>
-                            🧠 デイリー調律ルーティン
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                          <div className="quick-action-icon-bg emerald-bg" style={{ width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.1)' }}>
+                            <Brain size={18} className="color-emerald" />
+                          </div>
+                          <span style={{ 
+                            fontSize: '9px', 
+                            fontWeight: 'bold', 
+                            color: '#10b981', 
+                            background: 'rgba(16, 185, 129, 0.05)', 
+                            padding: '2px 8px', 
+                            borderRadius: '12px', 
+                            border: '1px solid rgba(16, 185, 129, 0.15)' 
+                          }}>
+                            {isTuningCompletedToday ? 'COMPLETED' : 'DAILY TUNING'}
                           </span>
-                          <span className="quick-action-value" style={{ fontSize: '13px', color: 'var(--text-primary)' }}>
-                            {isTuningCompletedToday ? '本日の調律は完了しました' : '本日の思考調律を起動'}
-                          </span>
                         </div>
+                        <h3 style={{ fontSize: '14.5px', fontWeight: 'bold', margin: '0 0 6px 0', color: 'var(--text-primary)' }}>デイリー調律ルーティン</h3>
+                        <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                          思考の偏りをデバッグするための日常調律シナリオクイズ。
+                        </p>
                       </div>
-                      <ChevronRight size={18} className="arrow-muted-icon" />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
+                        <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          {isTuningCompletedToday ? '本日の調律は完了しました' : '本日の思考調律を起動'}
+                        </span>
+                        <ChevronRight size={16} className="color-emerald" />
+                      </div>
                     </div>
                   </div>
                 );
@@ -1007,7 +1067,7 @@ export default function Dashboard({
                 {activeTab === 'diagnostics' && (
                   <div className="fade-in diagnostics-tab-container">
                     <h2 className="tab-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 10px 0' }}>
-                      📊 診断結果 ＆ ブレインコード
+                      📊 レントゲン結果 ＆ ブレインコード
                     </h2>
                     <p className="tab-intro-desc">
                       思考レントゲン診断によって検出された、あなたの脳内パラメータとブレインコード（思考の指紋）です。
