@@ -257,7 +257,7 @@ export default function Dashboard({
                 {[
                   { id: 'home', label: '🏠 ホーム' },
                   { id: 'training', label: '🏋️ トレーニング' },
-                  { id: 'diagnostics', label: '📊 診断スキャン' },
+                  { id: 'diagnostics', label: '📊 診断結果 ＆ ブレインコード' },
                   { id: 'bugNote', label: '🧠 脳内バグノート' },
                   { id: 'encyclopedia', label: '📖 脳内図鑑・解説' },
                   { id: 'achievements', label: '🏆 実績 ＆ ログ' }
@@ -1007,7 +1007,7 @@ export default function Dashboard({
                 {activeTab === 'diagnostics' && (
                   <div className="fade-in diagnostics-tab-container">
                     <h2 className="tab-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: '0 0 10px 0' }}>
-                      📊 診断スキャン結果 ＆ ブレインコード
+                      📊 診断結果 ＆ ブレインコード
                     </h2>
                     <p className="tab-intro-desc">
                       思考レントゲン診断によって検出された、あなたの脳内パラメータとブレインコード（思考の指紋）です。
@@ -1554,7 +1554,7 @@ export default function Dashboard({
                     
                     <div className="kaeru-widget-buttons" style={{ display: 'flex', gap: '8px' }}>
                       <a 
-                        href="https://note.com/kaeru_analyst" 
+                        href="https://note.com/kaeru_lab" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         onClick={() => playSound('click')}
