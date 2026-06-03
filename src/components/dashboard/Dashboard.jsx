@@ -284,7 +284,11 @@ export default function Dashboard({
                 
                 {/* 0. HOME TAB */}
                 {activeTab === 'home' && (
-                  <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div className="fade-in home-tab-columns-wrapper" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+                    
+                    {/* 左メインカラム：プロフィールカルーセル ＆ クイックアクション */}
+                    <div className="home-left-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
+
               {/* Column 1: Your Brain Bug Card (Refactored to Autoplay Carousel) */}
               {(() => {
                 const slides = [
@@ -697,6 +701,145 @@ export default function Dashboard({
                 );
               })()}
 
+
+
+                    </div>
+
+                    {/* 右パラメーターカラム：レーダーチャート ＆ 相性スキャン */}
+                    <div className="home-right-column" style={{ width: '400px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                                            {/* 思考力パラメーター (Radar Chart) */}
+                      <div className="glass-panel radar-chart-panel" style={{ width: '100%', maxWidth: '450px', margin: '0 auto 10px auto', padding: '16px', boxSizing: 'border-box' }}>
+                        <div className="radar-chart-title" style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center', marginBottom: '10px' }}>
+                          {isFullUnlocked ? '思考力パラメーター' : '診断結果スキャンマップ'}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '280px', margin: '0 auto' }}>
+                          <svg 
+                            viewBox="0 0 320 300" 
+                            style={{ width: '100%', height: 'auto', maxWidth: '100%', overflow: 'visible' }}
+                            className="radar-chart-svg"
+                          >
+                            {/* Background grid pentagons */}
+                            <polygon points="160,70 236.1,125.3 207,214.7 113,214.7 83.9,125.3" fill="none" stroke="var(--border-color)" strokeWidth="1" />
+                            <polygon points="160,102 205.7,135.2 188.2,188.8 131.8,188.8 114.3,135.2" fill="none" stroke="var(--border-color)" strokeWidth="1" />
+                            <polygon points="160,126 182.8,142.6 174.1,169.4 145.9,169.4 137.2,142.6" fill="none" stroke="var(--border-color)" strokeWidth="1" />
+
+                            {/* Grid axis lines */}
+                            <line x1="160" y1="150" x2="160" y2="70" stroke="var(--border-color)" strokeDasharray="3,3" />
+                            <line x1="160" y1="150" x2="236.1" y2="125.3" stroke="var(--border-color)" strokeDasharray="3,3" />
+                            <line x1="160" y1="150" x2="207" y2="214.7" stroke="var(--border-color)" strokeDasharray="3,3" />
+                            <line x1="160" y1="150" x2="113" y2="214.7" stroke="var(--border-color)" strokeDasharray="3,3" />
+                            <line x1="160" y1="150" x2="83.9" y2="125.3" stroke="var(--border-color)" strokeDasharray="3,3" />
+
+                            {/* Labels */}
+                            <text x="160" y="32" textAnchor="middle" fill="var(--color-cyan)" fontSize="11" fontWeight="bold">
+                              事実分析 <tspan fill="var(--text-muted)" fontSize="9" fontWeight="normal">(FACT)</tspan>
+                            </text>
+                            <text x="245" y="118" textAnchor="start" fill="var(--color-emerald)" fontSize="11" fontWeight="bold">
+                              演繹・推論
+                              <tspan x="245" dy="14" fill="var(--text-muted)" fontSize="9" fontWeight="normal">(LOGIC)</tspan>
+                            </text>
+                            <text x="215" y="245" textAnchor="start" fill="#818cf8" fontSize="11" fontWeight="bold">
+                              戦略思考
+                              <tspan x="215" dy="14" fill="var(--text-muted)" fontSize="9" fontWeight="normal">(STRATEGY)</tspan>
+                            </text>
+                            <text x="105" y="245" textAnchor="end" fill="var(--color-amber)" fontSize="11" fontWeight="bold">
+                              構造化
+                              <tspan x="105" dy="14" fill="var(--text-muted)" fontSize="9" fontWeight="normal">(MECE)</tspan>
+                            </text>
+                            <text x="75" y="118" textAnchor="end" fill="var(--color-rose)" fontSize="11" fontWeight="bold">
+                              批判思考
+                              <tspan x="75" dy="14" fill="var(--text-muted)" fontSize="9" fontWeight="normal">(FALLACY)</tspan>
+                            </text>
+
+                            {/* Scores text values */}
+                            <text x="160" y="46" textAnchor="middle" fill="var(--text-secondary)" fontSize="10">{displayScores.factsOpinions}%</text>
+                            <text x="245" y="146" textAnchor="start" fill="var(--text-secondary)" fontSize="10">{displayScores.logicalValidity}%</text>
+                            <text x="215" y="273" textAnchor="start" fill="var(--text-secondary)" fontSize="10">{getStrategicScore()}%</text>
+                            <text x="105" y="273" textAnchor="end" fill="var(--text-secondary)" fontSize="10">{getRadicalScore()}%</text>
+                            <text x="75" y="146" textAnchor="end" fill="var(--text-secondary)" fontSize="10">{getCriticalScore()}%</text>
+
+                            <circle cx="160" cy="150" r="3" fill="var(--text-muted)" />
+
+                            {/* The radar chart dynamic polygon */}
+                            <polygon 
+                              className="radar-poly-anim"
+                              points={(() => {
+                                const scale = 80 / 100;
+                                
+                                const p1val = displayScores.factsOpinions || 0;
+                                const p2val = displayScores.logicalValidity || 0;
+                                const p3val = getStrategicScore();
+                                const p4val = getRadicalScore();
+                                const p5val = getCriticalScore();
+
+                                const p1x = 160;
+                                const p1y = 150 - p1val * scale;
+
+                                const p2x = 160 + p2val * scale * 0.9511;
+                                const p2y = 150 - p2val * scale * 0.3090;
+
+                                const p3x = 160 + p3val * scale * 0.5878;
+                                const p3y = 150 + p3val * scale * 0.8090;
+
+                                const p4x = 160 - p4val * scale * 0.5878;
+                                const p4y = 150 + p4val * scale * 0.8090;
+
+                                const p5x = 160 - p5val * scale * 0.9511;
+                                const p5y = 150 - p5val * scale * 0.3090;
+
+                                return `${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y} ${p4x},${p4y} ${p5x},${p5y}`;
+                              })()} 
+                              fill="rgba(99, 102, 241, 0.25)" 
+                              stroke="#6366f1" 
+                              strokeWidth="2.5"
+                              style={{ transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                            />
+                            
+                            {displayScores.factsOpinions > 0 && <circle cx="160" cy={150 - 80 * (displayScores.factsOpinions / 100)} r="4" fill="var(--color-cyan)" />}
+                            {displayScores.logicalValidity > 0 && <circle cx={160 + 80 * (displayScores.logicalValidity / 100) * 0.9511} cy={150 - 80 * (displayScores.logicalValidity / 100) * 0.3090} r="4" fill="var(--color-emerald)" />}
+                            {getStrategicScore() > 0 && <circle cx={160 + 80 * (getStrategicScore() / 100) * 0.5878} cy={150 + 80 * (getStrategicScore() / 100) * 0.8090} r="4" fill="#6366f1" />}
+                            {getRadicalScore() > 0 && <circle cx={160 - 80 * (getRadicalScore() / 100) * 0.5878} cy={150 + 80 * (getRadicalScore() / 100) * 0.8090} r="4" fill="var(--color-amber)" />}
+                            {getCriticalScore() > 0 && <circle cx={160 - 80 * (getCriticalScore() / 100) * 0.9511} cy={150 - 80 * (getCriticalScore() / 100) * 0.3090} r="4" fill="var(--color-rose)" />}
+                          </svg>
+                        </div>
+                        <div className="radar-eq-bar-group" style={{ marginTop: '15px', width: '100%', boxSizing: 'border-box' }}>
+                          <div className="eq-bar-header" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 'bold' }}>
+                            <span className="eq-label color-primary" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <Sparkles size={14} />
+                              EQ共感対話力
+                            </span>
+                            <span className="eq-value">
+                              {getEmotionalScore()}%
+                            </span>
+                          </div>
+                          <div className="eq-bar-container" style={{ width: '100%', height: '5px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', marginTop: '6px', overflow: 'hidden' }}>
+                            <div 
+                              className="eq-bar-fill"
+                              style={{ width: `${getEmotionalScore()}%`, height: '100%', background: 'var(--color-primary)' }} 
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 脳内摩擦係数（相性）チェック ＆ ブレインコード */}
+                      <FrictionMatcher 
+                        currentSpell={currentSpell}
+                        opponentSpell={opponentSpell}
+                        setOpponentSpell={setOpponentSpell}
+                        matchResult={matchResult}
+                        matchError={matchError}
+                        spellInput={spellInput}
+                        setSpellInput={setSpellInput}
+                        spellError={spellError}
+                        spellSuccess={spellSuccess}
+                        setSpellError={setSpellError}
+                        setSpellSuccess={setSpellSuccess}
+                        handleCheckFriction={handleCheckFriction}
+                        handleRestoreSpell={handleRestoreSpell}
+                        onCopyClick={onCopyClick}
+                        handleShareToX={handleShareToX}
+                      />
+                    </div>
 
                   </div>
                 )}
@@ -1314,145 +1457,124 @@ export default function Dashboard({
             </div>
               {/* 右サイドバーカラム (PC専用) */}
               <div className="dashboard-sidebar-column" style={{ width: '320px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div className="footer-accordion-section" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '0' }}>
                 
-                {/* アコーディオン 1: 環境音・ASMR設定 */}
-                <div className="glass-panel accordion-panel" style={{ borderRadius: '12px', padding: '12px 16px' }}>
-                  <button 
-                    onClick={() => { playSound('click'); setIsSoundOpen(!isSoundOpen); }}
-                    className="accordion-header-btn"
-                    style={{ background: 'none', border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', padding: 0, color: 'var(--text-primary)' }}
-                  >
-                    <div className="accordion-title-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold' }}>
-                      <span className="accordion-icon">🎧</span>
-                      <span className="accordion-title-text">環境音・ASMR設定</span>
-                    </div>
-                    <ChevronDown size={16} style={{ transition: 'transform 0.2s', transform: isSoundOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-                  </button>
+                {/* カード 1: 環境音・ASMR設定 (常時表示) */}
+                <div className="glass-panel" style={{ borderRadius: '12px', padding: '16px' }}>
+                  <div className="sidebar-section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold', marginBottom: '12px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px', color: 'var(--text-primary)' }}>
+                    <span>🎧</span>
+                    <span>環境音・ASMR設定</span>
+                  </div>
                   
-                  {isSoundOpen && (
-                    <div className="accordion-content-body fade-in" style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px', borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
-                      <p className="sound-desc" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                        思考に集中するためのBGMや、タイピング時の心地よい打鍵音をその場で合成・再生します。
-                      </p>
-                      
-                      {/* BGM Selector */}
-                      <div className="sound-selector-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <span className="sound-selector-label" style={{ fontWeight: 'bold', fontSize: '11px', color: 'var(--text-muted)' }}>▼ バックグラウンド環境音</span>
-                        <div className="sound-selector-buttons" style={{ display: 'flex', gap: '8px' }}>
-                          {[
-                            { id: 'none', label: '🍵 静寂' },
-                            { id: 'rain', label: '🌧️ 雨音' },
-                            { id: 'cozy_pad', label: '🌀 思考パッド' }
-                          ].map(item => (
-                            <button
-                              key={item.id}
-                              onClick={() => { playSound('click'); setBgmType(item.id); }}
-                              className={`btn bgm-select-btn ${bgmType === item.id ? 'active' : ''}`}
-                              style={{ padding: '6px 12px', fontSize: '11px', flex: 1 }}
-                            >
-                              {item.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* BGM Volume Slider */}
-                      {bgmType !== 'none' && (
-                        <div className="sound-volume-slider-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <div className="sound-volume-header" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-                            <span className="volume-label">BGM音量</span>
-                            <span className="volume-value">{Math.round(bgmVolume * 100)}%</span>
-                          </div>
-                          <input
-                            type="range"
-                            min="0"
-                            max="0.8"
-                            step="0.05"
-                            value={bgmVolume}
-                            onChange={(e) => setBgmVolume(parseFloat(e.target.value))}
-                            className="sound-volume-range"
-                            style={{ width: '100%' }}
-                          />
-                        </div>
-                      )}
-
-                      {/* Keyboard ASMR Switch */}
-                      <div className="asmr-switch-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div className="asmr-switch-text" style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span className="asmr-label" style={{ fontWeight: 'bold' }}>⌨️ タイピングASMR音</span>
-                          <span className="asmr-sub-label" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>キーを押した時に打鍵音を鳴らす</span>
-                        </div>
-                        <button
-                          onClick={() => { playSound('click'); setKeyboardEnabled(!keyboardEnabled); }}
-                          className={`btn asmr-toggle-btn ${keyboardEnabled ? 'active' : ''}`}
-                          style={{ padding: '6px 12px', fontSize: '11px' }}
-                        >
-                          {keyboardEnabled ? 'ON' : 'OFF'}
-                        </button>
+                  <div className="sound-settings-body" style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px' }}>
+                    <p className="sound-desc" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                      思考に集中するためのBGMや、タイピング時の心地よい打鍵音をその場で合成・再生します。
+                    </p>
+                    
+                    {/* BGM Selector */}
+                    <div className="sound-selector-group" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <span className="sound-selector-label" style={{ fontWeight: 'bold', fontSize: '11px', color: 'var(--text-muted)' }}>▼ バックグラウンド環境音</span>
+                      <div className="sound-selector-buttons" style={{ display: 'flex', gap: '8px' }}>
+                        {[
+                          { id: 'none', label: '🍵 静寂' },
+                          { id: 'rain', label: '🌧️ 雨音' },
+                          { id: 'cozy_pad', label: '🌀 思考パッド' }
+                        ].map(item => (
+                          <button
+                            key={item.id}
+                            onClick={() => { playSound('click'); setBgmType(item.id); }}
+                            className={`btn bgm-select-btn ${bgmType === item.id ? 'active' : ''}`}
+                            style={{ padding: '6px 12px', fontSize: '11px', flex: 1 }}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  )}
+
+                    {/* BGM Volume Slider */}
+                    {bgmType !== 'none' && (
+                      <div className="sound-volume-slider-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div className="sound-volume-header" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                          <span className="volume-label">BGM音量</span>
+                          <span className="volume-value">{Math.round(bgmVolume * 100)}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="0.8"
+                          step="0.05"
+                          value={bgmVolume}
+                          onChange={(e) => setBgmVolume(parseFloat(e.target.value))}
+                          className="sound-volume-range"
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Keyboard ASMR Switch */}
+                    <div className="asmr-switch-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--border-color)' }}>
+                      <div className="asmr-switch-text" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span className="asmr-label" style={{ fontWeight: 'bold' }}>⌨️ タイピングASMR音</span>
+                        <span className="asmr-sub-label" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>打鍵音を有効化</span>
+                      </div>
+                      <button
+                        onClick={() => { playSound('click'); setKeyboardEnabled(!keyboardEnabled); }}
+                        className={`btn asmr-toggle-btn ${keyboardEnabled ? 'active' : ''}`}
+                        style={{ padding: '6px 12px', fontSize: '11px' }}
+                      >
+                        {keyboardEnabled ? 'ON' : 'OFF'}
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                {/* アコーディオン 2: カエル分析官公式連携ウィジェット */}
-                <div className="glass-panel accordion-panel" style={{ borderRadius: '12px', padding: '12px 16px' }}>
-                  <button 
-                    onClick={() => { playSound('click'); setIsKaeruOpen(!isKaeruOpen); }}
-                    className="accordion-header-btn"
-                    style={{ background: 'none', border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', padding: 0, color: 'var(--text-primary)' }}
-                  >
-                    <div className="accordion-title-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold' }}>
-                      <span className="accordion-icon">🐸</span>
-                      <span className="accordion-title-text">公式連携：カエル分析官</span>
-                    </div>
-                    <ChevronDown size={16} style={{ transition: 'transform 0.2s', transform: isKaeruOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-                  </button>
+                {/* カード 2: 公式連携：カエル分析官 (常時表示) */}
+                <div className="glass-panel" style={{ borderRadius: '12px', padding: '16px' }}>
+                  <div className="sidebar-section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 'bold', marginBottom: '12px', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px', color: 'var(--text-primary)' }}>
+                    <span>🐸</span>
+                    <span>公式連携：カエル分析官</span>
+                  </div>
                   
-                  {isKaeruOpen && (
-                    <div className="accordion-content-body fade-in" style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px', borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
-                      <div className="kaeru-widget-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <div className="kaeru-widget-image-container" style={{ width: '100%', height: '100px', borderRadius: '8px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
-                          <img 
-                            src="/kaeru_analyst_eyecatch.jpg" 
-                            alt="カエル分析官" 
-                            className="kaeru-widget-img"
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          />
-                        </div>
-                        
-                        <p className="kaeru-widget-desc" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                          「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
-                        </p>
-                        
-                        <div className="kaeru-widget-buttons" style={{ display: 'flex', gap: '8px' }}>
-                          <a 
-                            href="https://note.com/kaeru_analyst" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            onClick={() => playSound('click')}
-                            className="btn btn-secondary kaeru-btn-note"
-                            style={{ flex: 1, padding: '6px 0', textAlign: 'center', display: 'block', fontSize: '11px', textDecoration: 'none' }}
-                          >
-                            📝 noteを読む
-                          </a>
-                          <a 
-                            href="https://x.com/michellle_sato" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            onClick={() => playSound('click')}
-                            className="btn btn-secondary kaeru-btn-x"
-                            style={{ flex: 1, padding: '6px 0', textAlign: 'center', display: 'block', fontSize: '11px', textDecoration: 'none' }}
-                          >
-                            𝕏 をフォロー
-                          </a>
-                        </div>
-                      </div>
+                  <div className="kaeru-widget-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
+                    <div className="kaeru-widget-image-container" style={{ width: '100%', height: '100px', borderRadius: '8px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
+                      <img 
+                        src="/kaeru_analyst_eyecatch.jpg" 
+                        alt="カエル分析官" 
+                        className="kaeru-widget-img"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
                     </div>
-                  )}
+                    
+                    <p className="kaeru-widget-desc" style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                      「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
+                    </p>
+                    
+                    <div className="kaeru-widget-buttons" style={{ display: 'flex', gap: '8px' }}>
+                      <a 
+                        href="https://note.com/kaeru_analyst" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={() => playSound('click')}
+                        className="btn btn-secondary kaeru-btn-note"
+                        style={{ flex: 1, padding: '6px 0', textAlign: 'center', display: 'block', fontSize: '11px', textDecoration: 'none' }}
+                      >
+                        📝 noteを読む
+                      </a>
+                      <a 
+                        href="https://x.com/michellle_sato" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={() => playSound('click')}
+                        className="btn btn-secondary kaeru-btn-x"
+                        style={{ flex: 1, padding: '6px 0', textAlign: 'center', display: 'block', fontSize: '11px', textDecoration: 'none' }}
+                      >
+                        𝕏 をフォロー
+                      </a>
+                    </div>
+                  </div>
                 </div>
 
                 {/* 常時表示：スポンサー広告 */}
@@ -1462,11 +1584,9 @@ export default function Dashboard({
                   </div>
                   <RakutenWidget size="250x250" ts="1779836909524" />
                 </div>
-
               </div>
               </div>
 
-          </div>
           </div>
 
           {/* モバイル用レイアウト (幅767px以下で表示) */}

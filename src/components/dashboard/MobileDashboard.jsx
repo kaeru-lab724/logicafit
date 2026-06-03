@@ -1122,113 +1122,97 @@ export default function MobileDashboard({
               )}
             </section>
 
-            {/* アコーディオン: 環境音・ASMR設定 */}
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '10px 12px' }}>
-              <button 
-                onClick={() => { playSound('click'); setIsSoundOpen(!isSoundOpen); }}
-                style={{ background: 'none', border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', padding: 0, color: 'var(--text-primary)' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold' }}>
-                  <span>🎧</span>
-                  <span>環境音・ASMR設定</span>
-                </div>
-                <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: isSoundOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-              </button>
+            {/* カード: 環境音・ASMR設定 (常時表示) */}
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', color: 'var(--text-primary)' }}>
+                <span>🎧</span>
+                <span>環境音・ASMR設定</span>
+              </div>
               
-              {isSoundOpen && (
-                <div className="fade-in" style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '11px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <span style={{ fontWeight: 'bold', color: 'var(--text-muted)', fontSize: '10px' }}>▼ バックグラウンド環境音</span>
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      {[
-                        { id: 'none', label: '🍵 静寂' },
-                        { id: 'rain', label: '🌧️ 雨音' },
-                        { id: 'cozy_pad', label: '🌀 思考' }
-                      ].map(item => (
-                        <button
-                          key={item.id}
-                          onClick={() => { playSound('click'); setBgmType(item.id); }}
-                          className={`btn bgm-select-btn ${bgmType === item.id ? 'active' : ''}`}
-                          style={{ padding: '4px 0', fontSize: '10px', flex: 1 }}
-                        >
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {bgmType !== 'none' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>音量</span>
-                        <span>{Math.round(bgmVolume * 100)}%</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="0.8"
-                        step="0.05"
-                        value={bgmVolume}
-                        onChange={(e) => setBgmVolume(parseFloat(e.target.value))}
-                        style={{ width: '100%' }}
-                      />
-                    </div>
-                  )}
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontWeight: 'bold' }}>⌨️ タイピングASMR音</span>
-                    </div>
-                    <button
-                      onClick={() => { playSound('click'); setKeyboardEnabled(!keyboardEnabled); }}
-                      className={`btn ${keyboardEnabled ? 'active' : ''}`}
-                      style={{ padding: '4px 10px', fontSize: '10px' }}
-                    >
-                      {keyboardEnabled ? 'ON' : 'OFF'}
-                    </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '11px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{ fontWeight: 'bold', color: 'var(--text-muted)', fontSize: '10px' }}>▼ バックグラウンド環境音</span>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    {[
+                      { id: 'none', label: '🍵 静寂' },
+                      { id: 'rain', label: '🌧️ 雨音' },
+                      { id: 'cozy_pad', label: '🌀 思考' }
+                    ].map(item => (
+                      <button
+                        key={item.id}
+                        onClick={() => { playSound('click'); setBgmType(item.id); }}
+                        className={`btn bgm-select-btn ${bgmType === item.id ? 'active' : ''}`}
+                        style={{ padding: '4px 0', fontSize: '10px', flex: 1 }}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
-              )}
-            </div>
 
-            {/* アコーディオン: カエル分析官公式連携ウィジェット */}
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '10px 12px' }}>
-              <button 
-                onClick={() => { playSound('click'); setIsKaeruOpen(!isKaeruOpen); }}
-                style={{ background: 'none', border: 'none', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', padding: 0, color: 'var(--text-primary)' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold' }}>
-                  <span>🐸</span>
-                  <span>公式連携：カエル分析官</span>
-                </div>
-                <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: isKaeruOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-              </button>
-              
-              {isKaeruOpen && (
-                <div className="fade-in" style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
-                  <div style={{ width: '100%', height: '80px', borderRadius: '6px', overflow: 'hidden', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
-                    <img 
-                      src="/kaeru_analyst_eyecatch.jpg" 
-                      alt="カエル分析官" 
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                {bgmType !== 'none' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>音量</span>
+                      <span>{Math.round(bgmVolume * 100)}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="0.8"
+                      step="0.05"
+                      value={bgmVolume}
+                      onChange={(e) => setBgmVolume(parseFloat(e.target.value))}
+                      style={{ width: '100%' }}
                     />
                   </div>
-                  
-                  <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                    「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
-                  </p>
-                  
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <a href="https://note.com/kaeru_analyst" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
-                      📝 noteを読む
-                    </a>
-                    <a href="https://x.com/michellle_sato" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
-                      𝕏 をフォロー
-                    </a>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontWeight: 'bold' }}>⌨️ タイピングASMR音</span>
                   </div>
+                  <button
+                    onClick={() => { playSound('click'); setKeyboardEnabled(!keyboardEnabled); }}
+                    className={`btn ${keyboardEnabled ? 'active' : ''}`}
+                    style={{ padding: '4px 10px', fontSize: '10px' }}
+                  >
+                    {keyboardEnabled ? 'ON' : 'OFF'}
+                  </button>
                 </div>
-              )}
+              </div>
+            </div>
+
+            {/* カード: カエル分析官公式連携ウィジェット (常時表示) */}
+            <div className="glass-panel" style={{ borderRadius: '12px', padding: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', color: 'var(--text-primary)' }}>
+                <span>🐸</span>
+                <span>公式連携：カエル分析官</span>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
+                <div style={{ width: '100%', height: '80px', borderRadius: '6px', overflow: 'hidden', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
+                  <img 
+                    src="/kaeru_analyst_eyecatch.jpg" 
+                    alt="カエル分析官" 
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+                
+                <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                  「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
+                </p>
+                
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <a href="https://note.com/kaeru_analyst" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
+                    📝 noteを読む
+                  </a>
+                  <a href="https://x.com/michellle_sato" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
+                    𝕏 をフォロー
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* スポンサー広告 */}
