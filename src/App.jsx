@@ -1249,7 +1249,7 @@ export default function App() {
             gameState={gameState}
             onFinish={handleGameFinish}
             playSound={playSound}
-            onBack={() => setActiveGame(null)}
+            onBack={() => { setActiveGame(null); setActiveTab('home'); }}
             muted={muted}
             toggleMute={toggleMute}
           />

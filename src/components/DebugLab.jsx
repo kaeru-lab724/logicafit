@@ -122,7 +122,7 @@ export default function DebugLab({ gameState, onFinish, playSound, onBack, muted
           }}
         >
           <ChevronLeft size={16} />
-          ダッシュボードへ戻る
+          統合ハブに戻る
         </button>
       </div>
 
