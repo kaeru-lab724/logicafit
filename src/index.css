@@ -4641,22 +4641,23 @@ body.light-theme .lab-banner-active:hover {
   }
 
   /* モバイル版はみ出し対策の絶対防壁 */
-  .mobile-dashboard-wrapper *,
-  .mobile-main-content * {
-    max-width: 100%;
+  .dashboard-root-wrapper,
+  .dashboard-grid-layout,
+  .dashboard-main-column,
+  .glass-panel,
+  .radar-chart-panel,
+  .quick-actions-row,
+  .dashboard-tab-navigation,
+  .dashboard-tab-content-panel,
+  .footer-accordion-section,
+  .accordion-panel,
+  .sponsor-panel {
+    max-width: 100% !important;
     box-sizing: border-box !important;
   }
   
-  /* 特定の要素ではみ出しを防ぐ個別指定 */
-  .mobile-carousel-panel,
-  .mobile-quick-card,
-  .mobile-collapse-panel,
-  .mobile-room-card,
-  .mobile-game-card,
-  .mobile-bug-row,
-  .mobile-tuning-row,
-  .mobile-badge-card {
-    width: 100% !important;
+  /* すべての子要素にはみ出しを防ぐ制約をかける */
+  .dashboard-root-wrapper * {
     max-width: 100% !important;
     box-sizing: border-box !important;
   }

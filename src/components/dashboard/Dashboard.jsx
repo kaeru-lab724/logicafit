@@ -862,16 +862,14 @@ export default function Dashboard({
                     
                     <div className="diagnostics-grid-layout" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                       {/* 思考力パラメーター (Radar Chart) */}
-                      <div className="glass-panel radar-chart-panel" style={{ width: '100%', maxWidth: '450px', margin: '0 auto 10px auto', padding: '16px' }}>
+                      <div className="glass-panel radar-chart-panel" style={{ width: '100%', maxWidth: '450px', margin: '0 auto 10px auto', padding: '16px', boxSizing: 'border-box' }}>
                         <div className="radar-chart-title" style={{ fontSize: '14px', fontWeight: 'bold', textAlign: 'center', marginBottom: '10px' }}>
                           {isFullUnlocked ? '思考力パラメーター' : '診断結果スキャンマップ'}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '280px', margin: '0 auto' }}>
                           <svg 
                             viewBox="0 0 320 300" 
-                            width="100%" 
-                            height="auto" 
-                            style={{ maxWidth: '320px' }}
+                            style={{ width: '100%', height: 'auto', maxWidth: '100%', overflow: 'visible' }}
                             className="radar-chart-svg"
                           >
                             {/* Background grid pentagons */}
@@ -958,7 +956,7 @@ export default function Dashboard({
                             {getCriticalScore() > 0 && <circle cx={160 - 80 * (getCriticalScore() / 100) * 0.9511} cy={150 - 80 * (getCriticalScore() / 100) * 0.3090} r="4" fill="var(--color-rose)" />}
                           </svg>
                         </div>
-                        <div className="radar-eq-bar-group" style={{ marginTop: '15px' }}>
+                        <div className="radar-eq-bar-group" style={{ marginTop: '15px', width: '100%', boxSizing: 'border-box' }}>
                           <div className="eq-bar-header" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 'bold' }}>
                             <span className="eq-label color-primary" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <Sparkles size={14} />
