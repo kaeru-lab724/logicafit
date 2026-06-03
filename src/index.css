@@ -4662,3 +4662,35 @@ body.light-theme .lab-banner-active:hover {
     box-sizing: border-box !important;
   }
 }
+
+/* PC用とモバイル用のレイアウト出し分け */
+@media (max-width: 767px) {
+  .pc-only-layout {
+    display: none !important;
+  }
+  .mobile-only-layout {
+    display: block !important;
+  }
+}
+@media (min-width: 768px) {
+  .pc-only-layout {
+    display: block !important;
+  }
+  .mobile-only-layout {
+    display: none !important;
+  }
+}
+
+/* モバイル専用のスタイル調整 */
+.mobile-bottom-nav button {
+  transition: all 0.15s ease;
+}
+.mobile-bottom-nav button:active {
+  transform: scale(0.92);
+}
+.sub-tab-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sub-tab-btn:active {
+  transform: scale(0.97);
+}

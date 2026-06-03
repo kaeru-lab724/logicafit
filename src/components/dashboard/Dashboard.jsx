@@ -22,6 +22,7 @@ import LandingPage from './LandingPage';
 import FrictionMatcher from './FrictionMatcher';
 import BugLibrary from './BugLibrary';
 import BadgeModal from './BadgeModal';
+import MobileDashboard from './MobileDashboard';
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
@@ -234,6 +235,8 @@ export default function Dashboard({
            ② 診断完了後フェーズ（完全1カラム・レスポンシブダッシュボード）
            ======================================================= */
         <>
+          {/* PC用レイアウト (幅768px以上で表示) */}
+          <div className="pc-only-layout">
           {showIntroduction && (
             <div className="introduction-wrapper fade-in">
               <LandingPage 
@@ -244,10 +247,10 @@ export default function Dashboard({
             </div>
           )}
 
-          <div className="dashboard-grid-layout" style={{ display: 'flex', flexDirection: 'column', maxWidth: '800px', margin: '0 auto', gap: '20px' }}>
+          <div className="dashboard-grid-layout" style={{ display: 'flex', gap: '24px', maxWidth: '1200px', margin: '0 auto', alignItems: 'flex-start' }}>
           
             {/* メインカラム（全情報を中央寄せ1カラムに統合） */}
-            <div className="dashboard-main-column" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="dashboard-main-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
               
               {/* Column 1: Your Brain Bug Card (Refactored to Autoplay Carousel) */}
               {(() => {
@@ -1298,7 +1301,12 @@ export default function Dashboard({
               {/* ========================================================
                  ③ フッターアコーディオンセクション (タブの外側最下部)
                  ======================================================== */}
-              <div className="footer-accordion-section" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+              
+              
+            </div>
+              {/* 右サイドバーカラム (PC専用) */}
+              <div className="dashboard-sidebar-column" style={{ width: '320px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div className="footer-accordion-section" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '0' }}>
                 
                 {/* アコーディオン 1: 環境音・ASMR設定 */}
                 <div className="glass-panel accordion-panel" style={{ borderRadius: '12px', padding: '12px 16px' }}>
@@ -1448,9 +1456,48 @@ export default function Dashboard({
                 </div>
 
               </div>
-              
-            </div>
+              </div>
+
           </div>
+          </div>
+
+          {/* モバイル用レイアウト (幅767px以下で表示) */}
+          <div className="mobile-only-layout">
+            <MobileDashboard 
+              isFullUnlocked={isFullUnlocked}
+              gameState={gameState}
+              charClass={charClass}
+              playSound={playSound}
+              setActiveGame={setActiveGame}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              mode={mode}
+              displayScores={displayScores}
+              primaryDebugCategory={primaryDebugCategory}
+              rooms={rooms}
+              spellInput={spellInput}
+              setSpellInput={setSpellInput}
+              spellError={spellError}
+              setSpellError={setSpellError}
+              spellSuccess={spellSuccess}
+              setSpellSuccess={setSpellSuccess}
+              handleRestoreSpell={handleRestoreSpell}
+              handleCopySpell={handleCopySpell}
+              currentSpell={currentSpell}
+              setShowGuideModal={setShowGuideModal}
+              badgeDetails={badgeDetails}
+              skillsData={skillsData}
+              onUnlockType={onUnlockType}
+              onStartReview={onStartReview}
+              onClearTuningToday={onClearTuningToday}
+              setMode={setMode}
+              theme={theme}
+              setTheme={setTheme}
+              muted={muted}
+              toggleMute={toggleMute}
+ />
+          </div>
+
         </>
       )}
 
