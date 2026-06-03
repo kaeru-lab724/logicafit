@@ -256,7 +256,7 @@ export default function Dashboard({
               {(activeTab === 'home' || activeTab === 'achievements') && (
                 <div className="dashboard-tab-navigation" id="training-menu">
                   {[
-                    { id: 'home', label: '🏬 総合ロビー' },
+                    { id: 'home', label: '🧠 統合ハブ' },
                     { id: 'achievements', label: '🏆 実績・設定' }
                   ].map(tab => {
                     const isActive = activeTab === tab.id;
@@ -286,7 +286,7 @@ export default function Dashboard({
                       className="back-to-lobby-btn"
                     >
                       <ChevronLeft size={16} />
-                      <span>← 総合ロビーに戻る</span>
+                      <span>← 統合ハブに戻る</span>
                     </button>
                   </div>
                 )}
@@ -295,12 +295,12 @@ export default function Dashboard({
                 {activeTab === 'home' && (
                   <div className="fade-in home-tab-columns-wrapper" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                     
-                    {/* 左メインカラム：4大テナント（売り場看板） */}
+                    {/* 左メインカラム：主要デバッグモジュール */}
                     <div className="home-left-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
                       <div className="department-lobby-wrapper">
-                        <h2 className="department-lobby-title">🏬 総合ロビー / フロアガイド</h2>
+                        <h2 className="department-lobby-title">🧠 脳内デバッグ統合ハブ / CONTROL HUB</h2>
                         <p className="department-lobby-desc">
-                          脳内デバッグ・デパートへようこそ。各フロア（部屋）では、認知の偏りを修正するトレーニングや、スキャン結果の確認、バグ図鑑の閲覧が可能です。
+                          LogiFitシステムコントロールハブ。各セクションモジュールを起動し、認知回路の調整、ブレインコードの分析、および思考バグの検出を実行できます。
                         </p>
                         
                         <div className="tenants-grid">
@@ -311,15 +311,15 @@ export default function Dashboard({
                           >
                             <div className="tenant-card-header">
                               <div className="tenant-icon-circle">🏋️</div>
-                              <span className="tenant-tag">GYM</span>
+                              <span className="tenant-tag">MODULE 01</span>
                             </div>
                             <h3 className="tenant-title">思考力トレーニングジム</h3>
-                            <p className="tenant-tagline">論理＆クリティカル筋トレ</p>
+                            <p className="tenant-tagline">論理 ＆ クリティカル思考強化</p>
                             <p className="tenant-desc">
-                              事実と意見の選別や論理の妥当性検証など、ゲーム感覚で思考力を鍛え直すための本格トレーニングジム。
+                              事実と意見の選別や論理妥当性の検証など、脳の論理回路を鍛え上げるトレーニングエリア。
                             </p>
                             <div className="tenant-footer">
-                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
+                              <span className="tenant-action-text">セッション起動 <ChevronRight size={14} /></span>
                             </div>
                           </div>
 
@@ -330,15 +330,15 @@ export default function Dashboard({
                           >
                             <div className="tenant-card-header">
                               <div className="tenant-icon-circle">🧠</div>
-                              <span className="tenant-tag">CLINIC</span>
+                              <span className="tenant-tag">MODULE 02</span>
                             </div>
                             <h3 className="tenant-title">思考調律クリニック</h3>
-                            <p className="tenant-tagline">脳内ノイズをデバッグ</p>
+                            <p className="tenant-tagline">脳内ノイズの検出とデバッグ</p>
                             <p className="tenant-desc">
-                              日常のモヤモヤ（主観や感情的なノイズ）を吐き出して認知バイアスを検知し、クリアな事実コードへ調律。
+                              日常の主観的な偏りや感情的ノイズを排出し、認知バイアスを検知して客観的な事実コードへ調律。
                             </p>
                             <div className="tenant-footer">
-                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
+                              <span className="tenant-action-text">調律セッション起動 <ChevronRight size={14} /></span>
                             </div>
                           </div>
 
@@ -349,15 +349,15 @@ export default function Dashboard({
                           >
                             <div className="tenant-card-header">
                               <div className="tenant-icon-circle">📊</div>
-                              <span className="tenant-tag">LAB</span>
+                              <span className="tenant-tag">MODULE 03</span>
                             </div>
                             <h3 className="tenant-title">脳内レントゲン ＆ 摩擦研究所</h3>
-                            <p className="tenant-tagline">思考コード ＆ 相性チェック</p>
+                            <p className="tenant-tagline">ブレインコード解析 ＆ 思考摩擦測定</p>
                             <p className="tenant-desc">
-                              診断結果のスキャンマップ（レーダーチャート）確認や、他者のブレインコードから思考の摩擦係数をスキャン。
+                              診断結果のスキャンマップ（五角形パラメーター）分析や、他者のブレインコードとの相性摩擦を測定。
                             </p>
                             <div className="tenant-footer">
-                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
+                              <span className="tenant-action-text">ラボラトリーにアクセス <ChevronRight size={14} /></span>
                             </div>
                           </div>
 
@@ -368,15 +368,15 @@ export default function Dashboard({
                           >
                             <div className="tenant-card-header">
                               <div className="tenant-icon-circle">📖</div>
-                              <span className="tenant-tag">MUSEUM</span>
+                              <span className="tenant-tag">MODULE 04</span>
                             </div>
                             <h3 className="tenant-title">脳内バグ博物館</h3>
-                            <p className="tenant-tagline">全30種のバグ図鑑</p>
+                            <p className="tenant-tagline">認知バイアス・データベース（全30種）</p>
                             <p className="tenant-desc">
-                              誰もが無意識に抱えている思考のバグ（認知バイアス）全30種を、リアルな具体例と処方箋と共に展示・解説。
+                              無意識に陥る思考のバグ（認知バイアス）全30種を、具体例と改善プロセスと共に展示・解説。
                             </p>
                             <div className="tenant-footer">
-                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
+                              <span className="tenant-action-text">データベースを表示 <ChevronRight size={14} /></span>
                             </div>
                           </div>
                         </div>
