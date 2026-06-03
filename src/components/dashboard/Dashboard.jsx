@@ -252,6 +252,39 @@ export default function Dashboard({
             {/* メインカラム（全情報を中央寄せ1カラムに統合） */}
             <div className="dashboard-main-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
               
+              {/* Tab Navigation Menu */}
+              <div className="dashboard-tab-navigation" id="training-menu">
+                {[
+                  { id: 'home', label: '🏠 ホーム' },
+                  { id: 'training', label: '🏋️ トレーニング' },
+                  { id: 'diagnostics', label: '📊 診断スキャン' },
+                  { id: 'bugNote', label: '🧠 脳内バグノート' },
+                  { id: 'encyclopedia', label: '📖 脳内図鑑・解説' },
+                  { id: 'achievements', label: '🏆 実績 ＆ ログ' }
+                ].map(tab => {
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => { playSound('click'); setActiveTab(tab.id); }}
+                      className={`tab-btn ${isActive ? 'active-tab' : 'inactive-tab'}`}
+                      style={{
+                        borderColor: isActive ? 'var(--color-primary)' : 'transparent',
+                        color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)'
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Tab Content Display Area */}
+              <div className="dashboard-tab-content-panel">
+                
+                {/* 0. HOME TAB */}
+                {activeTab === 'home' && (
+                  <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {/* Column 1: Your Brain Bug Card (Refactored to Autoplay Carousel) */}
               {(() => {
                 const slides = [
@@ -664,34 +697,9 @@ export default function Dashboard({
                 );
               })()}
 
-              {/* Tab Navigation Menu */}
-              <div className="dashboard-tab-navigation" id="training-menu">
-                {[
-                  { id: 'training', label: '🏋️ トレーニング' },
-                  { id: 'diagnostics', label: '📊 診断スキャン' },
-                  { id: 'bugNote', label: '🧠 脳内バグノート' },
-                  { id: 'encyclopedia', label: '📖 脳内図鑑・解説' },
-                  { id: 'achievements', label: '🏆 実績 ＆ ログ' }
-                ].map(tab => {
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => { playSound('click'); setActiveTab(tab.id); }}
-                      className={`tab-btn ${isActive ? 'active-tab' : 'inactive-tab'}`}
-                      style={{
-                        borderColor: isActive ? 'var(--color-primary)' : 'transparent',
-                        color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)'
-                      }}
-                    >
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
 
-              {/* Tab Content Display Area */}
-              <div className="dashboard-tab-content-panel">
+                  </div>
+                )}
                 
                 {/* 1. TRAINING MENU TAB */}
                 {activeTab === 'training' && (
@@ -1406,7 +1414,7 @@ export default function Dashboard({
                       <div className="kaeru-widget-body" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <div className="kaeru-widget-image-container" style={{ width: '100%', height: '100px', borderRadius: '8px', overflow: 'hidden', position: 'relative', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
                           <img 
-                            src="/src/assets/kaeru_analyst_banner.jpg" 
+                            src="/kaeru_analyst_eyecatch.jpg" 
                             alt="カエル分析官" 
                             className="kaeru-widget-img"
                             onError={(e) => {

@@ -1208,7 +1208,7 @@ export default function MobileDashboard({
                 <div className="fade-in" style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
                   <div style={{ width: '100%', height: '80px', borderRadius: '6px', overflow: 'hidden', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
                     <img 
-                      src="/src/assets/kaeru_analyst_banner.jpg" 
+                      src="/kaeru_analyst_eyecatch.jpg" 
                       alt="カエル分析官" 
                       onError={(e) => { e.target.style.display = 'none'; }}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}

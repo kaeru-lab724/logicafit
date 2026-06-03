@@ -649,7 +649,7 @@ export default function App() {
   const isFullUnlocked = gameState.xp > 0;
   
   const currentSpell = encodeState(gameState);
-  const [activeTab, setActiveTab] = useState('training');
+  const [activeTab, setActiveTab] = useState('home');
 
   // レーダーチャート用のスコア変換
   const displayScores = (gameState.xp > 0)
