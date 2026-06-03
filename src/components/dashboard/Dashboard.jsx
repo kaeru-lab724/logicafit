@@ -253,516 +253,134 @@ export default function Dashboard({
             <div className="dashboard-main-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
               
               {/* Tab Navigation Menu */}
-              <div className="dashboard-tab-navigation" id="training-menu">
-                {[
-                  { id: 'home', label: '🏠 ホーム' },
-                  { id: 'training', label: '🏋️ 思考練習' },
-                  { id: 'diagnostics', label: '📊 レントゲン結果 ＆ コード' },
-                  { id: 'bugNote', label: '🧠 バグノート' },
-                  { id: 'encyclopedia', label: '📖 バグ図鑑' },
-                  { id: 'achievements', label: '🏆 実績' }
-                ].map(tab => {
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => { playSound('click'); setActiveTab(tab.id); }}
-                      className={`tab-btn ${isActive ? 'active-tab' : 'inactive-tab'}`}
-                      style={{
-                        borderColor: isActive ? 'var(--color-primary)' : 'transparent',
-                        color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)'
-                      }}
-                    >
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
+              {(activeTab === 'home' || activeTab === 'achievements') && (
+                <div className="dashboard-tab-navigation" id="training-menu">
+                  {[
+                    { id: 'home', label: '🏬 総合ロビー' },
+                    { id: 'achievements', label: '🏆 実績・設定' }
+                  ].map(tab => {
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => { playSound('click'); setActiveTab(tab.id); }}
+                        className={`tab-btn ${isActive ? 'active-tab' : 'inactive-tab'}`}
+                        style={{
+                          borderColor: isActive ? 'var(--color-primary)' : 'transparent',
+                          color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)'
+                        }}
+                      >
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Tab Content Display Area */}
               <div className="dashboard-tab-content-panel">
+                {activeTab !== 'home' && activeTab !== 'achievements' && (
+                  <div className="back-to-lobby-bar">
+                    <button 
+                      onClick={() => { playSound('click'); setActiveTab('home'); }} 
+                      className="back-to-lobby-btn"
+                    >
+                      <ChevronLeft size={16} />
+                      <span>← 総合ロビーに戻る</span>
+                    </button>
+                  </div>
+                )}
                 
                 {/* 0. HOME TAB */}
                 {activeTab === 'home' && (
                   <div className="fade-in home-tab-columns-wrapper" style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                     
-                    {/* 左メインカラム：プロフィールカルーセル ＆ クイックアクション */}
+                    {/* 左メインカラム：4大テナント（売り場看板） */}
                     <div className="home-left-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
-
-              {/* Column 1: Your Brain Bug Card (Refactored to Autoplay Carousel) */}
-              {(() => {
-                const slides = [
-                  // Slide 1: My Profile
-                  {
-                    badge: "あなたの愛すべき脳内バグ",
-                    badgeColor: "var(--color-badge-bg)",
-                    badgeTextColor: "var(--color-badge-text)",
-                    badgeBorder: "var(--color-badge-border)",
-                    level: gameState?.level ? `レベル ${gameState.level}` : '',
-                    icon: currentType?.emoji || "🐸",
-                    title: currentType?.name || charClass?.title,
-                    tagline: currentType?.tagline || '思考のデバッグジムへようこそ',
-                    desc: (
-                      <>
-                        <p className="carousel-slide-desc">
-                          {currentType?.description || charClass?.desc}
+                      <div className="department-lobby-wrapper">
+                        <h2 className="department-lobby-title">🏬 総合ロビー / フロアガイド</h2>
+                        <p className="department-lobby-desc">
+                          脳内デバッグ・デパートへようこそ。各フロア（部屋）では、認知の偏りを修正するトレーニングや、スキャン結果の確認、バグ図鑑の閲覧が可能です。
                         </p>
                         
-                        {/* アコーディオン: 取扱説明書 (トリセツ) & 3大バグ */}
-                        {currentType && (
-                          <div className="accordion-wrapper">
-                            <button
-                              onClick={() => { playSound('click'); setShowBugDetails(!showBugDetails); }}
-                              className="btn btn-secondary accordion-toggle-btn"
-                              style={{
-                                background: showBugDetails ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.01)'
-                              }}
-                            >
-                              <span>{showBugDetails ? '▼ 取扱説明書と脳内バグを閉じる' : '▶ あなたの取扱説明書と脳内バグを見る'}</span>
-                              <Sparkles size={14} className="color-cyan-icon" />
-                            </button>
-
-                            {showBugDetails && (
-                              <div className="accordion-content fade-in">
-                                <div className="accordion-item-box">
-                                  <span className="accordion-item-label color-cyan">💼 工作でのバグ</span>
-                                  <p className="accordion-item-text">{currentType?.workBug}</p>
-                                </div>
-                                <div className="accordion-item-box">
-                                  <span className="accordion-item-label color-rose">🏡 私生活でのバグ</span>
-                                  <p className="accordion-item-text">{currentType?.privateBug}</p>
-                                </div>
-                                <div className="accordion-item-box">
-                                  <span className="accordion-item-label color-amber">⚡ ふとした瞬間のクセ</span>
-                                  <p className="accordion-item-text">{currentType?.dailyHabit}</p>
-                                </div>
-                                <div className="accordion-item-box torisetsu-box">
-                                  <span className="accordion-item-label color-emerald block-label">📋 取扱説明書</span>
-                                  <span className="accordion-sub-label color-rose">● 地雷ポイント</span>
-                                  <p className="accordion-item-text label-spacing">{currentType?.torisetsu?.jealousPoint}</p>
-                                  <span className="accordion-sub-label color-emerald">● デバッグコマンド</span>
-                                  <p className="accordion-item-text">{currentType?.torisetsu?.debugSpell}</p>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </>
-                    ),
-                    actions: (
-                      <div className="carousel-actions-row">
-                        <button 
-                          onClick={() => { 
-                            playSound('click'); 
-                            document.getElementById('training-menu')?.scrollIntoView({ behavior: 'smooth' }); 
-                          }} 
-                          className="btn btn-primary primary-action-btn"
-                          style={{
-                            background: isFullUnlocked 
-                              ? 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)' 
-                              : 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                            boxShadow: isFullUnlocked 
-                              ? '0 4px 15px var(--color-primary-glow)' 
-                              : '0 4px 15px rgba(6, 182, 212, 0.3)'
-                          }}
-                        >
-                          🎯 {isFullUnlocked ? 'デバッグを再開する' : '最初の練習（デバッグ）へ'}
-                        </button>
-                        <button 
-                          onClick={() => { playSound('click'); setActiveGame('diagnostic'); }} 
-                          className="btn btn-secondary secondary-action-btn"
-                        >
-                          再スキャン/他者スキャン
-                        </button>
-                      </div>
-                    )
-                  },
-                  // Slide 2: About LogiFit
-                  {
-                    badge: "LogiFitとは？",
-                    badgeColor: "rgba(6, 182, 212, 0.05)",
-                    badgeTextColor: "var(--color-cyan)",
-                    badgeBorder: "rgba(6, 182, 212, 0.15)",
-                    level: null,
-                    icon: "🔬",
-                    title: "認知のバグを暴く思考ジム",
-                    tagline: "なぜか話が噛み合わない…そのアタマの偏りをデバッグする",
-                    desc: (
-                      <p className="carousel-slide-desc">
-                        LogiFitは、3分間のレントゲン（思考診断）であなたの認知の偏りを暴き、4つの思考ルーム（ロジカル、クリティカル、ラディカル、エモーショナル）でゲーム感覚で思考力をデバッグ・強化するジムです。
-                      </p>
-                    ),
-                    actions: (
-                      <div className="carousel-actions-row">
-                        <button 
-                          onClick={() => { playSound('click'); setShowIntroduction(!showIntroduction); }} 
-                          className="btn btn-primary full-width-btn"
-                          style={{
-                            background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                            boxShadow: '0 4px 15px rgba(6, 182, 212, 0.3)'
-                          }}
-                        >
-                          💡 {showIntroduction ? 'コンセプト説明を閉じる' : 'コンセプト説明を全表示する'}
-                        </button>
-                      </div>
-                    )
-                  },
-                  // Slide 3: Update Note
-                  {
-                    badge: "システムアップデート",
-                    badgeColor: "rgba(244, 63, 94, 0.05)",
-                    badgeTextColor: "var(--color-rose)",
-                    badgeBorder: "rgba(244, 63, 94, 0.15)",
-                    level: null,
-                    icon: "📢",
-                    title: "「脳内デバッグ・ラボ」へ進化",
-                    tagline: "HPや制限時間によるゲームオーバーを撤廃しました",
-                    desc: (
-                      <p className="carousel-slide-desc">
-                        『へりくつ魔獣討伐』を廃止し、本質的な思考デバッグへリニューアル！HP・制限時間によるゲームオーバーをなくし、納得いくまで解説を読んで思考力を磨ける仕様になりました。
-                      </p>
-                    ),
-                    actions: (
-                      <div className="carousel-actions-row">
-                        <button 
-                          onClick={() => { playSound('click'); setActiveTab('encyclopedia'); setLibrarySubTab('bug'); }} 
-                          className="btn btn-secondary flex-btn"
-                        >
-                          👾 脳内バグ図鑑を見る
-                        </button>
-                        <button 
-                          onClick={() => { 
-                            playSound('click'); 
-                            setActiveSlide(0); 
-                            setShowBugDetails(true); 
-                          }} 
-                          className="btn btn-secondary flex-btn"
-                        >
-                          📖 マイ取扱説明書を表示
-                        </button>
-                      </div>
-                    )
-                  },
-                  // Slide 4: Daily Mind Tuning (思考調律) Onboarding
-                  {
-                    badge: "思考調律",
-                    badgeColor: "rgba(16, 185, 129, 0.05)",
-                    badgeTextColor: "#10b981",
-                    badgeBorder: "rgba(16, 185, 129, 0.15)",
-                    level: null,
-                    icon: "🧠",
-                    title: "脳のメモリを解放する「思考調律」",
-                    tagline: "モヤモヤ・イライラをデバッグする、3分の新習慣",
-                    desc: (
-                      <div className="carousel-slide-desc text-left">
-                        <p style={{ margin: '0 0 8px 0' }}>
-                          日常生活や仕事でのモヤモヤ・イライラは脳のメモリ（RAM）を浪費し、集中力や判断力を低下させます。
-                        </p>
-                        <div className="tuning-mini-onboarding">
-                          <div>
-                            <span className="onboarding-heading-green">👉 何をするの？</span>
-                            <span className="onboarding-text-body">本音を書き出して脳内の「認知の偏り」を検出し、客観的な「事実ベース」に書き換えます。</span>
-                          </div>
-                          <div style={{ marginTop: '4px' }}>
-                            <span className="onboarding-heading-green">👉 どうなるの？</span>
-                            <span className="onboarding-text-body">感情的なループ思考が止まり、脳の処理能力が回復して「今やるべきこと」に集中できます。</span>
-                          </div>
-                        </div>
-                      </div>
-                    ),
-                    actions: (
-                      <div className="carousel-actions-row">
-                        {(() => {
-                          const todayStr = new Date().toLocaleDateString('sv'); // YYYY-MM-DD
-                          const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
-                          return isTuningCompletedToday ? (
-                            <div className="tuning-completed-actions" style={{ width: '100%' }}>
-                              <div className="tuning-buttons-group" style={{ display: 'flex', gap: '8px', width: '100%' }}>
-                                <button 
-                                  onClick={() => { 
-                                    playSound('click'); 
-                                    setActiveTab('achievements'); 
-                                    setTimeout(() => {
-                                      document.getElementById('tuning-log-section')?.scrollIntoView({ behavior: 'smooth' });
-                                    }, 100);
-                                  }}
-                                  className="btn btn-secondary tuning-history-link-btn"
-                                  style={{ flex: 1 }}
-                                >
-                                  <span>✅ 本日完了 (履歴へ)</span>
-                                </button>
-                                <button 
-                                  onClick={() => { playSound('click'); setActiveGame('mindTuning'); }} 
-                                  className="btn btn-primary tuning-redo-btn"
-                                  style={{ flex: 1 }}
-                                >
-                                  <span>🔄 もう一度調律する</span>
-                                </button>
-                              </div>
-                              {onClearTuningToday && (
-                                <div className="tuning-reset-debug-wrapper" style={{ marginTop: '8px', textAlign: 'center' }}>
-                                  <button 
-                                    onClick={() => {
-                                      playSound('click');
-                                      onClearTuningToday();
-                                    }}
-                                    className="tuning-debug-clear-btn"
-                                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '10px', cursor: 'pointer' }}
-                                  >
-                                    🧪 [デバッグ] 本日の調律完了状態を解除
-                                  </button>
-                                </div>
-                              )}
+                        <div className="tenants-grid">
+                          {/* 1. トレーニングジム */}
+                          <div 
+                            className="tenant-card gym-tenant"
+                            onClick={() => { playSound('click'); setActiveTab('training'); }}
+                          >
+                            <div className="tenant-card-header">
+                              <div className="tenant-icon-circle">🏋️</div>
+                              <span className="tenant-tag">GYM</span>
                             </div>
-                           ) : (
-                            <button 
-                              onClick={() => { playSound('click'); setActiveGame('mindTuning'); }} 
-                              className="btn btn-primary hover-lift tuning-btn-glow full-width-btn"
-                              style={{ 
-                                background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '6px'
-                              }}
-                            >
-                              <span>🧠 本日の思考調律を起動 (未)</span>
-                              <span className="xp-gold-badge">+100 XP</span>
-                            </button>
-                          );
-                        })()}
-                      </div>
-                    )
-                  }
-                ];
-
-                const isAccordionOpen = activeSlide === 0 && showBugDetails;
-
-                return (
-                  <div 
-                    className="glass-panel carousel-panel-wrapper"
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    style={{
-                      borderLeft: `4px solid ${
-                        activeSlide === 0 
-                          ? (isFullUnlocked ? 'var(--color-primary)' : 'var(--color-cyan)')
-                          : (activeSlide === 1 ? 'var(--color-cyan)' : (activeSlide === 2 ? 'var(--color-rose)' : '#10b981'))
-                      }`,
-                      minHeight: 'auto',
-                      height: 'auto'
-                    }}
-                  >
-                    <div 
-                      key={activeSlide} 
-                      className="fade-in carousel-slide-container"
-                      style={{ display: 'flex', flexDirection: 'row', gap: '24px', alignItems: 'stretch' }}
-                    >
-                      {/* Left Column: Text & Buttons */}
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
-                        <div>
-                          <div className="carousel-slide-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div className="carousel-badge-group">
-                              <span 
-                                className="carousel-slide-badge"
-                                style={{ 
-                                  color: slides[activeSlide].badgeTextColor, 
-                                  background: slides[activeSlide].badgeColor, 
-                                  border: `1px solid ${slides[activeSlide].badgeBorder}` 
-                                }}
-                              >
-                                {slides[activeSlide].badge}
-                              </span>
-                              {slides[activeSlide].level && (
-                                <span className="carousel-slide-level" style={{ marginLeft: '8px' }}>
-                                  {slides[activeSlide].level}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Dot & Arrow Indicators */}
-                            <div className="carousel-indicators-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <button
-                                onClick={() => {
-                                  playSound('click');
-                                  setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
-                                }}
-                                className="carousel-arrow-btn"
-                                title="前へ"
-                              >
-                                <ChevronLeft size={16} />
-                              </button>
-
-                              <div className="carousel-dots-group" style={{ display: 'flex', gap: '4px' }}>
-                                {slides.map((_, idx) => (
-                                  <button
-                                    key={idx}
-                                    onClick={() => { playSound('click'); setActiveSlide(idx); }}
-                                    className={`carousel-dot-btn ${idx === activeSlide ? 'active' : ''}`}
-                                    title={slides[idx].badge}
-                                  />
-                                ))}
-                              </div>
-
-                              <button
-                                onClick={() => {
-                                  playSound('click');
-                                  setActiveSlide((prev) => (prev + 1) % slides.length);
-                                }}
-                                className="carousel-arrow-btn"
-                                title="次へ"
-                              >
-                                <ChevronRight size={16} />
-                              </button>
+                            <h3 className="tenant-title">思考力トレーニングジム</h3>
+                            <p className="tenant-tagline">論理＆クリティカル筋トレ</p>
+                            <p className="tenant-desc">
+                              事実と意見の選別や論理の妥当性検証など、ゲーム感覚で思考力を鍛え直すための本格トレーニングジム。
+                            </p>
+                            <div className="tenant-footer">
+                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
                             </div>
                           </div>
 
-                          <div className="carousel-title-row" style={{ display: 'flex', gap: '12px', marginTop: '16px', alignItems: 'center' }}>
-                            <div>
-                              <h2 className="text-glow carousel-slide-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0 }}>
-                                {slides[activeSlide].title}
-                              </h2>
-                              <p className="carousel-slide-tagline" style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-                                {slides[activeSlide].tagline}
-                              </p>
+                          {/* 2. 思考調律クリニック */}
+                          <div 
+                            className="tenant-card tuning-tenant"
+                            onClick={() => { playSound('click'); setActiveTab('bugNote'); }}
+                          >
+                            <div className="tenant-card-header">
+                              <div className="tenant-icon-circle">🧠</div>
+                              <span className="tenant-tag">CLINIC</span>
+                            </div>
+                            <h3 className="tenant-title">思考調律クリニック</h3>
+                            <p className="tenant-tagline">脳内ノイズをデバッグ</p>
+                            <p className="tenant-desc">
+                              日常のモヤモヤ（主観や感情的なノイズ）を吐き出して認知バイアスを検知し、クリアな事実コードへ調律。
+                            </p>
+                            <div className="tenant-footer">
+                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
                             </div>
                           </div>
 
-                          <div style={{ marginTop: '12px' }}>
-                            {slides[activeSlide].desc}
+                          {/* 3. 脳内レントゲン ＆ 摩擦研究所 */}
+                          <div 
+                            className="tenant-card lab-tenant"
+                            onClick={() => { playSound('click'); setActiveTab('diagnostics'); }}
+                          >
+                            <div className="tenant-card-header">
+                              <div className="tenant-icon-circle">📊</div>
+                              <span className="tenant-tag">LAB</span>
+                            </div>
+                            <h3 className="tenant-title">脳内レントゲン ＆ 摩擦研究所</h3>
+                            <p className="tenant-tagline">思考コード ＆ 相性チェック</p>
+                            <p className="tenant-desc">
+                              診断結果のスキャンマップ（レーダーチャート）確認や、他者のブレインコードから思考の摩擦係数をスキャン。
+                            </p>
+                            <div className="tenant-footer">
+                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
+                            </div>
+                          </div>
+
+                          {/* 4. 脳内バグ博物館 */}
+                          <div 
+                            className="tenant-card museum-tenant"
+                            onClick={() => { playSound('click'); setActiveTab('encyclopedia'); setLibrarySubTab('bug'); }}
+                          >
+                            <div className="tenant-card-header">
+                              <div className="tenant-icon-circle">📖</div>
+                              <span className="tenant-tag">MUSEUM</span>
+                            </div>
+                            <h3 className="tenant-title">脳内バグ博物館</h3>
+                            <p className="tenant-tagline">全30種のバグ図鑑</p>
+                            <p className="tenant-desc">
+                              誰もが無意識に抱えている思考のバグ（認知バイアス）全30種を、リアルな具体例と処方箋と共に展示・解説。
+                            </p>
+                            <div className="tenant-footer">
+                              <span className="tenant-action-text">入店する <ChevronRight size={14} /></span>
+                            </div>
                           </div>
                         </div>
-
-                        <div className="carousel-actions-wrapper" style={{ marginTop: '20px' }}>
-                          {slides[activeSlide].actions}
-                        </div>
                       </div>
-
-                      {/* Right Column: Visual theme illustration */}
-                      <div className="carousel-visual-column" style={{ width: '130px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div className="carousel-emoji-glowing-circle" style={{
-                          width: '100px',
-                          height: '100px',
-                          borderRadius: '50%',
-                          background: slides[activeSlide].badgeColor || 'rgba(255,255,255,0.02)',
-                          border: `1px solid ${slides[activeSlide].badgeBorder || 'var(--border-color)'}`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '44px',
-                          boxShadow: `0 0 25px ${slides[activeSlide].badgeBorder ? slides[activeSlide].badgeBorder.replace('0.15', '0.45').replace('0.2', '0.45') : 'rgba(255,255,255,0.1)'}`,
-                          animation: 'pulse-scale 3s infinite ease-in-out'
-                        }}>
-                          {slides[activeSlide].icon}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* Quick Actions Area */}
-              {(() => {
-                const recGameKey = getRecommendedGameKey(gameState.scores);
-                const recGameName = getGameName(recGameKey);
-                const todayStr = new Date().toLocaleDateString('sv');
-                const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
-
-                return (
-                  <div className="quick-actions-row" style={{ display: 'flex', flexDirection: 'row', gap: '16px', width: '100%', boxSizing: 'border-box' }}>
-                    {/* Recommended Game Action Card */}
-                    <div 
-                      className="glass-panel hover-lift quick-action-card recom-card"
-                      onClick={() => {
-                        playSound('click');
-                        setActiveGame(recGameKey);
-                      }}
-                      style={{ 
-                        cursor: 'pointer', 
-                        flex: 1, 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        justifyContent: 'space-between', 
-                        padding: '20px', 
-                        minHeight: '140px',
-                        borderLeft: '4px solid var(--color-cyan)',
-                        boxSizing: 'border-box'
-                      }}
-                    >
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                          <div className="quick-action-icon-bg cyan-primary-bg" style={{ width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary-soft)' }}>
-                            <Award size={18} className="color-primary" />
-                          </div>
-                          <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--color-cyan)', background: 'rgba(6, 182, 212, 0.05)', padding: '2px 8px', borderRadius: '12px', border: '1px solid rgba(6, 182, 212, 0.15)' }}>RECOMMENDED</span>
-                        </div>
-                        <h3 style={{ fontSize: '14.5px', fontWeight: 'bold', margin: '0 0 6px 0', color: 'var(--text-primary)' }}>思考練習を再開する</h3>
-                        <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                          現在のパラメータに基づき、「{recGameName}」の練習を推奨します。
-                        </p>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
-                        <span style={{ fontSize: '12px', color: 'var(--color-cyan)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          「{recGameName}」をプレイする
-                        </span>
-                        <ChevronRight size={16} className="color-cyan" />
-                      </div>
-                    </div>
-
-                    {/* Daily Tuning Action Card */}
-                    <div 
-                      className={`glass-panel hover-lift quick-action-card tuning-card ${!isTuningCompletedToday ? 'tuning-btn-glow' : ''}`}
-                      onClick={() => {
-                        playSound('click');
-                        setActiveGame('mindTuning');
-                      }}
-                      style={{ 
-                        cursor: 'pointer', 
-                        flex: 1, 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        justifyContent: 'space-between', 
-                        padding: '20px', 
-                        minHeight: '140px',
-                        borderLeft: '4px solid #10b981',
-                        boxSizing: 'border-box'
-                      }}
-                    >
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                          <div className="quick-action-icon-bg emerald-bg" style={{ width: '36px', height: '36px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.1)' }}>
-                            <Brain size={18} className="color-emerald" />
-                          </div>
-                          <span style={{ 
-                            fontSize: '9px', 
-                            fontWeight: 'bold', 
-                            color: '#10b981', 
-                            background: 'rgba(16, 185, 129, 0.05)', 
-                            padding: '2px 8px', 
-                            borderRadius: '12px', 
-                            border: '1px solid rgba(16, 185, 129, 0.15)' 
-                          }}>
-                            {isTuningCompletedToday ? 'COMPLETED' : 'DAILY TUNING'}
-                          </span>
-                        </div>
-                        <h3 style={{ fontSize: '14.5px', fontWeight: 'bold', margin: '0 0 6px 0', color: 'var(--text-primary)' }}>デイリー調律ルーティン</h3>
-                        <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                          思考の偏りをデバッグするための日常調律シナリオクイズ。
-                        </p>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '10px' }}>
-                        <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          {isTuningCompletedToday ? '本日の調律は完了しました' : '本日の思考調律を起動'}
-                        </span>
-                        <ChevronRight size={16} className="color-emerald" />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-
-
                     </div>
 
                     {/* 右パラメーターカラム：レーダーチャート ＆ 相性スキャン */}

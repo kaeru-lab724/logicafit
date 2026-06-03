@@ -214,18 +214,11 @@ export default function MobileDashboard({
   // モバイル用のアクティブタブ切り替え
   const handleNavClick = (tabId) => {
     playSound('click');
-    if (tabId === 'bugs') {
-      // バグタブの場合は前回のサブタブに応じて設定
-      setActiveTab(bugSubTab === 'note' ? 'bugNote' : 'encyclopedia');
-    } else {
-      setActiveTab(tabId);
-    }
+    setActiveTab(tabId);
   };
 
   // ボトムナビでアクティブにする項目の判定
-  const isHomeActive = activeTab === 'home' || activeTab === 'diagnostics';
-  const isTrainingActive = activeTab === 'training';
-  const isBugsActive = activeTab === 'bugNote' || activeTab === 'encyclopedia';
+  const isLobbyFlowActive = activeTab !== 'achievements';
   const isAchievementsActive = activeTab === 'achievements';
 
   // 親の activeTab が変わったらサブタブ状態を同期
@@ -275,419 +268,218 @@ export default function MobileDashboard({
          ② メインコンテンツ領域
          ======================================================== */}
       <main className="mobile-app-content" style={{ padding: '16px', flex: 1 }}>
+        {activeTab !== 'home' && activeTab !== 'achievements' && activeTab !== undefined && (
+          <div className="back-to-lobby-bar" style={{ marginBottom: '16px' }}>
+            <button 
+              onClick={() => { playSound('click'); setActiveTab('home'); }} 
+              className="back-to-lobby-btn"
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              <ChevronLeft size={16} />
+              <span>← ロビーに戻る</span>
+            </button>
+          </div>
+        )}
         
         {/* ========================================================
            HOME TAB: カルーセル・推奨ゲーム・調律起動
            ======================================================== */}
         {(activeTab === 'home' || activeTab === undefined) && (
-          <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            {/* カルーセル */}
-            {(() => {
-              const slides = [
-                {
-                  badge: "あなたの愛すべき脳内バグ",
-                  badgeColor: "var(--color-badge-bg)",
-                  badgeTextColor: "var(--color-badge-text)",
-                  badgeBorder: "var(--color-badge-border)",
-                  level: gameState?.level ? `レベル ${gameState.level}` : '',
-                  icon: currentType?.emoji || "🐸",
-                  title: currentType?.name || charClass?.title,
-                  tagline: currentType?.tagline || '思考のデバッグジムへようこそ',
-                  desc: (
-                    <>
-                      <p className="carousel-slide-desc" style={{ fontSize: '12px', margin: '4px 0 8px 0', lineHeight: '1.4' }}>
-                        {currentType?.description || charClass?.desc}
-                      </p>
-                      {currentType && (
-                        <div className="accordion-wrapper">
-                          <button
-                            onClick={() => { playSound('click'); setShowBugDetails(!showBugDetails); }}
-                            className="btn btn-secondary accordion-toggle-btn"
-                            style={{
-                              background: showBugDetails ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.01)',
-                              fontSize: '11px',
-                              padding: '6px 10px',
-                              width: '100%',
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <span>{showBugDetails ? '▼ 詳細を閉じる' : '▶ あなたの取扱説明書・脳内バグ'}</span>
-                            <Sparkles size={12} className="color-cyan-icon" />
-                          </button>
-
-                          {showBugDetails && (
-                            <div className="accordion-content fade-in" style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11px', borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
-                              <div className="accordion-item-box">
-                                <span className="accordion-item-label color-cyan" style={{ fontWeight: 'bold' }}>💼 工作でのバグ:</span>
-                                <p className="accordion-item-text" style={{ margin: '2px 0 0 0' }}>{currentType?.workBug}</p>
-                              </div>
-                              <div className="accordion-item-box">
-                                <span className="accordion-item-label color-rose" style={{ fontWeight: 'bold' }}>🏡 私生活でのバグ:</span>
-                                <p className="accordion-item-text" style={{ margin: '2px 0 0 0' }}>{currentType?.privateBug}</p>
-                              </div>
-                              <div className="accordion-item-box">
-                                <span className="accordion-item-label color-amber" style={{ fontWeight: 'bold' }}>⚡ ふとした瞬間のクセ:</span>
-                                <p className="accordion-item-text" style={{ margin: '2px 0 0 0' }}>{currentType?.dailyHabit}</p>
-                              </div>
-                              <div className="accordion-item-box torisetsu-box" style={{ background: 'rgba(16, 185, 129, 0.02)', padding: '6px', borderRadius: '4px' }}>
-                                <span className="accordion-item-label color-emerald block-label" style={{ fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>📋 取扱説明書:</span>
-                                <span className="accordion-sub-label color-rose" style={{ fontSize: '10px' }}>● 地雷ポイント:</span>
-                                <p className="accordion-item-text label-spacing" style={{ margin: '0 0 4px 0' }}>{currentType?.torisetsu?.jealousPoint}</p>
-                                <span className="accordion-sub-label color-emerald" style={{ fontSize: '10px' }}>● デバッグコマンド:</span>
-                                <p className="accordion-item-text" style={{ margin: 0 }}>{currentType?.torisetsu?.debugSpell}</p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </>
-                  ),
-                  actions: (
-                    <div className="carousel-actions-row" style={{ display: 'flex', gap: '8px' }}>
-                      <button 
-                        onClick={() => { 
-                          playSound('click'); 
-                          setActiveTab('training');
-                        }} 
-                        className="btn btn-primary primary-action-btn"
-                        style={{
-                          flex: 1,
-                          fontSize: '11px',
-                          padding: '8px 0',
-                          background: isFullUnlocked 
-                            ? 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)' 
-                            : 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                          boxShadow: isFullUnlocked 
-                            ? '0 4px 15px var(--color-primary-glow)' 
-                            : '0 4px 15px rgba(6, 182, 212, 0.3)'
-                        }}
-                      >
-                        🎯 {isFullUnlocked ? 'デバッグ再開' : '最初の練習へ'}
-                      </button>
-                      <button 
-                        onClick={() => { playSound('click'); setActiveGame('diagnostic'); }} 
-                        className="btn btn-secondary secondary-action-btn"
-                        style={{ flex: 1, fontSize: '11px', padding: '8px 0' }}
-                      >
-                        再スキャン
-                      </button>
-                    </div>
-                  )
-                },
-                {
-                  badge: "LogiFitとは？",
-                  badgeColor: "rgba(6, 182, 212, 0.05)",
-                  badgeTextColor: "var(--color-cyan)",
-                  badgeBorder: "rgba(6, 182, 212, 0.15)",
-                  level: null,
-                  icon: "🔬",
-                  title: "認知バイアス思考ジム",
-                  tagline: "アタマの偏りをデバッグする",
-                  desc: (
-                    <p className="carousel-slide-desc" style={{ fontSize: '12px', margin: '4px 0 8px 0', lineHeight: '1.4' }}>
-                      LogiFitは、3分間の診断（思考レントゲン）であなたの認知の偏りを暴き、ゲーム感覚で思考力をデバッグ・強化するジムです。
-                    </p>
-                  ),
-                  actions: (
-                    <div className="carousel-actions-row" style={{ width: '100%' }}>
-                      <button 
-                        onClick={() => { playSound('click'); setShowIntroduction(!showIntroduction); }} 
-                        className="btn btn-primary full-width-btn"
-                        style={{
-                          width: '100%',
-                          fontSize: '11px',
-                          padding: '8px 0',
-                          background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)'
-                        }}
-                      >
-                        💡 {showIntroduction ? 'コンセプトを閉じる' : 'コンセプトを表示'}
-                      </button>
-                    </div>
-                  )
-                },
-                {
-                  badge: "システムアップデート",
-                  badgeColor: "rgba(244, 63, 94, 0.05)",
-                  badgeTextColor: "var(--color-rose)",
-                  badgeBorder: "rgba(244, 63, 94, 0.15)",
-                  level: null,
-                  icon: "📢",
-                  title: "「脳内デバッグ・ラボ」へ進化",
-                  tagline: "HPや制限時間によるゲームオーバーを撤廃",
-                  desc: (
-                    <p className="carousel-slide-desc" style={{ fontSize: '12px', margin: '4px 0 8px 0', lineHeight: '1.4' }}>
-                      HP・制限時間によるゲームオーバーをなくし、納得いくまで解説を読んで思考力を磨ける仕様になりました。
-                    </p>
-                  ),
-                  actions: (
-                    <div className="carousel-actions-row" style={{ display: 'flex', gap: '8px', width: '100%' }}>
-                      <button 
-                        onClick={() => { playSound('click'); setActiveTab('encyclopedia'); setLibrarySubTab('bug'); }} 
-                        className="btn btn-secondary flex-btn"
-                        style={{ flex: 1, fontSize: '11px', padding: '8px 0' }}
-                      >
-                        👾 脳内バグ図鑑を見る
-                      </button>
-                      <button 
-                        onClick={() => { 
-                          playSound('click'); 
-                          setActiveSlide(0); 
-                          setShowBugDetails(true); 
-                        }} 
-                        className="btn btn-secondary flex-btn"
-                        style={{ flex: 1, fontSize: '11px', padding: '8px 0' }}
-                      >
-                        📖 取説を表示
-                      </button>
-                    </div>
-                  )
-                },
-                {
-                  badge: "思考調律",
-                  badgeColor: "rgba(16, 185, 129, 0.05)",
-                  badgeTextColor: "#10b981",
-                  badgeBorder: "rgba(16, 185, 129, 0.15)",
-                  level: null,
-                  icon: "🧠",
-                  title: "脳のメモリを解放する「思考調律」",
-                  tagline: "モヤモヤ・イライラをデバッグする、3分の新習慣",
-                  desc: (
-                    <p className="carousel-slide-desc" style={{ fontSize: '12px', margin: '4px 0 8px 0', lineHeight: '1.4' }}>
-                      日常生活のモヤモヤを書き出して認知の偏りを検出し、客観的な「事実ベース」に書き換えます。イライラが止まり「今やるべきこと」に集中できます。
-                    </p>
-                  ),
-                  actions: (
-                    <div className="carousel-actions-row" style={{ width: '100%' }}>
-                      {(() => {
-                        const todayStr = new Date().toLocaleDateString('sv');
-                        const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
-                        return isTuningCompletedToday ? (
-                          <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
-                            <button 
-                              onClick={() => { 
-                                playSound('click'); 
-                                setActiveTab('achievements'); 
-                                setTimeout(() => {
-                                  document.getElementById('tuning-log-section')?.scrollIntoView({ behavior: 'smooth' });
-                                }, 100);
-                              }}
-                              className="btn btn-secondary"
-                              style={{ flex: 1, fontSize: '11px', padding: '8px 0' }}
-                            >
-                              ✅ 本日完了
-                            </button>
-                            <button 
-                              onClick={() => { playSound('click'); setActiveGame('mindTuning'); }} 
-                              className="btn btn-primary"
-                              style={{ flex: 1, fontSize: '11px', padding: '8px 0' }}
-                            >
-                              🔄 再調律する
-                            </button>
-                          </div>
-                        ) : (
-                          <button 
-                            onClick={() => { playSound('click'); setActiveGame('mindTuning'); }} 
-                            className="btn btn-primary full-width-btn"
-                            style={{ 
-                              width: '100%',
-                              fontSize: '11px',
-                              padding: '8px 0',
-                              background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: '4px'
-                            }}
-                          >
-                            <span>🧠 思考調律を起動</span>
-                            <span className="xp-gold-badge" style={{ background: 'rgba(255,255,255,0.2)', padding: '1px 4px', borderRadius: '3px', fontSize: '9px' }}>+100 XP</span>
-                          </button>
-                        );
-                      })()}
-                    </div>
-                  )
-                }
-              ];
-
-              return (
-                <div 
-                  className="glass-panel carousel-panel-wrapper"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  style={{
-                    borderLeft: `4px solid ${
-                      activeSlide === 0 
-                        ? (isFullUnlocked ? 'var(--color-primary)' : 'var(--color-cyan)')
-                        : (activeSlide === 1 ? 'var(--color-cyan)' : (activeSlide === 2 ? 'var(--color-rose)' : '#10b981'))
-                    }`,
-                    padding: '12px',
-                    borderRadius: '12px'
-                  }}
-                >
-                  <div key={activeSlide} className="fade-in">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span 
-                        className="carousel-slide-badge"
-                        style={{ 
-                          color: slides[activeSlide].badgeTextColor, 
-                          background: slides[activeSlide].badgeColor, 
-                          border: `1px solid ${slides[activeSlide].badgeBorder}`,
-                          fontSize: '10px',
-                          padding: '2px 6px',
-                          borderRadius: '4px'
-                        }}
-                      >
-                        {slides[activeSlide].badge}
-                      </span>
-                      
-                      <div className="carousel-indicators" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <button onClick={() => { playSound('click'); setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length); }} className="carousel-arrow-btn" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', padding: '2px' }}><ChevronLeft size={14} /></button>
-                        <div style={{ display: 'flex', gap: '3px' }}>
-                          {slides.map((_, idx) => (
-                            <div key={idx} className={`carousel-dot ${idx === activeSlide ? 'active' : ''}`} style={{ width: '4px', height: '4px', borderRadius: '50%', background: idx === activeSlide ? 'var(--color-cyan)' : 'rgba(255,255,255,0.2)' }} />
-                          ))}
-                        </div>
-                        <button onClick={() => { playSound('click'); setActiveSlide((prev) => (prev + 1) % slides.length); }} className="carousel-arrow-btn" style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', padding: '2px' }}><ChevronRight size={14} /></button>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px', alignItems: 'center' }}>
-                      <span style={{ fontSize: '24px' }}>{slides[activeSlide].icon}</span>
-                      <div>
-                        <h2 className="text-glow" style={{ fontSize: '15px', fontWeight: 'bold', margin: 0 }}>{slides[activeSlide].title}</h2>
-                        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '1px 0 0 0' }}>{slides[activeSlide].tagline}</p>
-                      </div>
-                    </div>
-
-                    <div style={{ marginTop: '8px' }}>
-                      {slides[activeSlide].desc}
-                    </div>
-
-                    <div style={{ marginTop: '10px' }}>
-                      {slides[activeSlide].actions}
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* コンセプト説明の全表示 (Show Concept Onboarding if toggled) */}
-            {showIntroduction && (
-              <div className="glass-panel fade-in" style={{ padding: '14px', borderRadius: '12px' }}>
-                <h3 style={{ fontSize: '14px', fontWeight: 'bold', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Sparkles size={16} className="color-cyan-icon" />
-                  認知の偏りをデバッグするとは？
-                </h3>
-                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
-                  人は誰しも自分だけの「思考のクセ（認知バイアス）」を持っています。それは仕事や人間関係で「なぜか話が噛み合わない」「イライラしてしまう」といった形で表れます。<br />
-                  LogiFitはあなたの思考の歪み（バグ）を可視化し、それを修正（デバッグ）するための日常トレーニングを提供します。
-                </p>
-              </div>
-            )}
-
-            {/* クイックアクションエリア */}
-            {(() => {
-              const recGameKey = getRecommendedGameKey(gameState.scores);
-              const recGameName = getGameName(recGameKey);
-              const todayStr = new Date().toLocaleDateString('sv');
-              const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
-
-              return (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {/* 推奨トレーニング */}
-                  <div 
-                    className="glass-panel hover-lift"
-                    onClick={() => { playSound('click'); setActiveGame(recGameKey); }}
-                    style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderRadius: '12px' }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyBox: 'center', background: 'var(--color-primary-soft)', justifyContent: 'center' }}>
-                        <Award size={16} className="color-primary" />
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span className="color-cyan" style={{ fontSize: '10px', fontWeight: 'bold' }}>🎯 推奨トレーニング再開</span>
-                        <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>「{recGameName}」をプレイ</span>
-                      </div>
-                    </div>
-                    <ChevronRight size={16} className="arrow-muted-icon" />
-                  </div>
-
-                  {/* 思考調律 */}
-                  <div 
-                    className={`glass-panel hover-lift ${!isTuningCompletedToday ? 'tuning-btn-glow' : ''}`}
-                    onClick={() => { playSound('click'); setActiveGame('mindTuning'); }}
-                    style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderRadius: '12px' }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(16, 185, 129, 0.1)' }}>
-                        <Brain size={16} className="color-emerald" />
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span className="color-emerald" style={{ fontSize: '10px', fontWeight: 'bold' }}>🧠 デイリー調律ルーティン</span>
-                        <span style={{ fontSize: '12px', color: 'var(--text-primary)' }}>
-                          {isTuningCompletedToday ? '本日の調律は完了しました' : '本日の思考調律を起動'}
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronRight size={16} className="arrow-muted-icon" />
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* 簡易診断スキャン誘導（相性チェックや詳細パラメータ） */}
-            <div className="glass-panel" style={{ padding: '12px', borderRadius: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <span style={{ fontSize: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  📊 レントゲン結果 ＆ コード
-                </span>
-                <button 
-                  onClick={() => { playSound('click'); setActiveTab('diagnostics'); }}
-                  className="btn btn-secondary"
-                  style={{ fontSize: '10px', padding: '4px 8px' }}
-                >
-                  詳細・ブレインコード
-                </button>
-              </div>
+            {/* 総合ロビー / フロアガイド */}
+            <div className="department-lobby-wrapper">
+              <h2 className="department-lobby-title" style={{ fontSize: '20px' }}>🏬 総合ロビー / フロアガイド</h2>
+              <p className="department-lobby-desc" style={{ fontSize: '12px', marginBottom: '16px' }}>
+                各フロア（部屋）をタップして、思考力デバッグを開始しましょう。
+              </p>
               
-              {/* コンパクトなレーダーチャート */}
-              <div style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '200px', margin: '0 auto' }}>
-                <svg viewBox="0 0 320 300" style={{ width: '100%', height: 'auto', overflow: 'visible' }}>
-                  <polygon points="160,70 236.1,125.3 207,214.7 113,214.7 83.9,125.3" fill="none" stroke="var(--border-color)" strokeWidth="1" />
-                  <polygon points="160,102 205.7,135.2 188.2,188.8 131.8,188.8 114.3,135.2" fill="none" stroke="var(--border-color)" strokeWidth="1" />
-                  <line x1="160" y1="150" x2="160" y2="70" stroke="var(--border-color)" strokeDasharray="3,3" />
-                  <line x1="160" y1="150" x2="236.1" y2="125.3" stroke="var(--border-color)" strokeDasharray="3,3" />
-                  <line x1="160" y1="150" x2="207" y2="214.7" stroke="var(--border-color)" strokeDasharray="3,3" />
-                  <line x1="160" y1="150" x2="113" y2="214.7" stroke="var(--border-color)" strokeDasharray="3,3" />
-                  <line x1="160" y1="150" x2="83.9" y2="125.3" stroke="var(--border-color)" strokeDasharray="3,3" />
-                  
-                  <text x="160" y="52" textAnchor="middle" fill="var(--color-cyan)" fontSize="18" fontWeight="bold">事実</text>
-                  <text x="255" y="125" textAnchor="start" fill="var(--color-emerald)" fontSize="18" fontWeight="bold">論理</text>
-                  <text x="215" y="235" textAnchor="start" fill="#818cf8" fontSize="18" fontWeight="bold">戦略</text>
-                  <text x="105" y="235" textAnchor="end" fill="var(--color-amber)" fontSize="18" fontWeight="bold">構造</text>
-                  <text x="65" y="125" textAnchor="end" fill="var(--color-rose)" fontSize="18" fontWeight="bold">批判</text>
+              <div className="tenants-grid" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* 1. トレーニングジム */}
+                <div 
+                  className="tenant-card gym-tenant"
+                  onClick={() => { playSound('click'); setActiveTab('training'); }}
+                  style={{ minHeight: 'auto', padding: '16px' }}
+                >
+                  <div className="tenant-card-header" style={{ marginBottom: '8px' }}>
+                    <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>🏋️</div>
+                    <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>GYM</span>
+                  </div>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考力トレーニングジム</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>論理＆クリティカル筋トレ</p>
+                  <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
+                    事実と意見の選別や論理の妥当性検証など、思考力をゲーム感覚で鍛え直すジム。
+                  </p>
+                  <div className="tenant-footer" style={{ paddingTop: '8px' }}>
+                    <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>入店する <ChevronRight size={12} /></span>
+                  </div>
+                </div>
 
-                  <polygon 
-                    points={(() => {
-                      const scale = 80 / 100;
-                      const p1val = displayScores.factsOpinions || 0;
-                      const p2val = displayScores.logicalValidity || 0;
-                      const p3val = getStrategicScore();
-                      const p4val = getRadicalScore();
-                      const p5val = getCriticalScore();
-                      return `${160},${150 - p1val * scale} ${160 + p2val * scale * 0.9511},${150 - p2val * scale * 0.3090} ${160 + p3val * scale * 0.5878},${150 + p3val * scale * 0.8090} ${160 - p4val * scale * 0.5878},${150 + p4val * scale * 0.8090} ${160 - p5val * scale * 0.9511},${150 - p5val * scale * 0.3090}`;
-                    })()} 
-                    fill="rgba(99, 102, 241, 0.25)" 
-                    stroke="#6366f1" 
-                    strokeWidth="2.5"
-                  />
-                </svg>
+                {/* 2. 思考調律クリニック */}
+                <div 
+                  className="tenant-card tuning-tenant"
+                  onClick={() => { playSound('click'); setActiveTab('bugNote'); }}
+                  style={{ minHeight: 'auto', padding: '16px' }}
+                >
+                  <div className="tenant-card-header" style={{ marginBottom: '8px' }}>
+                    <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>🧠</div>
+                    <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>CLINIC</span>
+                  </div>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>思考調律クリニック</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>脳内ノイズをデバッグ</p>
+                  <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
+                    日常のモヤモヤ（感情的なノイズ）を吐き出して認知バイアスを検知し客観コードへ調律。
+                  </p>
+                  <div className="tenant-footer" style={{ paddingTop: '8px' }}>
+                    <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>入店する <ChevronRight size={12} /></span>
+                  </div>
+                </div>
+
+                {/* 3. 脳内レントゲン ＆ 摩擦研究所 */}
+                <div 
+                  className="tenant-card lab-tenant"
+                  onClick={() => { playSound('click'); setActiveTab('diagnostics'); }}
+                  style={{ minHeight: 'auto', padding: '16px' }}
+                >
+                  <div className="tenant-card-header" style={{ marginBottom: '8px' }}>
+                    <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>📊</div>
+                    <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>LAB</span>
+                  </div>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>脳内レントゲン ＆ 摩擦研究所</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>思考コード ＆ 相性チェック</p>
+                  <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
+                    診断結果のスキャンマップ確認や他者のブレインコードとの摩擦係数を測定。
+                  </p>
+                  <div className="tenant-footer" style={{ paddingTop: '8px' }}>
+                    <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>入店する <ChevronRight size={12} /></span>
+                  </div>
+                </div>
+
+                {/* 4. 脳内バグ博物館 */}
+                <div 
+                  className="tenant-card museum-tenant"
+                  onClick={() => { playSound('click'); setActiveTab('encyclopedia'); setLibrarySubTab('bug'); }}
+                  style={{ minHeight: 'auto', padding: '16px' }}
+                >
+                  <div className="tenant-card-header" style={{ marginBottom: '8px' }}>
+                    <div className="tenant-icon-circle" style={{ width: '36px', height: '36px', fontSize: '18px' }}>📖</div>
+                    <span className="tenant-tag" style={{ fontSize: '8px', padding: '2px 6px' }}>MUSEUM</span>
+                  </div>
+                  <h3 className="tenant-title" style={{ fontSize: '15px' }}>脳内バグ博物館</h3>
+                  <p className="tenant-tagline" style={{ fontSize: '10.5px' }}>全30種のバグ図鑑</p>
+                  <p className="tenant-desc" style={{ fontSize: '11px', margin: '0 0 10px 0' }}>
+                    誰しも無意識に抱えている思考のバグ（認知バイアス）全30種を解説。
+                  </p>
+                  <div className="tenant-footer" style={{ paddingTop: '8px' }}>
+                    <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>入店する <ChevronRight size={12} /></span>
+                  </div>
+                </div>
               </div>
             </div>
-            
+
+            {/* ロビーの休憩スペース・ラウンジ */}
+            <div className="lobby-lounge-card" style={{ marginTop: '10px' }}>
+              <h3 className="lobby-lounge-title" style={{ fontSize: '13px' }}>☕ ロビーラウンジ（リラクゼーション ＆ 休憩スペース）</h3>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                トレーニングの合間に休憩しましょう。環境音の調整や公式コラムを読めます。
+              </p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* 環境音・ASMR設定 */}
+                <div className="glass-panel" style={{ borderRadius: '12px', padding: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', color: 'var(--text-primary)' }}>
+                    <span>🎧</span>
+                    <span>環境音・ASMR設定</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '11px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontWeight: 'bold', color: 'var(--text-muted)', fontSize: '10px' }}>▼ バックグラウンド環境音</span>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        {[
+                          { id: 'none', label: '🍵 静寂' },
+                          { id: 'rain', label: '🌧️ 雨音' },
+                          { id: 'cozy_pad', label: '🌀 思考' }
+                        ].map(item => (
+                          <button
+                            key={item.id}
+                            onClick={() => { playSound('click'); setBgmType(item.id); }}
+                            className={`btn bgm-select-btn ${bgmType === item.id ? 'active' : ''}`}
+                            style={{ padding: '4px 0', fontSize: '10px', flex: 1 }}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {bgmType !== 'none' && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>音量</span>
+                          <span>{Math.round(bgmVolume * 100)}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="0.8"
+                          step="0.05"
+                          value={bgmVolume}
+                          onChange={(e) => setBgmVolume(parseFloat(e.target.value))}
+                          style={{ width: '100%' }}
+                        />
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 'bold' }}>⌨️ タイピングASMR音</span>
+                      <button
+                        onClick={() => { playSound('click'); setKeyboardEnabled(!keyboardEnabled); }}
+                        className={`btn ${keyboardEnabled ? 'active' : ''}`}
+                        style={{ padding: '4px 10px', fontSize: '10px' }}
+                      >
+                        {keyboardEnabled ? 'ON' : 'OFF'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* カエル分析官 */}
+                <div className="glass-panel" style={{ borderRadius: '12px', padding: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', color: 'var(--text-primary)' }}>
+                    <span>🐸</span>
+                    <span>公式連携：カエル分析官</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
+                    <div style={{ width: '100%', height: '80px', borderRadius: '6px', overflow: 'hidden', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
+                      <img 
+                        src="/kaeru_analyst_eyecatch.jpg" 
+                        alt="カエル分析官" 
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                      「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
+                    </p>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <a href="https://note.com/kaeru_lab" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
+                        📝 noteを読む
+                      </a>
+                      <a href="https://x.com/michellle_sato" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
+                        𝕏 をフォロー
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* スポンサー広告 */}
+                <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px', borderRadius: '12px' }}>
+                  <div style={{ fontSize: '9px', color: 'var(--text-muted)', marginBottom: '6px' }}>Sponsored Link</div>
+                  <RakutenWidget size="250x250" ts="1779836909524" />
+                </div>
+              </div>
+            </div>
+
           </div>
         )}
 
@@ -696,12 +488,7 @@ export default function MobileDashboard({
            ======================================================== */}
         {activeTab === 'diagnostics' && (
           <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-              <button onClick={() => { playSound('click'); setActiveTab('home'); }} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px 0' }}>
-                <ChevronLeft size={16} />
-              </button>
-              <h2 style={{ fontSize: '15px', fontWeight: 'bold', margin: 0 }}>📊 レントゲン結果 ＆ ブレインコード</h2>
-            </div>
+            <h2 style={{ fontSize: '15px', fontWeight: 'bold', margin: '0 0 10px 0' }}>📊 レントゲン結果 ＆ ブレインコード</h2>
             
             <div className="glass-panel" style={{ padding: '12px', borderRadius: '12px', boxSizing: 'border-box' }}>
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '240px', margin: '0 auto' }}>
@@ -1122,105 +909,6 @@ export default function MobileDashboard({
               )}
             </section>
 
-            {/* カード: 環境音・ASMR設定 (常時表示) */}
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', color: 'var(--text-primary)' }}>
-                <span>🎧</span>
-                <span>環境音・ASMR設定</span>
-              </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '11px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontWeight: 'bold', color: 'var(--text-muted)', fontSize: '10px' }}>▼ バックグラウンド環境音</span>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    {[
-                      { id: 'none', label: '🍵 静寂' },
-                      { id: 'rain', label: '🌧️ 雨音' },
-                      { id: 'cozy_pad', label: '🌀 思考' }
-                    ].map(item => (
-                      <button
-                        key={item.id}
-                        onClick={() => { playSound('click'); setBgmType(item.id); }}
-                        className={`btn bgm-select-btn ${bgmType === item.id ? 'active' : ''}`}
-                        style={{ padding: '4px 0', fontSize: '10px', flex: 1 }}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {bgmType !== 'none' && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>音量</span>
-                      <span>{Math.round(bgmVolume * 100)}%</span>
-                    </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="0.8"
-                      step="0.05"
-                      value={bgmVolume}
-                      onChange={(e) => setBgmVolume(parseFloat(e.target.value))}
-                      style={{ width: '100%' }}
-                    />
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: 'bold' }}>⌨️ タイピングASMR音</span>
-                  </div>
-                  <button
-                    onClick={() => { playSound('click'); setKeyboardEnabled(!keyboardEnabled); }}
-                    className={`btn ${keyboardEnabled ? 'active' : ''}`}
-                    style={{ padding: '4px 10px', fontSize: '10px' }}
-                  >
-                    {keyboardEnabled ? 'ON' : 'OFF'}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* カード: カエル分析官公式連携ウィジェット (常時表示) */}
-            <div className="glass-panel" style={{ borderRadius: '12px', padding: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', color: 'var(--text-primary)' }}>
-                <span>🐸</span>
-                <span>公式連携：カエル分析官</span>
-              </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
-                <div style={{ width: '100%', height: '80px', borderRadius: '6px', overflow: 'hidden', background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' }}>
-                  <img 
-                    src="/kaeru_analyst_eyecatch.jpg" 
-                    alt="カエル分析官" 
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                </div>
-                
-                <p style={{ color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                  「カエル分析官」による、ロジックとエモを駆使した生存戦略エッセイとKindle書籍を公開中。
-                </p>
-                
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <a href="https://note.com/kaeru_lab" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
-                    📝 noteを読む
-                  </a>
-                  <a href="https://x.com/michellle_sato" target="_blank" rel="noopener noreferrer" onClick={() => playSound('click')} className="btn btn-secondary" style={{ flex: 1, padding: '5px 0', textAlign: 'center', display: 'block', fontSize: '10px', textDecoration: 'none' }}>
-                    𝕏 をフォロー
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* スポンサー広告 */}
-            <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px', borderRadius: '12px' }}>
-              <div style={{ fontSize: '9px', color: 'var(--text-muted)', marginBottom: '6px' }}>Sponsored Link</div>
-              <RakutenWidget size="250x250" ts="1779836909524" />
-            </div>
-
           </div>
         )}
 
@@ -1232,31 +920,17 @@ export default function MobileDashboard({
       <nav className="mobile-bottom-nav" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '60px', background: 'rgba(15, 17, 23, 0.94)', backdropFilter: 'blur(12px)', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', zIndex: 100, paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <button 
           onClick={() => handleNavClick('home')}
-          style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isHomeActive ? 'var(--color-cyan)' : 'var(--text-secondary)', cursor: 'pointer', flex: 1, height: '100%', justifyContent: 'center' }}
+          style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isLobbyFlowActive ? 'var(--color-cyan)' : 'var(--text-secondary)', cursor: 'pointer', flex: 1, height: '100%', justifyContent: 'center' }}
         >
           <Home size={20} />
-          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>ホーム</span>
-        </button>
-        <button 
-          onClick={() => handleNavClick('training')}
-          style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isTrainingActive ? 'var(--color-cyan)' : 'var(--text-secondary)', cursor: 'pointer', flex: 1, height: '100%', justifyContent: 'center' }}
-        >
-          <Brain size={20} />
-          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>練習ルーム</span>
-        </button>
-        <button 
-          onClick={() => handleNavClick('bugs')}
-          style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isBugsActive ? 'var(--color-cyan)' : 'var(--text-secondary)', cursor: 'pointer', flex: 1, height: '100%', justifyContent: 'center' }}
-        >
-          <BookOpen size={20} />
-          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>脳内バグ</span>
+          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>🏬 ロビー</span>
         </button>
         <button 
           onClick={() => handleNavClick('achievements')}
           style={{ background: 'none', border: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isAchievementsActive ? 'var(--color-cyan)' : 'var(--text-secondary)', cursor: 'pointer', flex: 1, height: '100%', justifyContent: 'center' }}
         >
           <Award size={20} />
-          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>実績・設定</span>
+          <span style={{ fontSize: '9px', fontWeight: 'bold' }}>🏆 実績・設定</span>
         </button>
       </nav>
 
