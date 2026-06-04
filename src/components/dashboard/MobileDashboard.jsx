@@ -75,6 +75,7 @@ const getGameName = (key) => {
 export default function MobileDashboard({
   isFullUnlocked,
   gameState,
+  activeScores,
   charClass,
   playSound,
   setActiveGame,
@@ -597,7 +598,7 @@ export default function MobileDashboard({
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {room.games.map(game => {
-                        const score = gameState.scores[game.scoreKey] || 0;
+                        const score = (activeScores || {})[game.scoreKey] || 0;
                         return (
                           <div 
                             key={game.id}
@@ -806,6 +807,8 @@ export default function MobileDashboard({
                   librarySubTab={librarySubTab}
                   setLibrarySubTab={setLibrarySubTab}
                   gameState={gameState}
+                  mode={mode}
+                  activeScores={activeScores}
                   skillsData={skillsData}
                   diagnosticTypes={diagnosticTypes}
                   selectedBugId={selectedBugId}

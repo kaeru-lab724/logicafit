@@ -57,6 +57,18 @@ const DEFAULT_STATE = {
     strategic: 0,
     gameTheory: 0
   },
+  businessScores: {
+    factsOpinions: 0,
+    logicalValidity: 0,
+    logicTree: 0,
+    fallacy: 0,
+    empathyDialogue: 0,
+    hiddenAssumption: 0,
+    causalLoop: 0,
+    assertiveRewrite: 0,
+    strategic: 0,
+    gameTheory: 0
+  },
   badges: [false, false, false, false, false],
   diagnosticScores: null,
   diagnosticType: null,
@@ -236,6 +248,10 @@ export default function App() {
         scores: {
           ...DEFAULT_STATE.scores,
           ...(parsed.scores || {})
+        },
+        businessScores: {
+          ...DEFAULT_STATE.scores,
+          ...(parsed.businessScores || {})
         },
         unlockedTypes: initialUnlocked,
         bugNote: (parsed.bugNote || []).map(bug => {
@@ -456,7 +472,8 @@ export default function App() {
     playSound('click');
     
     setGameState(prev => {
-      const prevScores = prev.scores;
+      const isBusiness = mode === 'business';
+      const prevScores = isBusiness ? (prev.businessScores || {}) : prev.scores;
       const prevBest = prevScores[gameKey] || 0;
       
       const newBest = Math.max(prevBest, score);
@@ -472,23 +489,36 @@ export default function App() {
       const newLevel = Math.floor(newXp / 500) + 1;
       const isLevelUp = newLevel > prev.level;
 
+      // 両方のモードを含めたベストスコアでバッジ判定を行う
+      const mergedScores = {};
+      const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'];
+      keys.forEach(k => {
+        const dailyVal = isBusiness ? (prev.scores[k] || 0) : (k === gameKey ? newBest : (prev.scores[k] || 0));
+        const bizVal = isBusiness ? (k === gameKey ? newBest : (prev.businessScores?.[k] || 0)) : (prev.businessScores?.[k] || 0);
+        mergedScores[k] = Math.max(dailyVal, bizVal);
+      });
+
       const newBadges = [
-        updatedScores.factsOpinions >= 80,
-        updatedScores.logicalValidity >= 80,
-        updatedScores.logicTree >= 100,
-        updatedScores.fallacy >= 80,
-        Object.values(updatedScores).every(s => s > 0)
+        mergedScores.factsOpinions >= 80,
+        mergedScores.logicalValidity >= 80,
+        mergedScores.logicTree >= 100,
+        mergedScores.fallacy >= 80,
+        Object.values(mergedScores).every(s => s > 0)
       ];
 
       const newlyUnlockedBadgeIdx = newBadges.findIndex((unlocked, idx) => unlocked && !prev.badges[idx]);
       const isBadgeUnlocked = newlyUnlockedBadgeIdx !== -1;
 
+      // バッジ状態をマージして後退しないようにする
+      const mergedBadges = prev.badges.map((b, idx) => b || newBadges[idx]);
+
       const updatedState = {
         ...prev,
-        scores: updatedScores,
+        scores: isBusiness ? prev.scores : updatedScores,
+        businessScores: isBusiness ? updatedScores : (prev.businessScores || {}),
         xp: newXp,
         level: newLevel,
-        badges: newBadges
+        badges: mergedBadges
       };
 
       localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
@@ -587,6 +617,10 @@ export default function App() {
           ...DEFAULT_STATE.scores,
           ...(restoredState.scores || {})
         },
+        businessScores: {
+          ...DEFAULT_STATE.scores,
+          ...(restoredState.businessScores || {})
+        },
         unlockedTypes: mergedUnlocked
       };
 
@@ -643,9 +677,13 @@ export default function App() {
     });
   };
 
-  const charClass = getCharacterClass(gameState.scores, gameState.level);
-  const recGameKey = getRecommendedGameKey(gameState.scores);
-  const isAllCompleted = Object.values(gameState.scores).every(s => s >= 100);
+  const activeScores = mode === 'business'
+    ? (gameState.businessScores || {})
+    : (gameState.scores || {});
+
+  const charClass = getCharacterClass(activeScores, gameState.level);
+  const recGameKey = getRecommendedGameKey(activeScores);
+  const isAllCompleted = Object.values(activeScores).every(s => s >= 100);
   
   // 診断結果がありかつXPが0なら未アンロック状態（シングルフォーカス）
   const isNewUser = gameState.diagnosticScores === null && gameState.xp === 0;
@@ -656,7 +694,7 @@ export default function App() {
 
   // レーダーチャート用のスコア変換
   const displayScores = (gameState.xp > 0)
-    ? gameState.scores
+    ? activeScores
     : (gameState.diagnosticScores
         ? {
             factsOpinions: Math.round((gameState.diagnosticScores.L / 105) * 100),
@@ -1294,6 +1332,7 @@ export default function App() {
             isNewUser={isNewUser}
             isFullUnlocked={isFullUnlocked}
             gameState={gameState}
+            activeScores={activeScores}
             charClass={charClass}
             playSound={playSound}
             setActiveGame={setActiveGame}

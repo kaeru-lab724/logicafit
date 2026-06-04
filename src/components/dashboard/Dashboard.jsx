@@ -80,6 +80,7 @@ export default function Dashboard({
   isNewUser,
   isFullUnlocked,
   gameState,
+  activeScores,
   charClass,
   playSound,
   setActiveGame,
@@ -433,7 +434,7 @@ export default function Dashboard({
                             <div className="grid-training-responsive" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                               {/* Active Games */}
                               {room.games.map(game => {
-                                const score = gameState.scores[game.scoreKey] || 0;
+                                const score = (activeScores || {})[game.scoreKey] || 0;
                                 return (
                                   <div 
                                     key={game.id}
@@ -695,6 +696,8 @@ export default function Dashboard({
                   librarySubTab={librarySubTab}
                   setLibrarySubTab={setLibrarySubTab}
                   gameState={gameState}
+                  mode={mode}
+                  activeScores={activeScores}
                   skillsData={skillsData}
                   diagnosticTypes={diagnosticTypes}
                   selectedBugId={selectedBugId}
@@ -1249,6 +1252,7 @@ export default function Dashboard({
             <MobileDashboard 
               isFullUnlocked={isFullUnlocked}
               gameState={gameState}
+              activeScores={activeScores}
               charClass={charClass}
               playSound={playSound}
               setActiveGame={setActiveGame}

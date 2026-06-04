@@ -6,6 +6,8 @@ export default function BugLibrary({
   librarySubTab,
   setLibrarySubTab,
   gameState,
+  mode,
+  activeScores,
   skillsData,
   diagnosticTypes,
   selectedBugId,
@@ -17,7 +19,7 @@ export default function BugLibrary({
 
   const unlockedCount = (gameState.unlockedTypes || ["balancedThinker"]).length;
   const totalBugs = Object.keys(diagnosticTypes).length;
-  const unlockedSkillsCount = skillsData.filter(skill => (gameState.scores[skill.id] || 0) >= 80).length;
+  const unlockedSkillsCount = skillsData.filter(skill => ((activeScores || {})[skill.id] || 0) >= 80).length;
 
   return (
     <div className="library-container fade-in">
@@ -144,7 +146,7 @@ export default function BugLibrary({
 
             <div className="grid-skills-responsive">
               {skillsData.map((skill) => {
-                const score = gameState.scores[skill.id] || 0;
+                const score = (activeScores || {})[skill.id] || 0;
                 const isUnlocked = score >= 80;
 
                 return (
