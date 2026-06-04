@@ -389,14 +389,14 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
               <div style={{ padding: '16px', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
                 <strong style={{ color: '#818cf8', fontSize: '15px' }}>📌 ゲーム理論 とは？</strong>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: '1.5' }}>
-                  自分の利益（利得）が、自分の選択だけでなく**「相手の選択」によっても決定される状況**において、お互いがどのような行動をとるかを数学的に分析する思考フレームワークです。
+                  自分の利益（利得）が、自分の選択だけでなく<strong style={{ color: 'var(--text-primary)' }}>「相手の選択」によっても決定される状況</strong>において、お互いがどのような行動をとるかを数学的に分析する思考フレームワークです。
                 </p>
               </div>
 
               <div style={{ padding: '16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)' }}>
                 <strong style={{ color: 'var(--text-primary)', fontSize: '15px' }}>📌 ナッシュ均衡（安定点）とは？</strong>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: '1.5' }}>
-                  お互いが「相手の出方に対して、自分の選択をこれ以上変えるメリットがない」と判断した、**戦略が一致して動かない安定した状態**のことです。
+                  お互いが「相手の出方に対して、自分の選択をこれ以上変えるメリットがない」と判断した、<strong style={{ color: 'var(--text-primary)' }}>戦略が一致して動かない安定した状態</strong>のことです。
                   ※お互いの利得が一番高い「ウィンウィン」のポイントが、必ずしもナッシュ均衡になるとは限らない（＝囚人のジレンマ）のが特徴です。
                 </p>
               </div>
