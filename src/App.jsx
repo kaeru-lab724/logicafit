@@ -306,7 +306,7 @@ export default function App() {
           ...(parsed.scores || {})
         },
         businessScores: {
-          ...DEFAULT_STATE.scores,
+          ...DEFAULT_STATE.businessScores,
           ...(parsed.businessScores || {})
         },
         unlockedTypes: initialUnlocked,
@@ -539,7 +539,8 @@ export default function App() {
     playSound('click');
     
     setGameState(prev => {
-      const isBusiness = mode === 'business';
+      const isLabGame = ['fallacyHunter', 'treeQuest', 'eqSimulator'].includes(gameKey);
+      const isBusiness = !isLabGame && mode === 'business';
       const prevScores = isBusiness ? (prev.businessScores || {}) : prev.scores;
       const prevBest = prevScores[gameKey] || 0;
       
@@ -685,7 +686,7 @@ export default function App() {
           ...(restoredState.scores || {})
         },
         businessScores: {
-          ...DEFAULT_STATE.scores,
+          ...DEFAULT_STATE.businessScores,
           ...(restoredState.businessScores || {})
         },
         unlockedTypes: mergedUnlocked

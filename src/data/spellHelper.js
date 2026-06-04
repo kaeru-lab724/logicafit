@@ -58,9 +58,9 @@ const NUM_TO_TYPE = [
 ];
 
 /**
- * ユーザーの進捗ステータスを12文字の英数字の「ブレインコード」にエンコードします。
- * データ総ビット数: 61ビット (データ) + 11ビット (チェックサム) = 72ビット
- * 72ビット / 6ビット = 12文字
+ * ユーザーの進捗ステータスを22文字の英数字の「ブレインコード」にエンコードします。
+ * データ総ビット数: 118ビット (データ) + 14ビット (チェックサム) = 132ビット
+ * 132ビット / 6ビット = 22文字
  */
 export function encodeState(state) {
   try {
@@ -76,27 +76,41 @@ export function encodeState(state) {
     value |= BigInt(savedXp & 0x1FF) << offset;
     offset += 9n;
 
-    // 3. Score: factsOpinions (7 bits: 0 - 127)
-    value |= BigInt((state.scores.factsOpinions || 0) & 0x7F) << offset;
-    offset += 7n;
+    // 3. 10 Daily scores (10 * 4 bits = 40 bits)
+    const TRAINING_GAME_KEYS = [
+      'factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue',
+      'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'
+    ];
+    const scoresObj = state.scores || {};
+    for (let i = 0; i < 10; i++) {
+      const gameKey = TRAINING_GAME_KEYS[i];
+      const rawScore = scoresObj[gameKey] || 0;
+      const compressedScore = Math.min(10, Math.max(0, Math.round(rawScore / 10)));
+      value |= BigInt(compressedScore & 0xF) << offset;
+      offset += 4n;
+    }
 
-    // 4. Score: logicalValidity (7 bits: 0 - 127)
-    value |= BigInt((state.scores.logicalValidity || 0) & 0x7F) << offset;
-    offset += 7n;
+    // 4. 10 Business scores (10 * 4 bits = 40 bits)
+    const businessScoresObj = state.businessScores || {};
+    for (let i = 0; i < 10; i++) {
+      const gameKey = TRAINING_GAME_KEYS[i];
+      const rawScore = businessScoresObj[gameKey] || 0;
+      const compressedScore = Math.min(10, Math.max(0, Math.round(rawScore / 10)));
+      value |= BigInt(compressedScore & 0xF) << offset;
+      offset += 4n;
+    }
 
-    // 5. Score: logicTree (7 bits: 0 - 127)
-    value |= BigInt((state.scores.logicTree || 0) & 0x7F) << offset;
-    offset += 7n;
+    // 5. 3 Lab scores (3 * 4 bits = 12 bits)
+    const LAB_GAME_KEYS = ['fallacyHunter', 'treeQuest', 'eqSimulator'];
+    for (let i = 0; i < 3; i++) {
+      const gameKey = LAB_GAME_KEYS[i];
+      const rawScore = scoresObj[gameKey] || 0;
+      const compressedScore = Math.min(10, Math.max(0, Math.round(rawScore / 10)));
+      value |= BigInt(compressedScore & 0xF) << offset;
+      offset += 4n;
+    }
 
-    // 6. Score: fallacy (7 bits: 0 - 127)
-    value |= BigInt((state.scores.fallacy || 0) & 0x7F) << offset;
-    offset += 7n;
-
-    // 7. Score: empathyDialogue (7 bits: 0 - 127)
-    value |= BigInt((state.scores.empathyDialogue || 0) & 0x7F) << offset;
-    offset += 7n;
-
-    // 8. Badges (6 bits: supports up to 6 badges. Reduced from 8 bits to free up bits)
+    // 6. Badges (6 bits: supports up to 6 badges)
     let badgeBits = 0;
     if (state.badges && Array.isArray(state.badges)) {
       state.badges.slice(0, 6).forEach((b, i) => {
@@ -106,29 +120,29 @@ export function encodeState(state) {
     value |= BigInt(badgeBits & 0x3F) << offset;
     offset += 6n;
 
-    // 9. Diagnostic Type ID (4 bits: 0 - 15)
+    // 7. Diagnostic Type ID (4 bits: 0 - 15)
     const typeId = state.diagnosticTypeId !== undefined 
       ? (TYPE_TO_NUM[state.diagnosticTypeId] || 0) 
       : 0;
     value |= BigInt(typeId & 0x0F) << offset;
-    offset += 4n; // 合計 61 ビットのデータ
+    offset += 4n; // 合計 118 ビットのデータ
 
-    // 10. Checksum (11 bits) - 誤入力検知用
+    // 8. Checksum (14 bits) - 誤入力検知用
     let checksum = 0n;
     let t = value;
     while (t > 0n) {
-      checksum ^= (t & 0x7FFn); // 11ビット単位でXORを取る
-      t >>= 11n;
+      checksum ^= (t & 0x3FFFn); // 14ビット単位でXORを取る
+      t >>= 14n;
     }
-    checksum &= 0x7FFn;
+    checksum &= 0x3FFFn;
 
     value |= checksum << offset;
-    offset += 11n; // 合計 72 ビット
+    offset += 14n; // 合計 132 ビット
 
-    // 6ビットずつ英数字に変換 (12文字)
+    // 6ビットずつ英数字に変換 (22文字)
     let spell = "";
     let temp = value;
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 22; i++) {
       const idx = Number(temp & 63n);
       spell += BASE64_CHARS[idx];
       temp >>= 6n;
@@ -143,79 +157,235 @@ export function encodeState(state) {
 
 /**
  * ブレインコード（または旧ひらがなコード）をデコードして、ユーザーの進捗ステータスを復元します。
- * 新英数字コード形式と旧ひらがな形式の双方をチェックサムで自動判別します（後方互換性）。
+ * 新22文字英数字コード形式と旧12文字形式（英数字・ひらがな双方）を自動判別します。
  */
 export function decodeState(spell) {
-  // 入力された文字列にひらがなが含まれているか判定
-  const hasHiragana = /[\u3040-\u309F\u30A0-\u30FF]/.test(spell);
-  let cleanSpell = "";
-  
-  if (hasHiragana) {
-    // 旧ひらがな呪文：記号や空白を除去
-    cleanSpell = spell.replace(/[\s　\-_]/g, "");
-    if (cleanSpell.length !== 12) {
-      throw new Error("ブレインコードの長さが正しくありません（ひらがな12文字）");
-    }
-  } else {
-    // 新英数字コード：スペースや改行のみ除去（ハイフンやアンダーバーは有効なコード文字のため維持）
-    cleanSpell = spell.replace(/[\s　\r\n\t]/g, "");
-    if (cleanSpell.length !== 12) {
-      throw new Error("ブレインコードの長さが正しくありません（英数字12文字）");
-    }
-  }
+  // スペースや改行のみ除去
+  const cleanSpell = spell.replace(/[\s　\r\n\t]/g, "");
+  const hasHiragana = /[\u3040-\u309F\u30A0-\u30FF]/.test(cleanSpell);
 
-  // 72ビットの数値を復元
-  let value = 0n;
-  for (let i = 11; i >= 0; i--) {
-    const char = cleanSpell[i];
-    const idx = hasHiragana ? CHARS.indexOf(char) : BASE64_CHARS.indexOf(char);
-    if (idx === -1) {
-      throw new Error(`使用できない文字「${char}」が混ざっています`);
+  if (cleanSpell.length === 12) {
+    // 72ビットの数値を復元
+    let value = 0n;
+    for (let i = 11; i >= 0; i--) {
+      const char = cleanSpell[i];
+      const idx = hasHiragana ? CHARS.indexOf(char) : BASE64_CHARS.indexOf(char);
+      if (idx === -1) {
+        throw new Error(`使用できない文字「${char}」が混ざっています`);
+      }
+      value = (value << 6n) | BigInt(idx);
     }
-    value = (value << 6n) | BigInt(idx);
-  }
 
-  // 1. 新形式 (61ビットデータ + 11ビットチェックサム = 72ビット) のチェックサム検証
-  const newFormatDataValue = value & ((1n << 61n) - 1n);
-  const newFormatChecksum = Number((value >> 61n) & 0x7FFn);
-  
-  let calculatedNewChecksum = 0n;
-  let tNew = newFormatDataValue;
-  while (tNew > 0n) {
-    calculatedNewChecksum ^= (tNew & 0x7FFn);
-    tNew >>= 11n;
-  }
-  calculatedNewChecksum &= 0x7FFn;
+    // 1. 新12文字形式 (61ビットデータ + 11ビットチェックサム = 72ビット) のチェックサム検証
+    const newFormatDataValue = value & ((1n << 61n) - 1n);
+    const newFormatChecksum = Number((value >> 61n) & 0x7FFn);
+    
+    let calculatedNewChecksum = 0n;
+    let tNew = newFormatDataValue;
+    while (tNew > 0n) {
+      calculatedNewChecksum ^= (tNew & 0x7FFn);
+      tNew >>= 11n;
+    }
+    calculatedNewChecksum &= 0x7FFn;
 
-  if (calculatedNewChecksum === BigInt(newFormatChecksum)) {
-    // 新形式としてアンパック
+    if (calculatedNewChecksum === BigInt(newFormatChecksum)) {
+      let offset = 0n;
+
+      const level = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const savedXp = Number((value >> offset) & 0x1FFn);
+      offset += 9n;
+
+      const factsOpinions = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const logicalValidity = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const logicTree = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const fallacy = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const empathyDialogue = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const badgeBits = Number((value >> offset) & 0x3Fn);
+      offset += 6n;
+
+      const typeNum = Number((value >> offset) & 0x0Fn);
+      const diagnosticTypeId = NUM_TO_TYPE[typeNum] || "balancedThinker";
+
+      const badges = [];
+      for (let i = 0; i < 5; i++) {
+        badges.push((badgeBits & (1 << i)) !== 0);
+      }
+      const xp = Math.max(0, (level - 1) * 500) + savedXp;
+
+      return {
+        level,
+        xp,
+        scores: {
+          factsOpinions,
+          logicalValidity,
+          logicTree,
+          fallacy,
+          empathyDialogue
+        },
+        businessScores: {},
+        badges,
+        diagnosticTypeId,
+        calendar: Array(35).fill(false)
+      };
+    }
+
+    // 2. 旧12文字形式 (59ビットデータ + 11ビットチェックサム = 70ビット) のチェックサム検証 (後方互換用)
+    const oldFormatDataValue = value & ((1n << 59n) - 1n);
+    const oldFormatChecksum = Number((value >> 59n) & 0x7FFn);
+
+    let calculatedOldChecksum = 0n;
+    let tOld = oldFormatDataValue;
+    while (tOld > 0n) {
+      calculatedOldChecksum ^= (tOld & 0x7FFn);
+      tOld >>= 11n;
+    }
+    calculatedOldChecksum &= 0x7FFn;
+
+    if (calculatedOldChecksum === BigInt(oldFormatChecksum)) {
+      let offset = 0n;
+
+      const level = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const savedXp = Number((value >> offset) & 0x1FFn);
+      offset += 9n;
+
+      const factsOpinions = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const logicalValidity = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const logicTree = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const fallacy = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const empathyDialogue = Number((value >> offset) & 0x7Fn);
+      offset += 7n;
+
+      const badgeBits = Number((value >> offset) & 0xFFn);
+
+      let diagId = "balancedThinker";
+      const L = logicalValidity, C = fallacy, R = logicTree, E = empathyDialogue;
+      const maxVal = Math.max(L, C, R, E);
+      const minVal = Math.min(L, C, R, E);
+      if (maxVal - minVal <= 15) {
+        diagId = (L+C+R+E)/4 >= 20 ? "frogAnalyst" : "balancedThinker";
+      } else {
+        if (maxVal === L) diagId = "psycho";
+        else if (maxVal === C) diagId = "nitpicker";
+        else if (maxVal === R) diagId = "radicalOrigin";
+        else if (maxVal === E) diagId = "runawayTrain";
+      }
+
+      const badges = [];
+      for (let i = 0; i < 5; i++) {
+        badges.push((badgeBits & (1 << i)) !== 0);
+      }
+      const xp = Math.max(0, (level - 1) * 500) + savedXp;
+
+      return {
+        level,
+        xp,
+        scores: {
+          factsOpinions,
+          logicalValidity,
+          logicTree,
+          fallacy,
+          empathyDialogue
+        },
+        businessScores: {},
+        badges,
+        diagnosticTypeId: diagId,
+        calendar: Array(35).fill(false)
+      };
+    }
+
+    throw new Error("ブレインコードの解析に失敗しました。もう一度入力内容を確認してください。");
+  } else if (cleanSpell.length === 22) {
+    if (hasHiragana) {
+      throw new Error("新しい22文字のブレインコードは英数字のみサポートされています。");
+    }
+
+    // 132ビットの数値を復元
+    let value = 0n;
+    for (let i = 21; i >= 0; i--) {
+      const char = cleanSpell[i];
+      const idx = BASE64_CHARS.indexOf(char);
+      if (idx === -1) {
+        throw new Error(`使用できない文字「${char}」が混ざっています`);
+      }
+      value = (value << 6n) | BigInt(idx);
+    }
+
+    // チェックサム検証 (14ビット)
+    const dataValue = value & ((1n << 118n) - 1n);
+    const storedChecksum = Number((value >> 118n) & 0x3FFFn);
+
+    let calculatedChecksum = 0n;
+    let t = dataValue;
+    while (t > 0n) {
+      calculatedChecksum ^= (t & 0x3FFFn);
+      t >>= 14n;
+    }
+    calculatedChecksum &= 0x3FFFn;
+
+    if (calculatedChecksum !== BigInt(storedChecksum)) {
+      throw new Error("ブレインコードのチェックサムが一致しません。入力内容を確認してください。");
+    }
+
+    // データ展開
     let offset = 0n;
 
-    const level = Number((value >> offset) & 0x7Fn);
+    const level = Number((dataValue >> offset) & 0x7Fn);
     offset += 7n;
 
-    const savedXp = Number((value >> offset) & 0x1FFn);
+    const savedXp = Number((dataValue >> offset) & 0x1FFn);
     offset += 9n;
 
-    const factsOpinions = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
+    const TRAINING_GAME_KEYS = [
+      'factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue',
+      'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'
+    ];
+    const scores = {};
+    for (let i = 0; i < 10; i++) {
+      const compressedScore = Number((dataValue >> offset) & 0xFn);
+      scores[TRAINING_GAME_KEYS[i]] = compressedScore * 10;
+      offset += 4n;
+    }
 
-    const logicalValidity = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
+    const businessScores = {};
+    for (let i = 0; i < 10; i++) {
+      const compressedScore = Number((dataValue >> offset) & 0xFn);
+      businessScores[TRAINING_GAME_KEYS[i]] = compressedScore * 10;
+      offset += 4n;
+    }
 
-    const logicTree = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
+    const LAB_GAME_KEYS = ['fallacyHunter', 'treeQuest', 'eqSimulator'];
+    for (let i = 0; i < 3; i++) {
+      const compressedScore = Number((dataValue >> offset) & 0xFn);
+      scores[LAB_GAME_KEYS[i]] = compressedScore * 10;
+      offset += 4n;
+    }
 
-    const fallacy = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const empathyDialogue = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const badgeBits = Number((value >> offset) & 0x3Fn);
+    const badgeBits = Number((dataValue >> offset) & 0x3Fn);
     offset += 6n;
 
-    const typeNum = Number((value >> offset) & 0x0Fn);
+    const typeNum = Number((dataValue >> offset) & 0x0Fn);
     const diagnosticTypeId = NUM_TO_TYPE[typeNum] || "balancedThinker";
 
     const badges = [];
@@ -227,94 +397,15 @@ export function decodeState(spell) {
     return {
       level,
       xp,
-      scores: {
-        factsOpinions,
-        logicalValidity,
-        logicTree,
-        fallacy,
-        empathyDialogue
-      },
+      scores,
+      businessScores,
       badges,
       diagnosticTypeId,
       calendar: Array(35).fill(false)
     };
+  } else {
+    throw new Error(`ブレインコードの長さが正しくありません（12文字または22文字）。入力された長さ: ${cleanSpell.length}`);
   }
-
-  // 2. 旧形式 (59ビットデータ + 11ビットチェックサム = 70ビット) のチェックサム検証 (後方互換用)
-  const oldFormatDataValue = value & ((1n << 59n) - 1n);
-  const oldFormatChecksum = Number((value >> 59n) & 0x7FFn);
-
-  let calculatedOldChecksum = 0n;
-  let tOld = oldFormatDataValue;
-  while (tOld > 0n) {
-    calculatedOldChecksum ^= (tOld & 0x7FFn);
-    tOld >>= 11n;
-  }
-  calculatedOldChecksum &= 0x7FFn;
-
-  if (calculatedOldChecksum === BigInt(oldFormatChecksum)) {
-    // 旧形式としてアンパック
-    let offset = 0n;
-
-    const level = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const savedXp = Number((value >> offset) & 0x1FFn);
-    offset += 9n;
-
-    const factsOpinions = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const logicalValidity = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const logicTree = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const fallacy = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const empathyDialogue = Number((value >> offset) & 0x7Fn);
-    offset += 7n;
-
-    const badgeBits = Number((value >> offset) & 0xFFn);
-    // 旧形式には diagnosticTypeId はないため、トレーニングスコアから推測決定
-    let diagId = "balancedThinker";
-    const L = logicalValidity, C = fallacy, R = logicTree, E = empathyDialogue;
-    const maxVal = Math.max(L, C, R, E);
-    const minVal = Math.min(L, C, R, E);
-    if (maxVal - minVal <= 15) {
-      diagId = (L+C+R+E)/4 >= 20 ? "frogAnalyst" : "balancedThinker";
-    } else {
-      if (maxVal === L) diagId = "psycho";
-      else if (maxVal === C) diagId = "nitpicker";
-      else if (maxVal === R) diagId = "radicalOrigin";
-      else if (maxVal === E) diagId = "runawayTrain";
-    }
-
-    const badges = [];
-    for (let i = 0; i < 5; i++) {
-      badges.push((badgeBits & (1 << i)) !== 0);
-    }
-    const xp = Math.max(0, (level - 1) * 500) + savedXp;
-
-    return {
-      level,
-      xp,
-      scores: {
-        factsOpinions,
-        logicalValidity,
-        logicTree,
-        fallacy,
-        empathyDialogue
-      },
-      badges,
-      diagnosticTypeId: diagId,
-      calendar: Array(35).fill(false)
-    };
-  }
-
-  throw new Error("ブレインコードの解析に失敗しました。もう一度入力内容を確認してください。");
 }
 
 /**
