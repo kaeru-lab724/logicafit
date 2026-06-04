@@ -724,6 +724,70 @@ export default function Dashboard({
                         「デバッグ起動」ボタンから復習モードに挑戦し、正解すると <b>+50 XP</b> 獲得！
                       </p>
 
+                      {/* 思考調律（ジャーナリング）起動バナー */}
+                      {(() => {
+                        const todayStr = new Date().toLocaleDateString('sv');
+                        const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
+                        return (
+                          <div 
+                            className="glass-panel"
+                            style={{
+                              padding: '20px',
+                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)',
+                              border: '1px solid rgba(6, 182, 212, 0.25)',
+                              borderRadius: '16px',
+                              marginBottom: '24px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '12px',
+                              position: 'relative',
+                              overflow: 'hidden'
+                            }}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <span className="game-badge" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.25)", color: "#10b981", padding: "4px 10px", borderRadius: "12px", fontSize: "11px", fontWeight: "bold", letterSpacing: '0.5px' }}>
+                                🧠 DAILY MIND TUNING
+                              </span>
+                              {!isTuningCompletedToday && (
+                                <span className="xp-gold-badge" style={{ fontSize: '10px', padding: '2px 6px', background: 'var(--color-primary-soft)', border: '1px solid var(--color-primary)', color: 'var(--color-primary)', borderRadius: '6px', fontWeight: 'bold' }}>+100 XP</span>
+                              )}
+                            </div>
+                            <div>
+                              <h3 style={{ fontSize: '15px', fontWeight: 'bold', margin: '0 0 6px 0', color: 'var(--text-primary)', textAlign: 'left' }}>
+                                本日の思考調律を起動
+                              </h3>
+                              <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', lineHeight: '1.5', margin: 0, textAlign: 'left' }}>
+                                日々頭の中に溜まるモヤモヤやイライラ（主観・本音）を吐き出し、客観的事実ベースにデバッグ（書き換え）して脳の空きメモリを解放する3分間のジャーナリング体験です。
+                              </p>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
+                              <button
+                                onClick={() => {
+                                  playSound('click');
+                                  setActiveGame('mindTuning');
+                                }}
+                                className="btn btn-primary hover-lift"
+                                style={{
+                                  background: isTuningCompletedToday 
+                                    ? 'rgba(255, 255, 255, 0.05)'
+                                    : 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
+                                  border: isTuningCompletedToday ? '1px solid var(--border-color)' : 'none',
+                                  color: isTuningCompletedToday ? 'var(--text-secondary)' : '#fff',
+                                  boxShadow: isTuningCompletedToday ? 'none' : '0 4px 15px rgba(6, 182, 212, 0.2)',
+                                  padding: '8px 20px',
+                                  fontSize: '13px',
+                                  borderRadius: '10px',
+                                  fontWeight: 'bold',
+                                  cursor: 'pointer'
+                                }}
+                              >
+                                {isTuningCompletedToday ? '🔄 思考調律を再起動 (本日完了済み)' : '🧠 思考調律（ジャーナリング）を開始'}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
                       {/* 累積スタッツ & 弱点分析 */}
                       {(() => {
                         const bugs = gameState.bugNote || [];
