@@ -26,7 +26,7 @@ import MobileDashboard from './MobileDashboard';
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
-  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic'];
+  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'];
   
   // 1. 未プレイ（0%）を優先
   for (const key of keys) {
@@ -70,6 +70,7 @@ const getGameName = (key) => {
     causalLoop: '因果ループ',
     assertiveRewrite: 'アサーティブ',
     strategic: '戦略コンパイラー',
+    gameTheory: 'ゲーム理論デバッガー',
     empathyDialogue: '共感対話'
   };
   return names[key] || '';
@@ -773,6 +774,7 @@ export default function Dashboard({
                           causalLoop: '因果ループ',
                           assertiveRewrite: 'アサーティブ',
                           strategic: '戦略コンパイラー',
+                          gameTheory: 'ゲーム理論デバッガー',
                           treeQuest: 'ツリー探索',
                           fallacyHunter: '誤謬スナイパー',
                           eqSimulator: 'EQシミュレーター'

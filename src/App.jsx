@@ -14,6 +14,7 @@ import FallacyHunter from './components/games/FallacyHunter';
 import TreeQuest from './components/games/TreeQuest';
 import EqSimulator from './components/games/EqSimulator';
 import StrategicCompiler from './components/games/StrategicCompiler';
+import GameTheory from './components/games/GameTheory';
 import DiagnosticContainer from './components/DiagnosticContainer';
 import HarassmentScanner from './components/HarassmentScanner';
 import RakutenWidget from './components/common/RakutenWidget';
@@ -53,7 +54,8 @@ const DEFAULT_STATE = {
     hiddenAssumption: 0,
     causalLoop: 0,
     assertiveRewrite: 0,
-    strategic: 0
+    strategic: 0,
+    gameTheory: 0
   },
   badges: [false, false, false, false, false],
   diagnosticScores: null,
@@ -76,14 +78,15 @@ const getCharacterClass = (scores, level) => {
     hiddenAssumption: ha = 0,
     causalLoop: cl = 0,
     assertiveRewrite: ar = 0,
-    strategic: st = 0
+    strategic: st = 0,
+    gameTheory: gt = 0
   } = scores;
-  const avg = (fo + lv + lt + fa + ed + ha + cl + ar + st) / 9;
+  const avg = (fo + lv + lt + fa + ed + ha + cl + ar + st + gt) / 10;
   
   if (avg === 0) return { title: '思考の初心者', desc: 'まだ思考の筋トレを始めていません。いずれかのトレーニングに挑戦しましょう！' };
   
   // 新しい最高称号：共感と論理の両立
-  if (fo >= 80 && lv >= 80 && lt >= 80 && fa >= 80 && ed >= 80 && ha >= 80 && cl >= 80 && ar >= 80 && st >= 80) {
+  if (fo >= 80 && lv >= 80 && lt >= 80 && fa >= 80 && ed >= 80 && ha >= 80 && cl >= 80 && ar >= 80 && st >= 80 && gt >= 80) {
     return { title: 'ロジカル＆エモーショナル賢者 (超越者)', desc: '鋭い論理的分析力と、豊かな共感対話力を兼ね備えた、知性と感性のハイブリッド。対立を調和へ導きます。' };
   }
   if (avg >= 95) return { title: '超越した論理知性 (超人類)', desc: 'すべての論理領域で極限に達した、未来の思考者。隙のない完璧なロジックを展開します。' };
@@ -106,7 +109,7 @@ const getCharacterClass = (scores, level) => {
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
-  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic'];
+  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'];
   
   // 1. 未プレイ（0%）を優先
   for (const key of keys) {
@@ -826,6 +829,16 @@ export default function App() {
             ? '日常の選択におけるジレンマを見抜き、二律背反を両立させる戦略パッチをコンパイルする。'
             : '開発、セキュリティ、集客等のビジネス上のトレードオフを解消し、両立させる最適パッチを適用する。',
           difficulty: mode === 'daily' ? '初級' : '中級'
+        },
+        {
+          id: 'gameTheory',
+          scoreKey: 'gameTheory',
+          moduleNum: 'MODULE 06 [2nd]',
+          name: 'ゲーム理論デバッガー',
+          desc: mode === 'daily'
+            ? '日常の利害対立や駆け引きにおける利得マトリクスを分析し、最も合理的な均衡点（戦略）を選択する。'
+            : '価格競争や協調プロジェクトにおける競合の行動を予測し、社会的損失を防ぐナッシュ均衡と戦略を導く。',
+          difficulty: mode === 'daily' ? '初級' : '中級'
         }
       ]
     }
@@ -1214,6 +1227,18 @@ export default function App() {
         )}
         {(activeGame === 'strategic' || activeGame === 'strategicCompiler') && (
           <StrategicCompiler 
+            onFinish={handleGameFinish}
+            playSound={playSound}
+            muted={muted}
+            toggleMute={toggleMute}
+            mode={mode}
+            onLogBug={handleLogBug}
+            reviewQuestionId={reviewQuestionId}
+            onFinishReview={handleFinishReview}
+          />
+        )}
+        {activeGame === 'gameTheory' && (
+          <GameTheory 
             onFinish={handleGameFinish}
             playSound={playSound}
             muted={muted}

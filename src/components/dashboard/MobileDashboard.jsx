@@ -29,7 +29,7 @@ import BadgeModal from './BadgeModal';
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
-  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic'];
+  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'];
   for (const key of keys) {
     if ((scores[key] || 0) === 0) {
       return key;
@@ -66,6 +66,7 @@ const getGameName = (key) => {
     causalLoop: '因果ループ',
     assertiveRewrite: 'アサーティブ',
     strategic: '戦略コンパイラー',
+    gameTheory: 'ゲーム理論デバッガー',
     empathyDialogue: '共感対話'
   };
   return names[key] || '';
@@ -754,6 +755,7 @@ export default function MobileDashboard({
                     causalLoop: '因果ループ',
                     assertiveRewrite: 'アサーティブ',
                     strategic: '戦略コンパイラー',
+                    gameTheory: 'ゲーム理論デバッガー',
                     treeQuest: 'ツリー探索',
                     fallacyHunter: '誤謬スナイパー',
                     eqSimulator: 'EQシミュレーター'
