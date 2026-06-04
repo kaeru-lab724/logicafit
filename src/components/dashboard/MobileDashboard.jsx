@@ -741,6 +741,9 @@ export default function MobileDashboard({
                       case 'assertiveRewrite':
                       case 'eqSimulator':
                         return { name: 'エモーショナル', color: 'var(--color-primary)', room: 'emotional' };
+                      case 'strategic':
+                      case 'gameTheory':
+                        return { name: '戦略的', color: '#818cf8', room: 'strategic' };
                       default:
                         return { name: 'その他', color: 'var(--text-muted)', room: 'other' };
                     }

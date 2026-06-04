@@ -745,6 +745,9 @@ export default function Dashboard({
                             case 'assertiveRewrite':
                             case 'eqSimulator':
                               return { name: 'エモーショナル思考', color: 'var(--color-primary)', room: 'emotional' };
+                            case 'strategic':
+                            case 'gameTheory':
+                              return { name: '戦略的思考', color: '#818cf8', room: 'strategic' };
                             default:
                               return { name: 'その他', color: 'var(--text-muted)', room: 'other' };
                           }
@@ -754,7 +757,8 @@ export default function Dashboard({
                           logical: { active: 0, total: 0, name: 'ロジカル思考', color: 'var(--color-cyan)' },
                           critical: { active: 0, total: 0, name: 'クリティカル思考', color: 'var(--color-rose)' },
                           radical: { active: 0, total: 0, name: 'ラディカル思考', color: 'var(--color-amber)' },
-                          emotional: { active: 0, total: 0, name: 'エモーショナル思考', color: 'var(--color-primary)' }
+                          emotional: { active: 0, total: 0, name: 'エモーショナル思考', color: 'var(--color-primary)' },
+                          strategic: { active: 0, total: 0, name: '戦略的思考', color: '#818cf8' }
                         };
 
                         bugs.forEach(b => {
