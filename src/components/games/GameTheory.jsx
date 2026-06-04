@@ -271,7 +271,7 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
     } else {
       playSound('incorrect');
       if (tries >= 2 && onLogBug && !reviewQuestionId) {
-        onLogBug('gameTheory', currentTheme.id, `Step 1 均衡特定エラー: "${choice.text}"`);
+        onLogBug('gameTheory', currentTheme.id, `Step 1 均衡特定エラー: "${choice.text}"`, currentTheme.description);
       }
     }
   };
@@ -298,7 +298,7 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
     } else {
       playSound('incorrect');
       if (tries >= 2 && onLogBug && !reviewQuestionId) {
-        onLogBug('gameTheory', currentTheme.id, `Step 2 戦略パッチ適用エラー: "${choice.text}"`);
+        onLogBug('gameTheory', currentTheme.id, `Step 2 戦略パッチ適用エラー: "${choice.text}"`, currentTheme.description);
       }
     }
   };

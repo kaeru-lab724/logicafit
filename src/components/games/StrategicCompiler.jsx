@@ -345,7 +345,8 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
         onLogBug(
           'strategic', 
           currentScenario.id, 
-          `対立構造特定失敗 (Scenario: ${currentScenario.title}) - 選択: "${choice.text}"`
+          `対立構造特定失敗 (Scenario: ${currentScenario.title}) - 選択: "${choice.text}"`,
+          currentScenario.description
         );
       }
     }
@@ -383,7 +384,8 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
         onLogBug(
           'strategic', 
           currentScenario.id, 
-          `戦略パッチ適用失敗 (Scenario: ${currentScenario.title}) - 選択: "${choice.text}"`
+          `戦略パッチ適用失敗 (Scenario: ${currentScenario.title}) - 選択: "${choice.text}"`,
+          currentScenario.description
         );
       }
     }

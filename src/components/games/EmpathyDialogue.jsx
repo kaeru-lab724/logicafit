@@ -174,7 +174,7 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
     } else {
       setTimeout(() => playSound('incorrect'), 300);
       if (onLogBug && !reviewQuestionId) {
-        onLogBug('empathyDialogue', question.id, `あなたの選択: ${choice.text} (正解: ${question.choices.find(c => c.isCorrect)?.text})`);
+        onLogBug('empathyDialogue', question.id, `あなたの選択: ${choice.text} (正解: ${question.choices.find(c => c.isCorrect)?.text})`, question.scenario);
       }
     }
 

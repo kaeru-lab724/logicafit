@@ -152,7 +152,7 @@ export default function LogicTreeAssembler({ onFinish, playSound, muted, toggleM
           const placedOpt = currentTheme.options.find(o => o.id === placedOptId);
           return `${slot.label}: [配置: ${placedOpt ? placedOpt.text : '未配置'} (正解: ${slot.expectedText})]`;
         }).join(', ');
-        onLogBug('logicTree', currentTheme.id, `誤配置: ${wrongList}`);
+        onLogBug('logicTree', currentTheme.id, `誤配置: ${wrongList}`, currentTheme.theme);
       }
     }
   };

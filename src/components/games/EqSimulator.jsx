@@ -1173,14 +1173,14 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
 
       setTrust(prev => Math.min(100, Math.max(0, prev + actualTrustChange)));
       if (onLogBug && !reviewQuestionId && !isUp) {
-        onLogBug('eqSimulator', selectedScenario.id, `対話エラー: ${choice.text} (信頼度変化: ${choice.trustChange})`);
+        onLogBug('eqSimulator', selectedScenario.id, `対話エラー: ${choice.text} (信頼度変化: ${choice.trustChange})`, selectedScenario.initialDesc);
       }
     } else if (isBlocked) {
       setTimeout(() => playSound('incorrect'), 300);
       setTrustChangeNotify({ val: 'SHIELD BLOCK', isUp: false });
       setTimeout(() => setTrustChangeNotify(null), 1500);
       if (onLogBug && !reviewQuestionId) {
-        onLogBug('eqSimulator', selectedScenario.id, `対話エラー: ${choice.text} (防衛シールドブロック)`);
+        onLogBug('eqSimulator', selectedScenario.id, `対話エラー: ${choice.text} (防衛シールドブロック)`, selectedScenario.initialDesc);
       }
     }
 

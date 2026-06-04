@@ -85,7 +85,7 @@ export default function LogicalValidity({ onFinish, playSound, muted, toggleMute
         setIsAnswered(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('logicalValidity', currentQuestion.id, `あなたの選択: ${answer ? '妥当' : '非妥当'} (正解: ${currentQuestion.isValid ? '妥当' : '非妥当'})`);
+          onLogBug('logicalValidity', currentQuestion.id, `あなたの選択: ${answer ? '妥当' : '非妥当'} (正解: ${currentQuestion.isValid ? '妥当' : '非妥当'})`, currentQuestion.premise1 + ' ' + currentQuestion.premise2 + ' ' + currentQuestion.conclusion);
         }
       }
     }

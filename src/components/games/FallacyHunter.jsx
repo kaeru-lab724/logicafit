@@ -734,7 +734,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
       setTimeout(() => setScreenEffect(null), 500);
 
       if (onLogBug && !reviewQuestionId) {
-        onLogBug('fallacyHunter', currentQuestion.id, `あなたの選択: ${currentQuestion.choices[choiceIdx].text} (正解: ${currentQuestion.choices.find(c => c.isCorrect)?.text})`);
+        onLogBug('fallacyHunter', currentQuestion.id, `あなたの選択: ${currentQuestion.choices[choiceIdx].text} (正解: ${currentQuestion.choices.find(c => c.isCorrect)?.text})`, currentQuestion.scenario);
       }
     }
   };

@@ -346,7 +346,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
               wrongSlots.push(`${slot.id === 'root' ? '課題' : slot.id === 'left' ? '要素1' : '要素2'}: ${placedOption ? placedOption.text : '未配置'} (正解: ${slot.expectedText})`);
             }
           });
-          onLogBug('treeQuest', currentStage.id, `スロット誤配置: ${wrongSlots.join(', ')}`);
+          onLogBug('treeQuest', currentStage.id, `スロット誤配置: ${wrongSlots.join(', ')}`, currentStage.theme);
         }
       }
     }, 2000);

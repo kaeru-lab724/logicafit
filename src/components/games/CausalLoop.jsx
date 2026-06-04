@@ -210,7 +210,7 @@ export default function CausalLoop({ onFinish, playSound, muted, toggleMute, mod
         setIsStep1Solved(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('causalLoop', currentQ.id, `Step 1の誤回答: ${option.text} (正解: ${currentQ.step1Options.find(o => o.isCorrect)?.text})`);
+          onLogBug('causalLoop', currentQ.id, `Step 1の誤回答: ${option.text} (正解: ${currentQ.step1Options.find(o => o.isCorrect)?.text})`, currentQ.title);
         }
       }
     }
@@ -243,7 +243,7 @@ export default function CausalLoop({ onFinish, playSound, muted, toggleMute, mod
         setIsStep2Solved(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('causalLoop', currentQ.id, `Step 2の誤回答: ${option.text} (正解: ${currentQ.step2Options.find(o => o.isCorrect)?.text})`);
+          onLogBug('causalLoop', currentQ.id, `Step 2の誤回答: ${option.text} (正解: ${currentQ.step2Options.find(o => o.isCorrect)?.text})`, currentQ.title);
         }
       }
     }

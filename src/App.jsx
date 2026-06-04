@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useSound } from './hooks/useSound';
 import { encodeState, decodeState } from './data/spellHelper';
-import { skillsData } from './data/questions';
+import { 
+  skillsData, 
+  factsOpinionsDaily, 
+  factsOpinionsBusiness, 
+  logicalValidityDaily, 
+  logicalValidityBusiness, 
+  logicTreesDaily, 
+  logicTreesBusiness, 
+  fallaciesDaily, 
+  fallaciesBusiness, 
+  empathyDialoguesDaily, 
+  empathyDialoguesBusiness 
+} from './data/questions';
 import FactsOpinions from './components/games/FactsOpinions';
 import LogicalValidity from './components/games/LogicalValidity';
 import LogicTreeAssembler from './components/games/LogicTreeAssembler';
@@ -169,6 +181,50 @@ const getGameName = (key) => {
   return names[key] || '';
 };
 
+// 過去に記録されたバグの文言不足を補うフォールバック関数
+const getFallbackStatement = (gameId, questionId) => {
+  const allQuestions = [
+    ...(typeof factsOpinionsDaily !== 'undefined' ? factsOpinionsDaily : []),
+    ...(typeof factsOpinionsBusiness !== 'undefined' ? factsOpinionsBusiness : []),
+    ...(typeof logicalValidityDaily !== 'undefined' ? logicalValidityDaily : []),
+    ...(typeof logicalValidityBusiness !== 'undefined' ? logicalValidityBusiness : []),
+    ...(typeof logicTreesDaily !== 'undefined' ? logicTreesDaily : []),
+    ...(typeof logicTreesBusiness !== 'undefined' ? logicTreesBusiness : []),
+    ...(typeof fallaciesDaily !== 'undefined' ? fallaciesDaily : []),
+    ...(typeof fallaciesBusiness !== 'undefined' ? fallaciesBusiness : []),
+    ...(typeof empathyDialoguesDaily !== 'undefined' ? empathyDialoguesDaily : []),
+    ...(typeof empathyDialoguesBusiness !== 'undefined' ? empathyDialoguesBusiness : [])
+  ];
+  const foundQ = allQuestions.find(q => q.id === questionId);
+  if (foundQ) {
+    if (foundQ.statement) return foundQ.statement;
+    if (foundQ.theme) return foundQ.theme;
+    if (foundQ.dialogue) return foundQ.dialogue;
+    if (foundQ.situation) return foundQ.situation;
+    if (foundQ.premise1) return `${foundQ.premise1} ${foundQ.premise2} ${foundQ.conclusion}`;
+  }
+
+  const localMap = {
+    st_d1: '健康維持 vs 自由時間 (仕事と趣味が忙しく、運動する時間がない。)',
+    st_d2: '食費節約 vs 時短・健康 (食費を抑えるために自炊を徹底したいが時間がない。)',
+    st_d3: '読書インプット量 vs 娯楽・リラックス (自己投資のために本を読みたいが疲れてしまう。)',
+    st_d4: '部屋の整理整頓 vs 物を捨てる痛み (思い出の品やいつか使うものが捨てられない。)',
+    st_d5: '英語の学習継続 vs 家族との時間 (自己研鑽の時間と大切な人とのコミュニケーション時間。)',
+    st_b1: '開発のスピード vs コードの品質 (新機能を最速投入したいが技術負債がたまる。)',
+    st_b2: '厳格なセキュリティ vs 従業員の業務効率 (セキュリティを強化したいが業務効率が下がる。)',
+    st_b3: '広告費削減による利益確保 vs 売上成長のための集客 (利益目標のために広告費を削りたいが集客が下がる。)',
+    st_b4: '顧客の個別カスタマイズ vs サービスの標準化・スケール (大口顧客の要望対応と共通機能のアップデート。)',
+    st_b5: 'メンバーへの業務委譲 vs クオリティコントロール (業務を任せたいが品質が低く手戻りになる。)',
+    gt_d1: '家事の分担ジレンマ (パートナーと家事を協力するか、サボるかの囚人のジレンマ。)',
+    gt_d2: '返信タイミング (友達への即返信と遅い返信における調整ゲーム。)',
+    gt_d3: 'デートの行き先対立 (カフェに行きたい自分とバーに行きたい相手の行き先対立。)',
+    gt_b1: '競合との価格競争 (競合他社との高価格維持か値下げ競争かの価格競争。)',
+    gt_b2: '共同プロジェクトへの投資 (全力投資かタダ乗りするかのフリーライダー問題。)',
+    gt_b3: '新規参入と価格防衛 (スタートアップの参入に対し価格戦で対抗するかの参入阻止。)'
+  };
+  return localMap[questionId] || 'バグ問題データ';
+};
+
 export default function App() {
   const { playSound, muted, toggleMute } = useSound();
   const [activeGame, setActiveGame] = useState(null);
@@ -255,10 +311,17 @@ export default function App() {
         },
         unlockedTypes: initialUnlocked,
         bugNote: (parsed.bugNote || []).map(bug => {
-          if (bug.gameId === 'strategicCompiler') {
-            return { ...bug, gameId: 'strategic' };
+          let updatedBug = { ...bug };
+          if (updatedBug.gameId === 'strategicCompiler') {
+            updatedBug.gameId = 'strategic';
           }
-          return bug;
+          if (!updatedBug.addedAt && updatedBug.timestamp) {
+            updatedBug.addedAt = new Date(updatedBug.timestamp).toLocaleDateString('sv');
+          }
+          if (!updatedBug.statement) {
+            updatedBug.statement = getFallbackStatement(updatedBug.gameId, updatedBug.questionId);
+          }
+          return updatedBug;
         }),
         tuningLog: parsed.tuningLog || [],
         lastTuningDate: parsed.lastTuningDate || null
@@ -328,7 +391,7 @@ export default function App() {
   const [reviewQuestionId, setReviewQuestionId] = useState(null);
 
   // 脳内バグノートへの記録処理
-  const handleLogBug = (gameId, questionId, wrongAnswerDetails) => {
+  const handleLogBug = (gameId, questionId, wrongAnswerDetails, statement) => {
     setGameState(prev => {
       const bugNote = prev.bugNote || [];
       const existingBugIdx = bugNote.findIndex(b => b.gameId === gameId && b.questionId === questionId);
@@ -339,7 +402,9 @@ export default function App() {
         questionId,
         mode,
         wrongAnswerDetails: wrongAnswerDetails || '',
+        statement: statement || '',
         timestamp: Date.now(),
+        addedAt: new Date().toLocaleDateString('sv'),
         solved: false
       };
 
@@ -349,7 +414,9 @@ export default function App() {
         updatedBugNote[existingBugIdx] = {
           ...updatedBugNote[existingBugIdx],
           wrongAnswerDetails: wrongAnswerDetails || '',
+          statement: statement || updatedBugNote[existingBugIdx].statement || '',
           timestamp: Date.now(),
+          addedAt: updatedBugNote[existingBugIdx].addedAt || new Date().toLocaleDateString('sv'),
           solved: false
         };
       } else {
@@ -424,7 +491,7 @@ export default function App() {
       const bugNote = prev.bugNote || [];
       const updatedBugNote = bugNote.map(bug => {
         if (bug.gameId === gameId && bug.questionId === questionId) {
-          return { ...bug, solved: true };
+          return { ...bug, solved: true, solvedAt: new Date().toLocaleDateString('sv') };
         }
         return bug;
       });
@@ -1358,9 +1425,15 @@ export default function App() {
             onUnlockType={handleUnlockType}
             onStartReview={(gameId, questionId) => {
               playSound('click');
-              const mappedGameId = gameId === 'strategicCompiler' ? 'strategic' : gameId;
+              let finalGameId = gameId;
+              let finalQuestionId = questionId;
+              if (gameId && typeof gameId === 'object') {
+                finalGameId = gameId.gameId;
+                finalQuestionId = gameId.questionId;
+              }
+              const mappedGameId = finalGameId === 'strategicCompiler' ? 'strategic' : finalGameId;
               setActiveGame(mappedGameId);
-              setReviewQuestionId(questionId);
+              setReviewQuestionId(finalQuestionId);
             }}
           />
         )}

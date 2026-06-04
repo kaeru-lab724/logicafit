@@ -298,7 +298,7 @@ export default function HiddenAssumption({ onFinish, playSound, muted, toggleMut
         setIsStep1Solved(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('hiddenAssumption', currentQ.id, `Step 1の誤回答: ${option.text} (正解: ${currentQ.assumptionOptions.find(o => o.isCorrect)?.text})`);
+          onLogBug('hiddenAssumption', currentQ.id, `Step 1の誤回答: ${option.text} (正解: ${currentQ.options.find(o => o.isCorrect)?.text})`, currentQ.claim);
         }
       }
     }
@@ -331,7 +331,7 @@ export default function HiddenAssumption({ onFinish, playSound, muted, toggleMut
         setIsStep2Solved(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('hiddenAssumption', currentQ.id, `Step 2の誤回答: ${option.text} (正解: ${currentQ.rewriteOptions.find(o => o.isCorrect)?.text})`);
+          onLogBug('hiddenAssumption', currentQ.id, `Step 2の誤回答: ${option.text} (正解: ${currentQ.rewriteOptions.find(o => o.isCorrect)?.text})`, currentQ.claim);
         }
       }
     }

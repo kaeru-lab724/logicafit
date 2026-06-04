@@ -200,7 +200,7 @@ export default function AssertiveRewrite({ onFinish, playSound, muted, toggleMut
         setSelectedType(currentQ.correctType); // Highlight correct type
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('assertiveRewrite', currentQ.id, `Step 1の誤回答: 選択したタイプは正しくありません (正解: ${currentQ.correctType === 'aggressive' ? '攻撃的' : '受動的'})`);
+          onLogBug('assertiveRewrite', currentQ.id, `Step 1の誤回答: 選択したタイプは正しくありません (正解: ${currentQ.correctType === 'aggressive' ? '攻撃的' : '受動的'})`, currentQ.originalText);
         }
       }
     }
@@ -260,7 +260,7 @@ export default function AssertiveRewrite({ onFinish, playSound, muted, toggleMut
           setAssembledKeys(['D', 'E', 'S', 'C']);
           setMeters({ aggressive: 0, passive: 0, assertive: 100 });
           if (onLogBug && !reviewQuestionId) {
-            onLogBug('assertiveRewrite', currentQ.id, `Step 2の誤回答: DESCブロックの組み立て順序が違います。`);
+            onLogBug('assertiveRewrite', currentQ.id, `Step 2の誤回答: DESCブロックの組み立て順序が違います。`, currentQ.originalText);
           }
         }
       }

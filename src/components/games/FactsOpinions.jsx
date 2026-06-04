@@ -85,7 +85,7 @@ export default function FactsOpinions({ onFinish, playSound, muted, toggleMute, 
         setIsAnswered(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('factsOpinions', currentQuestion.id, `あなたの選択: ${answer ? '事実' : '意見'} (正解: ${currentQuestion.isFact ? '事実' : '意見'})`);
+          onLogBug('factsOpinions', currentQuestion.id, `あなたの選択: ${answer ? '事実' : '意見'} (正解: ${currentQuestion.isFact ? '事実' : '意見'})`, currentQuestion.statement);
         }
       }
     }

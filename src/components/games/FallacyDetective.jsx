@@ -89,7 +89,7 @@ export default function FallacyDetective({ onFinish, playSound, muted, toggleMut
         setIsAnswered(true);
         playSound('incorrect');
         if (onLogBug && !reviewQuestionId) {
-          onLogBug('fallacy', currentQuestion.id, `あなたの選択: ${currentQuestion.choices[choiceIdx].text} (正解: ${currentQuestion.choices.find(c => c.isCorrect)?.text})`);
+          onLogBug('fallacy', currentQuestion.id, `あなたの選択: ${currentQuestion.choices[choiceIdx].text} (正解: ${currentQuestion.choices.find(c => c.isCorrect)?.text})`, currentQuestion.scenario);
         }
       }
     }
