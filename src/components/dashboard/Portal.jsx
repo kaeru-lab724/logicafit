@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Brain, BookOpen, Lock, Sparkles } from 'lucide-react';
 
 export default function Portal({ onSelectView, playSound }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const cards = [
     {
       id: 'logicafit',
@@ -35,18 +46,26 @@ export default function Portal({ onSelectView, playSound }) {
 
   return (
     <div style={{
+      width: '100%',
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '48px 24px',
+      padding: isMobile ? '32px 16px' : '48px 24px',
       minHeight: '85vh',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: '32px'
+      gap: isMobile ? '24px' : '32px',
+      boxSizing: 'border-box'
     }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: '16px',
+        width: '100%',
+        boxSizing: 'border-box',
+        padding: '0 8px'
+      }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -58,27 +77,37 @@ export default function Portal({ onSelectView, playSound }) {
           fontSize: '11px',
           letterSpacing: '2px',
           color: 'var(--text-muted)',
-          marginBottom: '16px'
+          marginBottom: '16px',
+          maxWidth: '100%',
+          boxSizing: 'border-box'
         }}>
-          <Brain size={12} />
-          <span>THOUGHT TRAINING & TUNING LAB</span>
+          <Brain size={12} style={{ flexShrink: 0 }} />
+          <span style={{ 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap' 
+          }}>
+            THOUGHT TRAINING & TUNING LAB
+          </span>
         </div>
         <h1 style={{
           fontFamily: 'var(--font-display)',
-          fontSize: '32px',
+          fontSize: isMobile ? '26px' : '32px',
           fontWeight: 'bold',
           color: 'var(--text-primary)',
           letterSpacing: '-0.5px',
-          margin: '0 0 12px 0'
+          margin: '0 0 12px 0',
+          lineHeight: '1.2'
         }}>
           LogicaFit Portal
         </h1>
         <p style={{
-          fontSize: '14px',
+          fontSize: isMobile ? '13px' : '14px',
           color: 'var(--text-secondary)',
           maxWidth: '560px',
           margin: '0 auto',
-          lineHeight: '1.6'
+          lineHeight: '1.6',
+          padding: '0 4px'
         }}>
           クイズ形式で考え方の偏りを鍛える「思考トレーニング＆診断（LogicaFit）」と、頭のモヤモヤを書き出してスッキリ整理する「思考整理ノート（LogiJournal）」。2つのアプローチで、あなたの思考の調律をサポートします。
         </p>
@@ -87,11 +116,12 @@ export default function Portal({ onSelectView, playSound }) {
       {/* Grid Layout */}
       <div className="portal-grid" style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))',
         gap: '24px',
         width: '100%',
         maxWidth: '1080px',
-        marginTop: '16px'
+        marginTop: '16px',
+        boxSizing: 'border-box'
       }}>
         {cards.map((card) => {
           const IconComponent = card.icon;
@@ -103,7 +133,7 @@ export default function Portal({ onSelectView, playSound }) {
               onClick={() => handleSelect(card.id)}
               className={`glass-panel portal-card ${isActive ? 'active-card' : 'locked-card'}`}
               style={{
-                padding: '32px',
+                padding: isMobile ? '24px' : '32px',
                 borderRadius: '16px',
                 background: 'var(--hero-bg)',
                 border: '1px solid var(--border-color)',
@@ -113,20 +143,21 @@ export default function Portal({ onSelectView, playSound }) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                minHeight: '280px',
+                minHeight: isMobile ? '240px' : '280px',
                 position: 'relative',
                 overflow: 'hidden',
-                opacity: isActive ? 1 : 0.6
+                opacity: isActive ? 1 : 0.6,
+                boxSizing: 'border-box'
               }}
               onMouseEnter={(e) => {
-                if (isActive) {
+                if (isActive && !isMobile) {
                   e.currentTarget.style.borderColor = card.themeColor;
                   e.currentTarget.style.boxShadow = `0 12px 30px ${card.glowColor}`;
                   e.currentTarget.style.transform = 'translateY(-4px)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (isActive) {
+                if (isActive && !isMobile) {
                   e.currentTarget.style.borderColor = '';
                   e.currentTarget.style.boxShadow = 'none';
                   e.currentTarget.style.transform = 'none';
@@ -160,7 +191,8 @@ export default function Portal({ onSelectView, playSound }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isActive ? card.themeColor : 'var(--text-muted)'
+                    color: isActive ? card.themeColor : 'var(--text-muted)',
+                    flexShrink: 0
                   }}>
                     <IconComponent size={24} />
                   </div>
@@ -192,7 +224,8 @@ export default function Portal({ onSelectView, playSound }) {
                   color: card.themeColor,
                   fontWeight: '600',
                   display: 'block',
-                  marginBottom: '12px'
+                  marginBottom: '12px',
+                  lineHeight: '1.4'
                 }}>
                   {card.subtitle}
                 </span>
