@@ -33,7 +33,10 @@ import RakutenWidget from './components/common/RakutenWidget';
 import Dashboard from './components/dashboard/Dashboard';
 import DebugLab from './components/DebugLab';
 import MindTuning from './components/games/MindTuning';
+import Portal from './components/dashboard/Portal';
+import LogiJournal from './components/dashboard/LogiJournal';
 import { 
+  ArrowLeft,
   Award, 
   Brain, 
   BookOpen, 
@@ -228,6 +231,7 @@ const getFallbackStatement = (gameId, questionId) => {
 export default function App() {
   const { playSound, muted, toggleMute } = useSound();
   const [activeGame, setActiveGame] = useState(null);
+  const [currentView, setCurrentView] = useState('portal');
   const [mode, setMode] = useState('daily');
   const [showGuideModal, setShowGuideModal] = useState(false);
   const [showUnlockModal, setShowUnlockModal] = useState(false);
@@ -445,7 +449,7 @@ export default function App() {
           ...logEntry
         },
         ...currentLog
-      ].slice(0, 7); // 直近7日分を保持
+      ].slice(0, 500); // 履歴保持数を500件に拡張
 
       // 思考調律完了でボーナス 100 XP
       const earnedXp = 100;
@@ -467,6 +471,81 @@ export default function App() {
 
       localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
       return updatedState;
+    });
+  };
+
+  // 思考調律ログの追記・更新処理
+  const handleUpdateTuningLog = (updatedEntry) => {
+    setGameState(prev => {
+      const newLog = (prev.tuningLog || []).map(entry => 
+        entry.id === updatedEntry.id ? updatedEntry : entry
+      );
+      const updatedState = {
+        ...prev,
+        tuningLog: newLog
+      };
+      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      return updatedState;
+    });
+  };
+
+  // データのJSONエクスポート
+  const handleExportData = () => {
+    playSound('click');
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameState));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    downloadAnchor.setAttribute("download", `logifit_backup_${dateStr}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
+  // データのJSONインポート（マージ復元）
+  const handleImportData = (importedState) => {
+    setGameState(prev => {
+      const mergedTuningLog = [
+        ...(importedState.tuningLog || []),
+        ...(prev.tuningLog || [])
+      ];
+      const seenIds = new Set();
+      const uniqueTuningLog = [];
+      mergedTuningLog.forEach(item => {
+        const id = item.id || item.timestamp;
+        if (id && !seenIds.has(id)) {
+          seenIds.add(id);
+          uniqueTuningLog.push(item);
+        }
+      });
+
+      const mergedBugNote = [
+        ...(importedState.bugNote || []),
+        ...(prev.bugNote || [])
+      ];
+      const seenBugs = new Set();
+      const uniqueBugNote = [];
+      mergedBugNote.forEach(item => {
+        const bugId = `${item.gameId}_${item.questionId}`;
+        if (!seenBugs.has(bugId)) {
+          seenBugs.add(bugId);
+          uniqueBugNote.push(item);
+        }
+      });
+
+      const mergedState = {
+        ...prev,
+        ...importedState,
+        scores: { ...prev.scores, ...(importedState.scores || {}) },
+        businessScores: { ...prev.businessScores, ...(importedState.businessScores || {}) },
+        tuningLog: uniqueTuningLog,
+        bugNote: uniqueBugNote,
+        level: Math.max(prev.level, importedState.level || 1),
+        xp: Math.max(prev.xp, importedState.xp || 0),
+      };
+
+      localStorage.setItem('logifit_save_data', JSON.stringify(mergedState));
+      return mergedState;
     });
   };
 
@@ -1001,6 +1080,7 @@ export default function App() {
   return (
     <div className="app-container">
       {/* Header Navigation */}
+      {currentView === 'logifit' && (
       <header 
         className="glass-panel"
         style={{
@@ -1017,38 +1097,57 @@ export default function App() {
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto' }}>
-          <div 
-            onClick={() => { playSound('click'); setActiveGame(null); }}
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
-          >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div 
-              style={{ 
-                background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-cyan) 100%)',
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
+              onClick={() => { playSound('click'); setActiveGame(null); }}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+            >
+              <div 
+                style={{ 
+                  background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-cyan) 100%)',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 15px rgba(139, 92, 246, 0.4)'
+                }}
+              >
+                <Brain size={20} color="#fff" />
+              </div>
+              <span 
+                style={{ 
+                  fontFamily: 'var(--font-display)', 
+                  fontWeight: '800', 
+                  fontSize: '22px', 
+                  letterSpacing: '1px',
+                  background: 'linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                LogiFit
+              </span>
+            </div>
+
+            <button 
+              onClick={() => { playSound('click'); setActiveGame(null); setCurrentView('portal'); }}
+              className="btn btn-secondary"
+              style={{
+                fontSize: '11px',
+                padding: '6px 12px',
+                borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 0 15px rgba(139, 92, 246, 0.4)'
+                gap: '4px',
+                marginLeft: '8px'
               }}
             >
-              <Brain size={20} color="#fff" />
-            </div>
-            <span 
-              style={{ 
-                fontFamily: 'var(--font-display)', 
-                fontWeight: '800', 
-                fontSize: '22px', 
-                letterSpacing: '1px',
-                background: 'linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
-            >
-              LogiFit
-            </span>
+              <ArrowLeft size={12} />
+              <span>ポータル</span>
+            </button>
           </div>
 
           {/* スマホ時のみ、ヘッダー上部の右側にテーマ切り替えと音量ボタンを配置 */}
@@ -1190,10 +1289,35 @@ export default function App() {
           )}
         </div>
       </header>
+      )}
 
       {/* Main Container */}
       <main className="main-content">
-        {activeGame === 'factsOpinions' && (
+        {currentView === 'portal' && (
+          <Portal 
+            onSelectView={(view) => {
+              setActiveGame(null);
+              setCurrentView(view);
+            }} 
+            playSound={playSound} 
+          />
+        )}
+
+        {currentView === 'logijournal' && (
+          <LogiJournal 
+            gameState={gameState} 
+            onSaveLog={handleSaveTuningLog} 
+            onUpdateLog={handleUpdateTuningLog}
+            onExportData={handleExportData}
+            onImportData={handleImportData}
+            onBack={() => setCurrentView('portal')} 
+            playSound={playSound} 
+          />
+        )}
+
+        {currentView === 'logifit' && (
+          <>
+            {activeGame === 'factsOpinions' && (
           <FactsOpinions 
             onFinish={handleGameFinish} 
             playSound={playSound} 
@@ -1420,6 +1544,8 @@ export default function App() {
             handleRestoreSpell={handleRestoreSpell}
             handleCopySpell={handleCopySpell}
             currentSpell={currentSpell}
+            handleExportData={handleExportData}
+            handleImportData={handleImportData}
             setShowGuideModal={setShowGuideModal}
             badgeDetails={badgeDetails}
             skillsData={skillsData}
@@ -1437,6 +1563,8 @@ export default function App() {
               setReviewQuestionId(finalQuestionId);
             }}
           />
+        )}
+          </>
         )}
       </main>
 

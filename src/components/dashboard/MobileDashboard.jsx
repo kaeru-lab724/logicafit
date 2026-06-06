@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Home,
   Award,
@@ -19,7 +19,9 @@ import {
   Sliders,
   Trash2,
   KeyRound,
-  Copy
+  Copy,
+  Download,
+  Upload
 } from 'lucide-react';
 import { decodeState, calculateFriction } from '../../data/spellHelper';
 import { diagnosticTypes } from '../../data/diagnosticData';
@@ -109,8 +111,28 @@ export default function MobileDashboard({
   theme,
   setTheme,
   muted,
-  toggleMute
+  toggleMute,
+  handleExportData,
+  handleImportData
 }) {
+  const fileInputRef = useRef(null);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        if (handleImportData) {
+          handleImportData(data);
+        }
+      } catch (err) {
+        alert('不正なファイル形式です。JSONファイルを読み込んでください。');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const [showToast, setShowToast] = useState(false);
   const [opponentSpell, setOpponentSpell] = useState('');
   const [matchResult, setMatchResult] = useState(null);
@@ -1116,6 +1138,38 @@ export default function MobileDashboard({
                     {spellError && <p style={{ fontSize: '9px', color: 'var(--color-rose)', margin: '1px 0 0 0' }}>❌ {spellError}</p>}
                     {spellSuccess && <p style={{ fontSize: '9px', color: '#10b981', margin: '1px 0 0 0' }}>✨ 同期されました！</p>}
                   </form>
+
+                  {/* JSONファイルバックアップ */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '8px', marginTop: '4px' }}>
+                    <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>JSONファイルバックアップ（完全保存）:</span>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button 
+                        type="button" 
+                        onClick={handleExportData} 
+                        className="btn btn-secondary" 
+                        style={{ flex: 1, padding: '6px', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                      >
+                        <Download size={11} />
+                        <span>エクスポート</span>
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={() => fileInputRef.current.click()} 
+                        className="btn btn-secondary" 
+                        style={{ flex: 1, padding: '6px', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                      >
+                        <Upload size={11} />
+                        <span>インポート</span>
+                      </button>
+                    </div>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      onChange={handleFileChange} 
+                      accept=".json" 
+                      style={{ display: 'none' }} 
+                    />
+                  </div>
                 </div>
 
                 {/* 3. Danger Zone */}

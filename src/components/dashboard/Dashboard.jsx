@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Award, 
   Brain, 
@@ -18,7 +18,9 @@ import {
   Moon,
   Trash2,
   KeyRound,
-  Copy
+  Copy,
+  Download,
+  Upload
 } from 'lucide-react';
 import RakutenWidget from '../common/RakutenWidget';
 import { decodeState, calculateFriction } from '../../data/spellHelper';
@@ -118,8 +120,28 @@ export default function Dashboard({
   theme,
   setTheme,
   muted,
-  toggleMute
+  toggleMute,
+  handleExportData,
+  handleImportData
 }) {
+  const fileInputRef = useRef(null);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        if (handleImportData) {
+          handleImportData(data);
+        }
+      } catch (err) {
+        alert('不正なファイル形式です。JSONファイルを読み込んでください。');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const [showToast, setShowToast] = useState(false);
   const [opponentSpell, setOpponentSpell] = useState('');
   const [matchResult, setMatchResult] = useState(null);
@@ -1204,6 +1226,38 @@ export default function Dashboard({
                             {spellError && <p style={{ fontSize: '10px', color: 'var(--color-rose)', margin: '2px 0 0 0' }}>❌ {spellError}</p>}
                             {spellSuccess && <p style={{ fontSize: '10px', color: '#10b981', margin: '2px 0 0 0' }}>✨ コードが正常に同期されました！</p>}
                           </form>
+
+                          {/* JSONファイルバックアップ */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '12px', marginTop: '6px' }}>
+                            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>JSONファイルバックアップ（完全保存）:</span>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <button 
+                                type="button" 
+                                onClick={handleExportData} 
+                                className="btn btn-secondary" 
+                                style={{ flex: 1, padding: '8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                              >
+                                <Download size={12} />
+                                <span>エクスポート</span>
+                              </button>
+                              <button 
+                                type="button" 
+                                onClick={() => fileInputRef.current.click()} 
+                                className="btn btn-secondary" 
+                                style={{ flex: 1, padding: '8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                              >
+                                <Upload size={12} />
+                                <span>インポート</span>
+                              </button>
+                            </div>
+                            <input 
+                              type="file" 
+                              ref={fileInputRef} 
+                              onChange={handleFileChange} 
+                              accept=".json" 
+                              style={{ display: 'none' }} 
+                            />
+                          </div>
                         </div>
 
                         {/* 3. Danger Zone Panel */}
@@ -1531,6 +1585,8 @@ export default function Dashboard({
               handleRestoreSpell={handleRestoreSpell}
               handleCopySpell={handleCopySpell}
               currentSpell={currentSpell}
+              handleExportData={handleExportData}
+              handleImportData={handleImportData}
               setShowGuideModal={setShowGuideModal}
               badgeDetails={badgeDetails}
               skillsData={skillsData}
