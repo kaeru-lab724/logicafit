@@ -1,4 +1,4 @@
-// LogiFit - Hiragana Brain Code Engine (ふっかつのブレインコード) - 12文字軽量版
+// LogicaFit - Hiragana Brain Code Engine (ふっかつのブレインコード) - 12文字軽量版
 
 // 厳選した64文字のひらがな（1文字あたり6ビットの情報を格納可能）
 const CHARS = [

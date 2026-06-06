@@ -211,7 +211,7 @@ export default function Dashboard({
 
   const handleShareToX = (text) => {
     playSound('click');
-    const appUrl = 'https://www.logifit.site/';
+    const appUrl = 'https://www.logicafit.site/';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
   };
@@ -341,7 +341,7 @@ export default function Dashboard({
                     <div className="department-lobby-wrapper">
                       <h2 className="department-lobby-title">🧠 ダッシュボード / DASHBOARD</h2>
                       <p className="department-lobby-desc">
-                        LogiFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考バグのチェックを実行できます。
+                        LogicaFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考バグのチェックを実行できます。
                       </p>
                       
                       <div className="tenants-grid">
@@ -1272,7 +1272,7 @@ export default function Dashboard({
                             onClick={() => {
                               playSound('click');
                               if (window.confirm('本当にすべてのデータをリセットしますか？\nこの操作を実行すると、今までのスコアや獲得バッジ、調律ログが完全に削除され、復元できなくなります。')) {
-                                localStorage.removeItem('logifit_save_state');
+                                localStorage.removeItem('logicafit_save_state');
                                 window.location.reload();
                               }
                             }}

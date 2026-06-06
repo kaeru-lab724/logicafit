@@ -205,7 +205,7 @@ export default function MobileDashboard({
 
   const handleShareToX = (text) => {
     playSound('click');
-    const appUrl = 'https://www.logifit.site/';
+    const appUrl = 'https://www.logicafit.site/';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
   };
@@ -270,7 +270,7 @@ export default function MobileDashboard({
           <div className="logo-icon-bg" style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Brain size={16} style={{ color: '#fff' }} />
           </div>
-          <span className="logo-text" style={{ fontSize: '16px', fontWeight: 'bold', letterSpacing: '0.5px' }}>LogiFit</span>
+          <span className="logo-text" style={{ fontSize: '16px', fontWeight: 'bold', letterSpacing: '0.5px' }}>LogicaFit</span>
         </div>
         
         <div className="header-status-controls" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -333,7 +333,7 @@ export default function MobileDashboard({
             <div className="department-lobby-wrapper">
               <h2 className="department-lobby-title" style={{ fontSize: '20px' }}>🧠 ダッシュボード / DASHBOARD</h2>
               <p className="department-lobby-desc" style={{ fontSize: '12px', marginBottom: '16px' }}>
-                LogiFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考バグのチェックを実行できます。
+                LogicaFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考バグのチェックを実行できます。
               </p>
               
               <div className="tenants-grid" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -1181,7 +1181,7 @@ export default function MobileDashboard({
                     onClick={() => {
                       playSound('click');
                       if (window.confirm('本当にすべてのデータをリセットしますか？\nこの操作を実行すると、今までのスコアや獲得バッジ、調律ログが完全に削除され、復元できなくなります。')) {
-                        localStorage.removeItem('logifit_save_state');
+                        localStorage.removeItem('logicafit_save_state');
                         window.location.reload();
                       }
                     }}

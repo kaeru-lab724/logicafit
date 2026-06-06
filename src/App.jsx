@@ -237,7 +237,7 @@ export default function App() {
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('logifit_color_theme') || 'dark';
+    return localStorage.getItem('logicafit_color_theme') || 'dark';
   });
 
   useEffect(() => {
@@ -279,12 +279,12 @@ export default function App() {
     } else {
       document.body.classList.remove('light-theme');
     }
-    localStorage.setItem('logifit_color_theme', theme);
+    localStorage.setItem('logicafit_color_theme', theme);
   }, [theme]);
   
   // アプリ全体のステータス管理
   const [gameState, setGameState] = useState(() => {
-    const saved = localStorage.getItem('logifit_save_data');
+    const saved = localStorage.getItem('logicafit_save_data');
     if (saved) {
       const parsed = JSON.parse(saved);
       // カレンダーが残っている場合はクリーンアップして返す
@@ -333,7 +333,7 @@ export default function App() {
     }
     
     // 古い形式のスコアデータがある場合のマイグレーション
-    const oldScores = localStorage.getItem('logifit_scores');
+    const oldScores = localStorage.getItem('logicafit_scores');
     if (oldScores) {
       const parsedScores = JSON.parse(oldScores);
       return {
@@ -355,10 +355,10 @@ export default function App() {
     // 簡易スキャナー起動時はチュートリアルガイドの自動ポップアップを抑制
     if (activeGame === 'harassmentScanner') return;
 
-    const seen = localStorage.getItem('logifit_seen_guide');
+    const seen = localStorage.getItem('logicafit_seen_guide');
     if (gameState.xp === 0 && !seen) {
       setShowGuideModal(true);
-      localStorage.setItem('logifit_seen_guide', 'true');
+      localStorage.setItem('logicafit_seen_guide', 'true');
     }
   }, [gameState.xp, activeGame]);
 
@@ -432,7 +432,7 @@ export default function App() {
         bugNote: updatedBugNote
       };
       
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -469,7 +469,7 @@ export default function App() {
         playSound('success');
       }
 
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -484,7 +484,7 @@ export default function App() {
         ...prev,
         tuningLog: newLog
       };
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -496,7 +496,7 @@ export default function App() {
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    downloadAnchor.setAttribute("download", `logifit_backup_${dateStr}.json`);
+    downloadAnchor.setAttribute("download", `logicafit_backup_${dateStr}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -544,7 +544,7 @@ export default function App() {
         xp: Math.max(prev.xp, importedState.xp || 0),
       };
 
-      localStorage.setItem('logifit_save_data', JSON.stringify(mergedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(mergedState));
       return mergedState;
     });
   };
@@ -556,7 +556,7 @@ export default function App() {
         ...prev,
         lastTuningDate: null
       };
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -589,7 +589,7 @@ export default function App() {
         level: newLevel
       };
 
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
 
       if (isLevelUp) {
         setTimeout(() => {
@@ -668,7 +668,7 @@ export default function App() {
         badges: mergedBadges
       };
 
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
 
       // レベルアップまたはバッジ獲得時の報酬ポップアップ表示
       if (isLevelUp) {
@@ -736,7 +736,7 @@ export default function App() {
         ...prev,
         unlockedTypes: updatedUnlocked
       };
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -772,7 +772,7 @@ export default function App() {
       };
 
       setGameState(normalizedState);
-      localStorage.setItem('logifit_save_data', JSON.stringify(normalizedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(normalizedState));
       
       setSpellSuccess(true);
       setSpellInput('');
@@ -787,13 +787,13 @@ export default function App() {
     if (window.confirm('これまでの学習データをすべてリセットしますか？')) {
       playSound('click');
       setGameState(DEFAULT_STATE);
-      localStorage.setItem('logifit_save_data', JSON.stringify(DEFAULT_STATE));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(DEFAULT_STATE));
     }
   };
 
   const handleShareToX = (text) => {
     playSound('click');
-    const appUrl = 'https://www.logifit.site/';
+    const appUrl = 'https://www.logicafit.site/';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
   };
@@ -819,7 +819,7 @@ export default function App() {
         diagnosticTypeId: type.id,
         unlockedTypes: updatedUnlocked
       };
-      localStorage.setItem('logifit_save_data', JSON.stringify(updatedState));
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -1080,7 +1080,7 @@ export default function App() {
   return (
     <div className="app-container">
       {/* Header Navigation */}
-      {currentView === 'logifit' && (
+      {currentView === 'logicafit' && (
       <header 
         className="glass-panel"
         style={{
@@ -1128,7 +1128,7 @@ export default function App() {
                   WebkitTextFillColor: 'transparent'
                 }}
               >
-                LogiFit
+                LogicaFit
               </span>
             </div>
 
@@ -1315,7 +1315,7 @@ export default function App() {
           />
         )}
 
-        {currentView === 'logifit' && (
+        {currentView === 'logicafit' && (
           <>
             {activeGame === 'factsOpinions' && (
           <FactsOpinions 
@@ -1615,8 +1615,8 @@ export default function App() {
               <button
                 onClick={() => handleShareToX(
                   rewardModal.type === 'level'
-                    ? `✨ 思考の筋トレ「LogiFit」でレベルアップ！\n【${rewardModal.value}】に到達しました！脳の回路が活性化中。\n\n#LogiFit #ロジフィット #論理的思考`
-                    : `🏆 思考の筋トレ「LogiFit」で実績アンロック！\n称号【${rewardModal.value}】を獲得しました！\n\n#LogiFit #ロジフィット #論理的思考`
+                    ? `✨ 思考の筋トレ「LogicaFit」でレベルアップ！\n【${rewardModal.value}】に到達しました！脳の回路が活性化中。\n\n#LogicaFit #ロジカフィット #論理的思考`
+                    : `🏆 思考の筋トレ「LogicaFit」で実績アンロック！\n称号【${rewardModal.value}】を獲得しました！\n\n#LogicaFit #ロジカフィット #論理的思考`
                 )}
                 className="btn btn-secondary"
                 style={{ flex: 1, padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '14px' }}
@@ -1738,7 +1738,7 @@ function GuideModal({ isOpen, onClose }) {
   const stepsContent = [
     {
       title: "🌿 1. 難易度モードを選ぼう",
-      description: "LogiFitには『日常編（入門）』と『ビジネス編（中級）』の2つの難易度モードがあります。ヘッダー右上のトグルボタンでいつでも切り替えられます。初心者の方は、まず優しい『日常編』から始めるのがおすすめです！",
+      description: "LogicaFitには『日常編（入門）』と『ビジネス編（中級）』の2つの難易度モードがあります。ヘッダー右上のトグルボタンでいつでも切り替えられます。初心者の方は、まず優しい『日常編』から始めるのがおすすめです！",
       icon: <Sparkles size={48} style={{ color: 'var(--color-cyan)' }} />
     },
     {

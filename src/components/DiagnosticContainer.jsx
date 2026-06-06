@@ -220,7 +220,7 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
 
     let shareText = "";
     if (targetType === "self") {
-      shareText = `【LogiFit 思考スキャン診断】
+      shareText = `【LogicaFit 思考スキャン診断】
 私の愛すべき脳内バグは…
 🧠 ${resultType.name} ${resultType.emoji}
 ～ ${resultType.tagline} ～
@@ -231,8 +231,8 @@ export default function DiagnosticContainer({ onSelectGame, onSaveDiagnostic, my
 ・ラディカル　　：${bar(pR)} ${pR}%
 ・エモーショナル：${bar(pE)} ${pE}%
 
-#LogiFit思考スキャン診断 #愛すべき脳内バグ #思考力パラメーター
-https://www.logifit.site/`;
+#LogicaFit思考スキャン診断 #愛すべき脳内バグ #思考力パラメーター
+https://www.logicafit.site/`;
     } else {
       const targetLabel = {
         spouse: "パートナー",
@@ -245,14 +245,14 @@ https://www.logifit.site/`;
         frictionSnippet = `\n⚡ 私との「脳内摩擦係数」は【${frictionResult.friction}%】でした！\n関係性：【${frictionResult.pairName}】\n`;
       }
 
-      shareText = `【LogiFit 他者脳内スキャン】
+      shareText = `【LogicaFit 他者脳内スキャン】
 あの人の脳内バグをスキャンしました！
 🧠 タイプ：${resultType.name} ${resultType.emoji}
 ～ ${resultType.tagline} ～
 ${frictionSnippet}
 あの人の攻略トリセツと相性はこちら👇
-#脳内摩擦係数 #取扱説明書 #思考力パラメーター #LogiFit
-https://www.logifit.site/`;
+#脳内摩擦係数 #取扱説明書 #思考力パラメーター #LogicaFit
+https://www.logicafit.site/`;
     }
 
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
@@ -730,8 +730,8 @@ https://www.logifit.site/`;
                             friend: "友達"
                           }[targetType] || "あの人";
 
-                          const text = `⚡ ${targetLabel}との「脳内摩擦係数」をスキャンしました！\n結果：【${frictionResult.pairName}】\n摩擦係数：【${frictionResult.friction}%】\n\n診断＆相性チェックはこちら👇\n#脳内摩擦係数 #思考スキャン診断 #ブレインコード #LogiFit`;
-                          const appUrl = 'https://www.logifit.site/';
+                          const text = `⚡ ${targetLabel}との「脳内摩擦係数」をスキャンしました！\n結果：【${frictionResult.pairName}】\n摩擦係数：【${frictionResult.friction}%】\n\n診断＆相性チェックはこちら👇\n#脳内摩擦係数 #思考スキャン診断 #ブレインコード #LogicaFit`;
+                          const appUrl = 'https://www.logicafit.site/';
                           const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
                           window.open(shareUrl, '_blank', 'noopener,noreferrer');
                         }}
@@ -771,7 +771,7 @@ https://www.logifit.site/`;
               🧠 脳内デバッグ・学習ロードマップ
             </h3>
             <p style={{ color: "var(--text-secondary)", fontSize: "13px", lineHeight: "1.5", marginBottom: "24px" }}>
-              あなたの診断結果に基づいた推奨学習ルートです。まずはLogiFitで基礎を鍛え、さらに深めたい場合は専門特化アプリへ進みましょう。
+              あなたの診断結果に基づいた推奨学習ルートです。まずはLogicaFitで基礎を鍛え、さらに深めたい場合は専門特化アプリへ進みましょう。
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "20px", textAlign: "left" }}>

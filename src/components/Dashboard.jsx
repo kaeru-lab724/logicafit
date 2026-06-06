@@ -175,7 +175,7 @@ export default function Dashboard({
 
   const handleShareToX = (text) => {
     playSound('click');
-    const appUrl = 'https://www.logifit.site/';
+    const appUrl = 'https://www.logicafit.site/';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
   };
@@ -348,9 +348,9 @@ export default function Dashboard({
                     </div>
                   )
                 },
-                // Slide 2: About LogiFit
+                // Slide 2: About LogicaFit
                 {
-                  badge: "LogiFitとは？",
+                  badge: "LogicaFitとは？",
                   badgeColor: "rgba(6, 182, 212, 0.05)",
                   badgeTextColor: "var(--color-cyan)",
                   badgeBorder: "rgba(6, 182, 212, 0.15)",
@@ -360,7 +360,7 @@ export default function Dashboard({
                   tagline: "なぜか話が噛み合わない…そのアタマの偏りをデバッグする",
                   desc: (
                     <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '13.5px', marginBottom: '24px', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-                      LogiFitは、3分間のレントゲン（思考診断）であなたの認知の偏りを暴き、4つの思考ルーム（ロジカル、クリティカル、ラディカル、エモーショナル）でゲーム感覚で思考力をデバッグ・強化するジムです。
+                      LogicaFitは、3分間のレントゲン（思考診断）であなたの認知の偏りを暴き、4つの思考ルーム（ロジカル、クリティカル、ラディカル、エモーショナル）でゲーム感覚で思考力をデバッグ・強化するジムです。
                     </p>
                   ),
                   actions: (
@@ -1667,7 +1667,7 @@ export default function Dashboard({
                                 {/* エラー詳細ターミナル */}
                                 <div style={{ marginTop: '12px' }}>
                                   <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px', fontFamily: 'monospace' }}>
-                                    $ logifit-scanner --check-error
+                                    $ logicafit-scanner --check-error
                                   </div>
                                   <div 
                                     style={{ 
@@ -2254,7 +2254,7 @@ export default function Dashboard({
                   </div>
 
                   <button 
-                    onClick={() => handleShareToX(`⚡ 二人の「脳内摩擦係数」をスキャンしました！\n結果：【${matchResult.pairName}】\n激突度：【${matchResult.friction}%】\n\n診断＆相性チェックはこちら👇\n#脳内摩擦係数 #アたまのレントゲン #ブレインコード #LogiFit`)}
+                    onClick={() => handleShareToX(`⚡ 二人の「脳内摩擦係数」をスキャンしました！\n結果：【${matchResult.pairName}】\n激突度：【${matchResult.friction}%】\n\n診断＆相性チェックはこちら👇\n#脳内摩擦係数 #アたまのレントゲン #ブレインコード #LogicaFit`)}
                     className="btn btn-secondary"
                     style={{ width: '100%', fontSize: '12px', gap: '6px', background: 'white', color: 'black', fontWeight: 'bold' }}
                   >
@@ -2598,7 +2598,7 @@ export default function Dashboard({
                       
                       <button
                         onClick={() => {
-                          const tweetText = `🏆 思考ジム「LogiFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogiFit #思考デバッグ`;
+                          const tweetText = `🏆 思考ジム「LogicaFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogicaFit #思考デバッグ`;
                           handleShareToX(tweetText);
                         }}
                         className="btn btn-secondary"
@@ -2687,7 +2687,7 @@ function LandingPage({
           「なぜか話が噛み合わない…」<br />その脳内のバグ、スキャンしませんか？
         </h1>
         <p style={{ color: 'var(--text-secondary)', lineHeight: '1.7', fontSize: showCTA ? '15px' : '13.5px', marginBottom: showCTA ? '36px' : '0px', maxWidth: '680px', margin: '0 auto' }}>
-          LogiFit（ロジフィット）は、アタマのレントゲン（思考診断）であなたの認知の偏りを暴き、<br />
+          LogicaFit（ロジカフィット）は、アタマのレントゲン（思考診断）であなたの認知の偏りを暴き、<br />
           ゲーム感覚で脳内OSをアップデートする総合思考トレーニングジムです。
         </p>
         {showCTA && (
@@ -2761,7 +2761,7 @@ function LandingPage({
       {/* ③ 得られるメリット (Benefits/Values) */}
       <div className="glass-panel" style={{ padding: '36px 28px', border: '1px solid var(--border-color)', borderRadius: '16px', marginBottom: '16px' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: 'var(--text-primary)', textAlign: 'center' }}>
-          LogiFitでデバッグする「4つの論理・感情回路」
+          LogicaFitでデバッグする「4つの論理・感情回路」
         </h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '13px', textAlign: 'center', marginBottom: '28px' }}>
           診断結果からアタマの傾向をレーダー可視化。偏りを見極め、4つのルームでデバッグ学習を行います。

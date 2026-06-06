@@ -110,7 +110,7 @@ export default function BadgeModal({
                 
                 <button
                   onClick={() => {
-                    const tweetText = `🏆 「LogiFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogiFit #思考デバッグ`;
+                    const tweetText = `🏆 「LogicaFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogicaFit #思考デバッグ`;
                     handleShareToX(tweetText);
                   }}
                   className="btn btn-secondary badge-share-btn"

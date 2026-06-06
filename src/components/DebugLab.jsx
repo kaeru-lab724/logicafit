@@ -17,7 +17,7 @@ export default function DebugLab({ gameState, onFinish, playSound, onBack, muted
   const games = [
     {
       id: 'fallacyHunter',
-      name: 'LogiFit: Fallacy Hunter',
+      name: 'LogicaFit: Fallacy Hunter',
       moduleNum: 'LAB MODULE 01',
       desc: '日常会話やビジネスコードに潜む誤謬（へりくつ）を検出（Detect）し、論理バグを取り除く批判的思考スキャンゲーム。',
       difficulty: '脳内デバッグ',
@@ -28,7 +28,7 @@ export default function DebugLab({ gameState, onFinish, playSound, onBack, muted
     },
     {
       id: 'treeQuest',
-      name: 'LogiFit: Tree Quest',
+      name: 'LogicaFit: Tree Quest',
       moduleNum: 'LAB MODULE 02',
       desc: '複雑に絡み合った課題をMECEに分解・スキャンし、論理的な接続構造を構築するロジックツリー・デバッグゲーム。',
       difficulty: '脳内デバッグ',

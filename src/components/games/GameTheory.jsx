@@ -736,8 +736,8 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
                   else if (finalPercent >= 60) rank = "【一般脳 🧠】ジレンマに陥る可能性あり";
 
                   const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
-                  const text = `🎯 思考の筋トレ「LogiFit」でトレーニング完了！\n種目：ゲーム理論デバッガー (${modeText})\nスコア：${finalPercent}% \n評価：${rank}\n\nジレンマを解消し、お互いの最大利益を導き出せるか？\n#LogiFit #ロジフィット #ゲーム理論`;
-                  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logifit.site/')}`;
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：ゲーム理論デバッガー (${modeText})\nスコア：${finalPercent}% \n評価：${rank}\n\nジレンマを解消し、お互いの最大利益を導き出せるか？\n#LogicaFit #ロジカフィット #ゲーム理論`;
+                  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
                   window.open(shareUrl, '_blank', 'noopener,noreferrer');
                 }}
                 className="btn btn-secondary"

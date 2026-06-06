@@ -374,8 +374,8 @@ export default function FactsOpinions({ onFinish, playSound, muted, toggleMute, 
                   else if (finalPercent >= 60) rank = "【一般脳 🧠】デバッグの余地あり";
 
                   const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
-                  const text = `🎯 思考の筋トレ「LogiFit」でトレーニング完了！\n種目：事実 vs 意見 (${modeText})\nスコア：${finalPercent}% (${score} / ${questions.length} 問正解)\n評価：${rank}\n\nあなたは「事実」と「意見」を正しく見分けられますか？\n#LogiFit #ロジフィット #論理的思考`;
-                  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logifit.site/')}`;
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：事実 vs 意見 (${modeText})\nスコア：${finalPercent}% (${score} / ${questions.length} 問正解)\n評価：${rank}\n\nあなたは「事実」と「意見」を正しく見分けられますか？\n#LogicaFit #ロジカフィット #論理的思考`;
+                  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
                   window.open(shareUrl, '_blank', 'noopener,noreferrer');
                 }}
                 className="btn btn-secondary"

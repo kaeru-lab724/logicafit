@@ -472,7 +472,7 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
           
           {/* Cursor Prompt line at bottom */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '2px', fontSize: '10px', fontFamily: 'monospace' }}>
-            <span style={{ color: 'var(--color-cyan)', opacity: 0.5 }}>guest@logifit:~$_</span>
+            <span style={{ color: 'var(--color-cyan)', opacity: 0.5 }}>guest@logicafit:~$_</span>
             <span className="terminal-cursor" style={{ fontSize: '10px' }}>█</span>
           </div>
         </div>

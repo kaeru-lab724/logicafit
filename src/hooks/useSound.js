@@ -8,10 +8,10 @@ let padNodes = [];
 let globalBgmVolumeNode = null;
 
 // ローカルストレージおよびグローバル状態の初期化
-let globalBgmType = localStorage.getItem('logifit_bgm_type') || 'none';
-let globalBgmVolume = parseFloat(localStorage.getItem('logifit_bgm_volume') ?? '0.3');
-let globalKeyboardEnabled = localStorage.getItem('logifit_keyboard_enabled') !== 'false';
-let globalMuted = localStorage.getItem('logifit_muted') === 'true';
+let globalBgmType = localStorage.getItem('logicafit_bgm_type') || 'none';
+let globalBgmVolume = parseFloat(localStorage.getItem('logicafit_bgm_volume') ?? '0.3');
+let globalKeyboardEnabled = localStorage.getItem('logicafit_keyboard_enabled') !== 'false';
+let globalMuted = localStorage.getItem('logicafit_muted') === 'true';
 
 // 複数インスタンスのuseSound間で状態を同期するためのオブザーバー機構
 let listeners = [];
@@ -447,7 +447,7 @@ export function useSound() {
   const toggleMute = useCallback(() => {
     const nextMuted = !globalMuted;
     globalMuted = nextMuted;
-    localStorage.setItem('logifit_muted', nextMuted ? 'true' : 'false');
+    localStorage.setItem('logicafit_muted', nextMuted ? 'true' : 'false');
     console.log(`useSound: Global mute toggled to: ${nextMuted}`);
     
     if (nextMuted) {
@@ -462,7 +462,7 @@ export function useSound() {
   // BGMタイプの切り替え
   const changeBgmType = useCallback((type) => {
     globalBgmType = type;
-    localStorage.setItem('logifit_bgm_type', type);
+    localStorage.setItem('logicafit_bgm_type', type);
     console.log(`useSound: Global BGM type changed to: ${type}`);
     
     if (!globalMuted) {
@@ -474,7 +474,7 @@ export function useSound() {
   // BGM音量の変更
   const changeBgmVolume = useCallback((volume) => {
     globalBgmVolume = volume;
-    localStorage.setItem('logifit_bgm_volume', volume.toString());
+    localStorage.setItem('logicafit_bgm_volume', volume.toString());
     console.log(`useSound: Global BGM volume changed to: ${volume}`);
 
     ensureAudioContext();
@@ -487,7 +487,7 @@ export function useSound() {
   // キーボードASMRの切り替え
   const changeKeyboardEnabled = useCallback((enabled) => {
     globalKeyboardEnabled = enabled;
-    localStorage.setItem('logifit_keyboard_enabled', enabled ? 'true' : 'false');
+    localStorage.setItem('logicafit_keyboard_enabled', enabled ? 'true' : 'false');
     console.log(`useSound: Global Keyboard ASMR toggled to: ${enabled}`);
     notifyAll();
   }, []);

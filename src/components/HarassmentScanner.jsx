@@ -279,9 +279,9 @@ export default function HarassmentScanner({ onSaveDiagnostic, onSelectGame, play
       return '■'.repeat(filled) + '□'.repeat(5 - filled);
     };
 
-    const shareText = `【脳内摩擦スキャン】私のバグタイプは【${type.emoji}${type.name}】！\n\nロジハラ度：${breakdown.rojiha}% [${getBar(breakdown.rojiha)}]\n昭和バイアス：${breakdown.showa}% [${getBar(breakdown.showa)}]\n\n正論で人をフリーズさせているバグを検知。\n#LogiFit #脳内摩擦スキャナー\n`;
+    const shareText = `【脳内摩擦スキャン】私のバグタイプは【${type.emoji}${type.name}】！\n\nロジハラ度：${breakdown.rojiha}% [${getBar(breakdown.rojiha)}]\n昭和バイアス：${breakdown.showa}% [${getBar(breakdown.showa)}]\n\n正論で人をフリーズさせているバグを検知。\n#LogicaFit #脳内摩擦スキャナー\n`;
     
-    const appUrl = 'https://www.logifit.site/?mode=scan';
+    const appUrl = 'https://www.logicafit.site/?mode=scan';
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(appUrl)}`;
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
@@ -291,7 +291,7 @@ export default function HarassmentScanner({ onSaveDiagnostic, onSelectGame, play
     playSound('click');
     
     // 診断結果を親ステート (LocalStorage) に保存
-    // LCREの点数を 105点満点 (LogiFitのフル診断スケール) に適正化してマッピング
+    // LCREの点数を 105点満点 (LogicaFitのフル診断スケール) に適正化してマッピング
     const scale = 1.4; // 簡易診断(最大約75点)からフル診断(最大105点)へのマージン調整
     const mappedScores = {
       L: Math.min(105, Math.round(diagnosticResult.scores.L * scale)),

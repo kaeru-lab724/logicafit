@@ -4,8 +4,8 @@ import { Cpu, BookOpen, Lock, Terminal } from 'lucide-react';
 export default function Portal({ onSelectView, playSound }) {
   const cards = [
     {
-      id: 'logifit',
-      title: 'LogiFit',
+      id: 'logicafit',
+      title: 'LogicaFit',
       subtitle: 'ERROR DETECTION: 思考の論理診断',
       description: '認知バイアスや推論のゆがみを検出する13の論理構造化トレーニング。自らの思考パターンに潜むバグを可視化・診断します。',
       icon: Cpu,
@@ -80,7 +80,7 @@ export default function Portal({ onSelectView, playSound }) {
           margin: '0 auto',
           lineHeight: '1.6'
         }}>
-          思考のエラーを検出する「論理診断（LogiFit）」と、ノイズを論理的なパッチへ再構成する「思考リファクタリング（LogiJournal）」。2つのエンジンで脳のバグをデバッグします。
+          思考のエラーを検出する「論理診断（LogicaFit）」と、ノイズを論理的なパッチへ再構成する「思考リファクタリング（LogiJournal）」。2つのエンジンで脳のバグをデバッグします。
         </p>
       </div>
 
@@ -169,7 +169,7 @@ export default function Portal({ onSelectView, playSound }) {
                     fontWeight: 'bold',
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    background: isActive ? `rgba(${card.id === 'logifit' ? '16, 185, 129' : '6, 182, 212'}, 0.1)` : 'rgba(255, 255, 255, 0.03)',
+                    background: isActive ? `rgba(${card.id === 'logicafit' ? '16, 185, 129' : '6, 182, 212'}, 0.1)` : 'rgba(255, 255, 255, 0.03)',
                     color: isActive ? card.themeColor : 'var(--text-muted)',
                     border: `1px solid ${isActive ? 'rgba(255, 255, 255, 0.05)' : 'transparent'}`,
                     letterSpacing: '1px'

@@ -24,7 +24,7 @@ export default function LandingPage({
           「なぜか話が噛み合わない…」<br />その脳内のバグ、スキャンしませんか？
         </h1>
         <p className="landing-desc">
-          LogiFit（ロジフィット）は、思考スキャン診断であなたの認知の偏りを可視化し、<br className="desktop-only" />
+          LogicaFit（ロジカフィット）は、思考スキャン診断であなたの認知の偏りを可視化し、<br className="desktop-only" />
           ゲーム感覚で脳内OSをアップデートする総合思考トレーニングシステムです。
         </p>
         {showCTA && (
@@ -84,7 +84,7 @@ export default function LandingPage({
       {/* ③ 得られるメリット (Benefits/Values) */}
       <div className="glass-panel landing-section-panel">
         <h2 className="landing-section-title">
-          LogiFitでデバッグする「4つの論理・感情回路」
+          LogicaFitでデバッグする「4つの論理・感情回路」
         </h2>
         <p className="landing-section-subtitle">
           診断結果から思考力パラメーターをレーダーチャートで可視化。偏りを見極め、各ルームでデバッグ学習を行います。

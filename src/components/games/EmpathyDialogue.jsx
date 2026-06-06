@@ -239,12 +239,12 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
     return '冷徹な正論サイコパス';
   };
 
-  const shareText = `【LogiFit/エモーショナルルーム】で共感対話トレーニングを完了！
+  const shareText = `【LogicaFit/エモーショナルルーム】で共感対話トレーニングを完了！
 モード: ${mode === 'business' ? 'ビジネス編' : '日常編'}
 正解数: ${score} / ${questions.length} (スコア: ${Math.round((score / questions.length) * 100)}%)
 称号: 【${getEmpathyTitle(score)}】
 正論で論破するのをやめ、心のチューナーを合わせよう！
-#LogiFit #ロジフィット #論理的思考 #EQ`;
+#LogicaFit #ロジカフィット #論理的思考 #EQ`;
 
   return (
     <div className="game-container fade-in">
