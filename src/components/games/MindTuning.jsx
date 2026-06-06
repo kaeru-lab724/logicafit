@@ -328,14 +328,6 @@ export default function MindTuning({ onBack, playSound, onSaveLog }) {
               </button>
             ))}
           </div>
-
-          <button 
-            onClick={onBack} 
-            className="btn btn-secondary" 
-            style={{ marginTop: '32px', fontSize: '13px', padding: '10px 24px' }}
-          >
-            ← 戻る
-          </button>
         </div>
       )}
 

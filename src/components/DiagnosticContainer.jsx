@@ -845,21 +845,14 @@ https://www.logicafit.site/`;
                 onClick={() => {
                   onSelectGame(resultType.recommendedGame);
                 }}
-                style={{ flex: 1, minWidth: "200px" }}
+                style={{ flex: 1.5, minWidth: "200px" }}
               >
                 おすすめトレーニングを開始する
               </button>
               <button 
                 className="btn btn-secondary" 
-                onClick={() => onSelectGame(null)}
-                style={{ flex: 0.5, minWidth: "120px" }}
-              >
-                ← ダッシュボードに戻る
-              </button>
-              <button 
-                className="btn btn-secondary" 
                 onClick={handleStart}
-                style={{ flex: 0.5, minWidth: "120px" }}
+                style={{ flex: 1, minWidth: "150px" }}
               >
                 もう一度診断する
               </button>

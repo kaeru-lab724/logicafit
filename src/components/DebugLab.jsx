@@ -105,26 +105,7 @@ export default function DebugLab({ gameState, onFinish, playSound, onBack, muted
   }
 
   return (
-    <div className="game-container fade-in" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 16px' }}>
-      
-      {/* 戻るナビゲーション */}
-      <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '24px' }}>
-        <button 
-          onClick={() => { playSound('click'); onBack(); }}
-          className="btn btn-secondary"
-          style={{
-            padding: '8px 16px',
-            fontSize: '13.5px',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <ChevronLeft size={16} />
-          ← ダッシュボードに戻る
-        </button>
-      </div>
+    <div className="game-container fade-in" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 16px', paddingTop: '24px' }}>
 
       {/* ヘッダーエリア */}
       <div 
