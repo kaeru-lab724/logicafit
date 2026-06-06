@@ -457,8 +457,8 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
       {activeTab === 'workspace' && (
         <div className="journal-workspace-grid" style={{
           display: 'grid',
-          gridTemplateColumns: '320px 1fr',
-          gap: '24px',
+          gridTemplateColumns: isMobile ? '1fr' : '320px 1fr',
+          gap: isMobile ? '16px' : '24px',
           alignItems: 'start'
         }}>
           {/* Left Panel: History Sidebar */}
@@ -470,7 +470,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
-            maxHeight: '72vh',
+            maxHeight: isMobile ? '300px' : '72vh',
             overflowY: 'auto'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -509,7 +509,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
             </div>
 
             {/* History List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', minHeight: '280px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', minHeight: isMobile ? '120px' : '280px' }}>
               {filteredLog.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12.5px', padding: '40px 0' }}>
                   履歴がありません
@@ -835,7 +835,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                 </div>
 
                 {/* Raw vs Refactored Text views */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '20px' }}>
                   <div style={{ background: 'rgba(244, 63, 94, 0.01)', border: '1px solid rgba(244, 63, 94, 0.08)', padding: '16px', borderRadius: '8px' }}>
                     <span style={{ fontSize: '11px', color: '#f43f5e', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
                       🔴 整理前のモヤモヤ（無意識のクセ）
@@ -1019,7 +1019,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
       {/* Active Tab Analytics */}
       {activeTab === 'analytics' && (
         <div className="glass-panel fade-in" style={{
-          padding: '32px 24px',
+          padding: isMobile ? '20px 16px' : '32px 24px',
           borderRadius: '12px',
           background: 'var(--hero-bg)',
           border: '1px solid var(--border-color)',
@@ -1052,7 +1052,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
           </div>
 
           {/* Bias Bar Charts */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '24px' }}>
             <div style={{ background: 'rgba(0,0,0,0.1)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '8px' }}>
               <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
                 頻出する認知バイアス（偏りがちな思考パターン）
