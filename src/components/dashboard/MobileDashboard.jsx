@@ -1121,7 +1121,7 @@ export default function MobileDashboard({
                 {/* 3. Danger Zone */}
                 <div className="glass-panel" style={{ padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px', border: '1px solid rgba(244, 63, 94, 0.2)', background: 'rgba(255,255,255,0.02)' }}>
                   <h3 style={{ fontSize: '11px', fontWeight: 'bold', margin: 0, color: 'var(--color-rose)', borderBottom: '1px solid rgba(244, 63, 94, 0.1)', paddingBottom: '6px' }}>
-                    危険操作
+                    データ初期化（危険操作）
                   </h3>
                   <button
                     onClick={() => {

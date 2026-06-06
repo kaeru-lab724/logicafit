@@ -1209,7 +1209,7 @@ export default function Dashboard({
                         {/* 3. Danger Zone Panel */}
                         <div className="glass-panel" style={{ padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(244, 63, 94, 0.2)' }}>
                           <h3 style={{ fontSize: '13px', fontWeight: 'bold', margin: 0, color: 'var(--color-rose)', borderBottom: '1px solid rgba(244, 63, 94, 0.1)', paddingBottom: '8px' }}>
-                            デンジャーゾーン
+                            データ初期化（危険操作）
                           </h3>
                           <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
                             ブラウザに保存されているすべての進行状況、スコア、獲得実績バッジ、調律ログ履歴を消去して初期状態に戻します。
