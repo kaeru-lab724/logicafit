@@ -1127,7 +1127,11 @@ export default function App() {
                   }
                 } else {
                   setActiveGame(null);
-                  setCurrentView('portal');
+                  if (activeTab !== 'home' && activeTab !== 'achievements') {
+                    setActiveTab('home');
+                  } else {
+                    setCurrentView('portal');
+                  }
                 }
               }}
               className="btn btn-secondary"
@@ -1164,7 +1168,7 @@ export default function App() {
             >
               <ArrowLeft size={isMobile ? 12 : 14} style={{ flexShrink: 0 }} />
               <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
-                {activeGame !== null ? 'ダッシュボードへ戻る' : 'ポータルへ戻る'}
+                {(activeGame !== null || (activeTab !== 'home' && activeTab !== 'achievements')) ? 'ダッシュボードへ戻る' : 'ポータルへ戻る'}
               </span>
             </button>
 

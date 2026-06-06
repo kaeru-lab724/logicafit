@@ -323,17 +323,7 @@ export default function Dashboard({
 
               {/* Tab Content Display Area */}
               <div className="dashboard-tab-content-panel">
-                {activeTab !== 'home' && activeTab !== 'achievements' && (
-                  <div className="back-to-lobby-bar">
-                    <button 
-                      onClick={() => { playSound('click'); setActiveTab('home'); }} 
-                      className="back-to-lobby-btn"
-                    >
-                      <ChevronLeft size={16} />
-                      <span>← ダッシュボードに戻る</span>
-                    </button>
-                  </div>
-                )}
+                
                 
                 {/* 0. HOME TAB */}
                 {activeTab === 'home' && (

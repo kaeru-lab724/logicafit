@@ -297,18 +297,7 @@ export default function MobileDashboard({
          ② メインコンテンツ領域
          ======================================================== */}
       <main className="mobile-app-content" style={{ padding: '16px', flex: 1 }}>
-        {activeTab !== 'home' && activeTab !== 'achievements' && activeTab !== undefined && (
-          <div className="back-to-lobby-bar" style={{ marginBottom: '16px' }}>
-            <button 
-              onClick={() => { playSound('click'); setActiveTab('home'); }} 
-              className="back-to-lobby-btn"
-              style={{ width: '100%', justifyContent: 'center' }}
-            >
-              <ChevronLeft size={16} />
-              <span>← ダッシュボードに戻る</span>
-            </button>
-          </div>
-        )}
+        
 
         {/* Cyber Console Terminal Status Ticker */}
         {(activeTab === 'home' || activeTab === 'achievements' || activeTab === 'training' || activeTab === 'bugNote' || activeTab === 'encyclopedia' || activeTab === undefined) && (
