@@ -15,7 +15,11 @@ import {
   Volume2,
   VolumeX,
   Sun,
-  Moon
+  Moon,
+  Sliders,
+  Trash2,
+  KeyRound,
+  Copy
 } from 'lucide-react';
 import { decodeState, calculateFriction } from '../../data/spellHelper';
 import { diagnosticTypes } from '../../data/diagnosticData';
@@ -990,6 +994,164 @@ export default function MobileDashboard({
                   ))}
                 </div>
               )}
+            </section>
+
+            {/* システム設定・データ同期 */}
+            <div style={{ borderTop: '1px dashed rgba(255,255,255,0.08)', margin: '16px 0' }} />
+
+            <section id="system-settings-section" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: 'bold', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Sliders size={16} className="color-primary-icon" style={{ color: 'var(--color-cyan)' }} />
+                システム設定・データ同期
+              </h2>
+              
+              <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                表示テーマ、効果音、進行状況のバックアップ・復元、データリセットが可能です。
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '4px' }}>
+                {/* 1. Basic Settings */}
+                <div className="glass-panel" style={{ padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)' }}>
+                  <h3 style={{ fontSize: '11px', fontWeight: 'bold', margin: 0, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '6px' }}>
+                    基本設定
+                  </h3>
+                  
+                  {/* Theme Switcher */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>💡 カラーテーマ:</span>
+                    <button
+                      onClick={() => {
+                        playSound('click');
+                        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+                      }}
+                      className="btn btn-secondary"
+                      style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', padding: '4px 10px' }}
+                    >
+                      {theme === 'dark' ? <Moon size={10} /> : <Sun size={10} />}
+                      <span>{theme === 'dark' ? 'ダーク' : 'ライト'}</span>
+                    </button>
+                  </div>
+
+                  {/* Sound Switcher */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>🔊 効果音 (SE):</span>
+                    <button
+                      onClick={() => {
+                        playSound('click');
+                        toggleMute();
+                      }}
+                      className="btn btn-secondary"
+                      style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', padding: '4px 10px' }}
+                    >
+                      {muted ? <VolumeX size={10} /> : <Volume2 size={10} />}
+                      <span>{muted ? '消音中' : 'ON'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Sync / Backup */}
+                <div className="glass-panel" style={{ padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)' }}>
+                  <h3 style={{ fontSize: '11px', fontWeight: 'bold', margin: 0, display: 'flex', alignItems: 'center', gap: '6px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '6px' }}>
+                    <KeyRound size={12} style={{ color: 'var(--color-cyan)' }} />
+                    データ同期・バックアップ
+                  </h3>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>あなたの現在のブレインコード:</span>
+                    <div 
+                      onClick={() => handleCopySpell(currentSpell)}
+                      className="backup-code-display"
+                      style={{
+                        background: 'rgba(0,0,0,0.3)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        padding: '6px 10px',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        fontFamily: 'monospace',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        borderLeft: '3px solid var(--color-cyan)'
+                      }}
+                    >
+                      <span style={{ color: 'var(--color-cyan)', fontWeight: 'bold' }}>{currentSpell}</span>
+                      <Copy size={11} style={{ opacity: 0.6 }} />
+                    </div>
+                  </div>
+
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleRestoreSpell(e);
+                    }} 
+                    style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}
+                  >
+                    <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>コードを入力して復元・同期:</span>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      <input 
+                        type="text" 
+                        value={spellInput}
+                        onChange={(e) => {
+                          setSpellInput(e.target.value);
+                          if (setSpellError) setSpellError('');
+                          if (setSpellSuccess) setSpellSuccess(false);
+                        }}
+                        placeholder="コードを入力"
+                        style={{
+                          flex: 1,
+                          background: 'rgba(0,0,0,0.3)',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          borderRadius: '4px',
+                          padding: '4px 6px',
+                          color: '#fff',
+                          fontSize: '10px',
+                          fontFamily: 'monospace'
+                        }}
+                      />
+                      <button type="submit" className="btn btn-primary" style={{ padding: '4px 10px', fontSize: '10px' }}>
+                        同期
+                      </button>
+                    </div>
+                    {spellError && <p style={{ fontSize: '9px', color: 'var(--color-rose)', margin: '1px 0 0 0' }}>❌ {spellError}</p>}
+                    {spellSuccess && <p style={{ fontSize: '9px', color: '#10b981', margin: '1px 0 0 0' }}>✨ 同期されました！</p>}
+                  </form>
+                </div>
+
+                {/* 3. Danger Zone */}
+                <div className="glass-panel" style={{ padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px', border: '1px solid rgba(244, 63, 94, 0.2)', background: 'rgba(255,255,255,0.02)' }}>
+                  <h3 style={{ fontSize: '11px', fontWeight: 'bold', margin: 0, color: 'var(--color-rose)', borderBottom: '1px solid rgba(244, 63, 94, 0.1)', paddingBottom: '6px' }}>
+                    危険操作
+                  </h3>
+                  <button
+                    onClick={() => {
+                      playSound('click');
+                      if (window.confirm('本当にすべてのデータをリセットしますか？\nこの操作を実行すると、今までのスコアや獲得バッジ、調律ログが完全に削除され、復元できなくなります。')) {
+                        localStorage.removeItem('logifit_save_state');
+                        window.location.reload();
+                      }
+                    }}
+                    className="btn"
+                    style={{
+                      background: 'rgba(244, 63, 94, 0.08)',
+                      border: '1px solid rgba(244, 63, 94, 0.3)',
+                      color: 'var(--color-rose)',
+                      fontSize: '11px',
+                      padding: '6px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <Trash2 size={11} />
+                    データを完全に初期化する
+                  </button>
+                </div>
+              </div>
             </section>
 
           </div>

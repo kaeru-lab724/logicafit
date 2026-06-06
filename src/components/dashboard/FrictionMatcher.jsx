@@ -1,5 +1,5 @@
 import React from 'react';
-import { Copy, KeyRound, Sparkles } from 'lucide-react';
+import { Copy } from 'lucide-react';
 
 export default function FrictionMatcher({
   currentSpell,
@@ -7,14 +7,7 @@ export default function FrictionMatcher({
   setOpponentSpell,
   matchResult,
   matchError,
-  spellInput,
-  setSpellInput,
-  spellError,
-  spellSuccess,
-  setSpellError,
-  setSpellSuccess,
   handleCheckFriction,
-  handleRestoreSpell,
   onCopyClick,
   handleShareToX
 }) {
@@ -64,7 +57,7 @@ export default function FrictionMatcher({
                 type="text" 
                 value={opponentSpell} 
                 onChange={(e) => setOpponentSpell(e.target.value)}
-                placeholder="相手の英数字12文字を入力"
+                placeholder="相手のコードを入力"
                 className="matcher-input"
               />
             </div>
@@ -112,51 +105,6 @@ export default function FrictionMatcher({
             </button>
           </div>
         )}
-      </div>
-
-      {/* ブレインコード（同期・復元）(Alphanumeric Brain Code Backup Box) */}
-      <div className="glass-panel backup-panel">
-        <h3 className="backup-title">
-          <KeyRound size={18} className="color-primary-icon" />
-          ブレインコード（同期・復元）
-        </h3>
-        <p className="backup-desc">
-          データを他の端末と同期・復元できます（英数字12文字のコードです）。
-          <span className="backup-warning">
-            ⚠️ キャッシュクリアで学習データが消去されるため、コードを手元に保存しておくと安心です。
-          </span>
-        </p>
-        <div 
-          onClick={onCopyClick}
-          className="backup-code-display"
-          title="クリックしてコピー"
-        >
-          <span>{currentSpell}</span>
-          <Copy size={14} style={{ opacity: 0.6 }} />
-        </div>
-        <form onSubmit={handleRestoreSpell} className="backup-form">
-          <label className="backup-form-label">
-            コードを入力して復元・同期する:
-          </label>
-          <div className="backup-input-group">
-            <input 
-              type="text" 
-              value={spellInput}
-              onChange={(e) => {
-                setSpellInput(e.target.value);
-                if (setSpellError) setSpellError('');
-                if (setSpellSuccess) setSpellSuccess(false);
-              }}
-              placeholder="英数字12文字を入力"
-              className="backup-input"
-            />
-            <button type="submit" className="btn btn-primary backup-submit-btn">
-              同期
-            </button>
-          </div>
-          {spellError && <p className="backup-error">❌ {spellError}</p>}
-          {spellSuccess && <p className="backup-success">✨ コードが正常に同期されました！</p>}
-        </form>
       </div>
     </div>
   );

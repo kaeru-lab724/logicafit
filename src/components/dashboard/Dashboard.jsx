@@ -10,7 +10,15 @@ import {
   Unlock,
   ChevronLeft,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  Sliders,
+  Volume2,
+  VolumeX,
+  Sun,
+  Moon,
+  Trash2,
+  KeyRound,
+  Copy
 } from 'lucide-react';
 import RakutenWidget from '../common/RakutenWidget';
 import { decodeState, calculateFriction } from '../../data/spellHelper';
@@ -1065,6 +1073,178 @@ export default function Dashboard({
                           ))}
                         </div>
                       )}
+                    </section>
+
+                    {/* Settings & Data Sync Section */}
+                    <div style={{ borderTop: '1px dashed rgba(255,255,255,0.15)', margin: '24px 0' }} />
+
+                    <section className="text-left" id="system-settings-section">
+                      <div className="settings-header" style={{ marginBottom: '10px' }}>
+                        <h2 className="tab-title" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Sliders size={20} className="color-primary-icon" style={{ color: 'var(--color-cyan)' }} />
+                          システム設定・データ同期
+                        </h2>
+                      </div>
+                      
+                      <p className="tab-intro-desc">
+                        アプリの基本表示設定、効果音の切替え、ブレインコードを用いた進行状況のバックアップ・復元、およびデータの初期化を行えます。
+                      </p>
+
+                      <div className="settings-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginTop: '16px' }}>
+                        {/* 1. Basic Settings Panel */}
+                        <div className="glass-panel" style={{ padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '13px', fontWeight: 'bold', margin: 0, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            基本設定
+                          </h3>
+                          
+                          {/* Theme Toggle */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                            <span style={{ color: 'var(--text-secondary)' }}>💡 カラーテーマ:</span>
+                            <button
+                              onClick={() => {
+                                playSound('click');
+                                setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+                              }}
+                              className="btn btn-secondary"
+                              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', padding: '6px 12px' }}
+                            >
+                              {theme === 'dark' ? <Moon size={12} /> : <Sun size={12} />}
+                              <span>{theme === 'dark' ? 'ダークモード' : 'ライトモード'}</span>
+                            </button>
+                          </div>
+
+                          {/* Mute Toggle */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                            <span style={{ color: 'var(--text-secondary)' }}>🔊 効果音 (SE):</span>
+                            <button
+                              onClick={() => {
+                                playSound('click');
+                                toggleMute();
+                              }}
+                              className="btn btn-secondary"
+                              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', padding: '6px 12px' }}
+                            >
+                              {muted ? <VolumeX size={12} /> : <Volume2 size={12} />}
+                              <span>{muted ? '消音中 (Muted)' : '有効 (ON)'}</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* 2. Data Backup & Sync Panel */}
+                        <div className="glass-panel" style={{ padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)' }}>
+                          <h3 style={{ fontSize: '13px', fontWeight: 'bold', margin: 0, display: 'flex', alignItems: 'center', gap: '6px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '8px' }}>
+                            <KeyRound size={14} style={{ color: 'var(--color-cyan)' }} />
+                            データ同期・バックアップ
+                          </h3>
+                          <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                            他の端末へのデータ同期や、進行状況（レベル、バッジ、調律ログ等）の保管に使用します。
+                          </p>
+
+                          {/* Display Braincode */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>あなたの現在のブレインコード:</span>
+                            <div 
+                              onClick={() => handleCopySpell(currentSpell)}
+                              className="backup-code-display"
+                              style={{
+                                background: 'rgba(0,0,0,0.3)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                padding: '8px 12px',
+                                borderRadius: '6px',
+                                fontSize: '12px',
+                                fontFamily: 'monospace',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                borderLeft: '3px solid var(--color-cyan)'
+                              }}
+                              title="クリックしてコピー"
+                            >
+                              <span style={{ color: 'var(--color-cyan)', fontWeight: 'bold', letterSpacing: '0.5px' }}>{currentSpell}</span>
+                              <Copy size={13} style={{ opacity: 0.6 }} />
+                            </div>
+                          </div>
+
+                          {/* Input Spell form */}
+                          <form 
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              handleRestoreSpell(e);
+                            }} 
+                            style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px' }}
+                          >
+                            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>コードを入力して復元・同期:</span>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                              <input 
+                                type="text" 
+                                value={spellInput}
+                                onChange={(e) => {
+                                  setSpellInput(e.target.value);
+                                  if (setSpellError) setSpellError('');
+                                  if (setSpellSuccess) setSpellSuccess(false);
+                                }}
+                                placeholder="ブレインコードを入力"
+                                style={{
+                                  flex: 1,
+                                  background: 'rgba(0,0,0,0.35)',
+                                  border: '1px solid rgba(255,255,255,0.15)',
+                                  borderRadius: '6px',
+                                  padding: '6px 10px',
+                                  color: '#fff',
+                                  fontSize: '11px',
+                                  fontFamily: 'monospace'
+                                }}
+                              />
+                              <button type="submit" className="btn btn-primary" style={{ padding: '6px 16px', fontSize: '11px' }}>
+                                同期
+                              </button>
+                            </div>
+                            {spellError && <p style={{ fontSize: '10px', color: 'var(--color-rose)', margin: '2px 0 0 0' }}>❌ {spellError}</p>}
+                            {spellSuccess && <p style={{ fontSize: '10px', color: '#10b981', margin: '2px 0 0 0' }}>✨ コードが正常に同期されました！</p>}
+                          </form>
+                        </div>
+
+                        {/* 3. Danger Zone Panel */}
+                        <div className="glass-panel" style={{ padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(244, 63, 94, 0.2)' }}>
+                          <h3 style={{ fontSize: '13px', fontWeight: 'bold', margin: 0, color: 'var(--color-rose)', borderBottom: '1px solid rgba(244, 63, 94, 0.1)', paddingBottom: '8px' }}>
+                            デンジャーゾーン
+                          </h3>
+                          <p style={{ fontSize: '10px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
+                            ブラウザに保存されているすべての進行状況、スコア、獲得実績バッジ、調律ログ履歴を消去して初期状態に戻します。
+                          </p>
+                          <button
+                            onClick={() => {
+                              playSound('click');
+                              if (window.confirm('本当にすべてのデータをリセットしますか？\nこの操作を実行すると、今までのスコアや獲得バッジ、調律ログが完全に削除され、復元できなくなります。')) {
+                                localStorage.removeItem('logifit_save_state');
+                                window.location.reload();
+                              }
+                            }}
+                            className="btn"
+                            style={{
+                              background: 'rgba(244, 63, 94, 0.08)',
+                              border: '1px solid rgba(244, 63, 94, 0.3)',
+                              color: 'var(--color-rose)',
+                              fontSize: '11.5px',
+                              padding: '8px 12px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                              marginTop: 'auto',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '6px',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            <Trash2 size={12} />
+                            進行状況を完全にリセットする
+                          </button>
+                        </div>
+                      </div>
                     </section>
                   </div>
                 )}
