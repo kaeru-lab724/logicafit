@@ -1230,7 +1230,7 @@ export default function App() {
                 fontWeight: 'bold',
                 background: mode === 'daily' ? 'linear-gradient(135deg, var(--color-cyan) 0%, #0891b2 100%)' : 'transparent',
                 border: 'none',
-                color: mode === 'daily' ? '#0a0b10' : 'var(--text-secondary)',
+                color: mode === 'daily' ? '#fff' : 'var(--text-secondary)',
                 boxShadow: mode === 'daily' ? '0 0 10px var(--color-cyan-glow)' : 'none',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 display: 'flex',
