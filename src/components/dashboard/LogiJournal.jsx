@@ -5,6 +5,7 @@ import {
   BarChart2, ArrowLeft, Check, Edit3, HelpCircle,
   Sun, Moon, Volume2, VolumeX
 } from 'lucide-react';
+import RakutenWidget from '../common/RakutenWidget';
 
 const BIAS_RULES = [
   {
@@ -525,129 +526,158 @@ export default function LogiJournal({
           gap: isMobile ? '16px' : '24px',
           alignItems: 'start'
         }}>
-          {/* Left Panel: History Sidebar */}
-          <div className="glass-panel" style={{
-            padding: '16px',
-            borderRadius: '12px',
-            background: 'var(--hero-bg)',
-            border: '1px solid var(--border-color)',
+          {/* Left Panel Container (Sidebar + Desktop Ad) */}
+          <div style={{
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
-            maxHeight: isMobile ? '300px' : '72vh',
-            overflowY: 'auto'
+            width: isMobile ? '100%' : '320px',
+            flexShrink: 0
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-muted)', letterSpacing: '1px' }}>
-                JOURNAL HISTORY
-              </span>
-              <button 
-                onClick={handleStartCreate}
-                className="btn btn-primary"
-                style={{ padding: '6px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', background: 'var(--color-cyan)', border: 'none' }}
-              >
-                <Plus size={14} />
-                <span>新規作成</span>
-              </button>
-            </div>
+            {/* Left Panel: History Sidebar */}
+            <div className="glass-panel" style={{
+              padding: '16px',
+              borderRadius: '12px',
+              background: 'var(--hero-bg)',
+              border: '1px solid var(--border-color)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              maxHeight: isMobile ? '300px' : '72vh',
+              overflowY: 'auto',
+              width: '100%'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-muted)', letterSpacing: '1px' }}>
+                  JOURNAL HISTORY
+                </span>
+                <button 
+                  onClick={handleStartCreate}
+                  className="btn btn-primary"
+                  style={{ padding: '6px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', background: 'var(--color-cyan)', border: 'none' }}
+                >
+                  <Plus size={14} />
+                  <span>新規作成</span>
+                </button>
+              </div>
 
-            {/* Search Input */}
-            <div style={{ position: 'relative' }}>
-              <Search size={14} style={{ position: 'absolute', left: '10px', top: '10px', color: 'var(--text-muted)' }} />
-              <input 
-                type="text" 
-                placeholder="履歴を検索..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px 8px 30px',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border-color)',
-                  background: 'rgba(0,0,0,0.15)',
-                  fontSize: '12.5px',
-                  outline: 'none',
-                  color: 'var(--text-primary)'
-                }}
-              />
-            </div>
+              {/* Search Input */}
+              <div style={{ position: 'relative' }}>
+                <Search size={14} style={{ position: 'absolute', left: '10px', top: '10px', color: 'var(--text-muted)' }} />
+                <input 
+                  type="text" 
+                  placeholder="履歴を検索..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px 8px 30px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-color)',
+                    background: 'rgba(0,0,0,0.15)',
+                    fontSize: '12.5px',
+                    outline: 'none',
+                    color: 'var(--text-primary)'
+                  }}
+                />
+              </div>
 
-            {/* History List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', minHeight: isMobile ? '120px' : '280px' }}>
-              {filteredLog.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12.5px', padding: '40px 0' }}>
-                  履歴がありません
-                </div>
-              ) : (
-                filteredLog.map(entry => {
-                  const info = VIBE_DATA[entry.vibe] || { emoji: '📝', themeColor: 'var(--color-cyan)' };
-                  const isSelected = selectedEntryId === entry.id;
-                  const dateStr = new Date(entry.timestamp).toLocaleDateString('ja-JP', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+              {/* History List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto', minHeight: isMobile ? '120px' : '280px' }}>
+                {filteredLog.length === 0 ? (
+                  <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '12.5px', padding: '40px 0' }}>
+                    履歴がありません
+                  </div>
+                ) : (
+                  filteredLog.map(entry => {
+                    const info = VIBE_DATA[entry.vibe] || { emoji: '📝', themeColor: 'var(--color-cyan)' };
+                    const isSelected = selectedEntryId === entry.id;
+                    const dateStr = new Date(entry.timestamp).toLocaleDateString('ja-JP', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-                  return (
-                    <div
-                      key={entry.id}
-                      onClick={() => { playSound('click'); setSelectedEntryId(entry.id); setIsCreating(false); }}
-                      style={{
-                        padding: '12px',
-                        borderRadius: '8px',
-                        background: isSelected ? 'rgba(6, 182, 212, 0.08)' : 'rgba(255, 255, 255, 0.01)',
-                        border: `1px solid ${isSelected ? 'var(--color-cyan)' : 'var(--border-color)'}`,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        textAlign: 'left'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isSelected) e.currentTarget.style.borderColor = '';
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span style={{ fontSize: '16px' }}>{info.emoji}</span>
-                          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{dateStr}</span>
+                    return (
+                      <div
+                        key={entry.id}
+                        onClick={() => { playSound('click'); setSelectedEntryId(entry.id); setIsCreating(false); }}
+                        style={{
+                          padding: '12px',
+                          borderRadius: '8px',
+                          background: isSelected ? 'rgba(6, 182, 212, 0.08)' : 'rgba(255, 255, 255, 0.01)',
+                          border: `1px solid ${isSelected ? 'var(--color-cyan)' : 'var(--border-color)'}`,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.borderColor = '';
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '16px' }}>{info.emoji}</span>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{dateStr}</span>
+                          </div>
+                          <span style={{
+                            fontSize: '9px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px',
+                            background: entry.status === 'patched' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(244, 63, 94, 0.1)',
+                            color: entry.status === 'patched' ? '#10b981' : '#f43f5e'
+                          }}>
+                            {entry.status === 'patched' ? '整理完了' : '未整理'}
+                          </span>
                         </div>
-                        <span style={{
-                          fontSize: '9px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px',
-                          background: entry.status === 'patched' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(244, 63, 94, 0.1)',
-                          color: entry.status === 'patched' ? '#10b981' : '#f43f5e'
+                        <p style={{
+                          fontSize: '12px', color: 'var(--text-secondary)', margin: 0,
+                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
                         }}>
-                          {entry.status === 'patched' ? '整理完了' : '未整理'}
-                        </span>
+                          {entry.refactoredText}
+                        </p>
                       </div>
-                      <p style={{
-                        fontSize: '12px', color: 'var(--text-secondary)', margin: 0,
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'
-                      }}>
-                        {entry.refactoredText}
-                      </p>
-                    </div>
-                  );
-                })
-              )}
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Import / Export utility block */}
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', display: 'flex', gap: '8px' }}>
+                <button 
+                  onClick={onExportData}
+                  className="btn btn-secondary"
+                  style={{ flex: 1, padding: '8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                >
+                  <Download size={12} />
+                  <span>エクスポート</span>
+                </button>
+                <button 
+                  onClick={triggerImport}
+                  className="btn btn-secondary"
+                  style={{ flex: 1, padding: '8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                >
+                  <Upload size={12} />
+                  <span>インポート</span>
+                </button>
+              </div>
             </div>
 
-            {/* Import / Export utility block */}
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '16px', display: 'flex', gap: '8px' }}>
-              <button 
-                onClick={onExportData}
-                className="btn btn-secondary"
-                style={{ flex: 1, padding: '8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-              >
-                <Download size={12} />
-                <span>エクスポート</span>
-              </button>
-              <button 
-                onClick={triggerImport}
-                className="btn btn-secondary"
-                style={{ flex: 1, padding: '8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-              >
-                <Upload size={12} />
-                <span>インポート</span>
-              </button>
-            </div>
+            {/* Sponsored Link (Desktop only) */}
+            {!isMobile && (
+              <div className="glass-panel sponsor-panel" style={{ 
+                width: '100%', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                padding: '16px', 
+                borderRadius: '12px',
+                background: 'rgba(255,255,255,0.02)', 
+                border: '1px solid var(--border-color)' 
+              }}>
+                <div className="sponsor-label" style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                  Sponsored Link
+                </div>
+                <RakutenWidget size="250x250" ts="1779836909524" />
+              </div>
+            )}
           </div>
 
           {/* Right Panel: Workspace Area */}
@@ -1169,6 +1199,26 @@ export default function LogiJournal({
               </p>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Sponsor Ad (Mobile only) */}
+      {isMobile && (
+        <div className="glass-panel sponsor-panel" style={{ 
+          width: '100%', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          padding: '16px', 
+          borderRadius: '12px',
+          background: 'rgba(255,255,255,0.02)', 
+          border: '1px solid var(--border-color)',
+          marginTop: '16px'
+        }}>
+          <div className="sponsor-label" style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '8px' }}>
+            Sponsored Link
+          </div>
+          <RakutenWidget size="250x250" ts="1779836909524" />
         </div>
       )}
     </div>
