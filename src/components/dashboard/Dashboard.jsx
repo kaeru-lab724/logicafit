@@ -1150,6 +1150,40 @@ export default function Dashboard({
                               <span>{muted ? '消音中 (Muted)' : '有効 (ON)'}</span>
                             </button>
                           </div>
+
+                          {/* Keyboard ASMR Toggle */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                            <span style={{ color: 'var(--text-secondary)' }}>⌨️ タイピング音 (ASMR):</span>
+                            <button
+                              onClick={() => {
+                                playSound('click');
+                                setKeyboardEnabled(!keyboardEnabled);
+                              }}
+                              className="btn btn-secondary"
+                              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', padding: '6px 12px' }}
+                            >
+                              <span>{keyboardEnabled ? '有効 (ON)' : '無効 (OFF)'}</span>
+                            </button>
+                          </div>
+
+                          {/* Environment BGM Selector */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                            <span style={{ color: 'var(--text-secondary)' }}>🎧 環境音 (BGM):</span>
+                            <button
+                              onClick={() => {
+                                playSound('click');
+                                const nextBgm = bgmType === 'none' ? 'rain' : bgmType === 'rain' ? 'cozy_pad' : 'none';
+                                setBgmType(nextBgm);
+                              }}
+                              className="btn btn-secondary"
+                              style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', padding: '6px 12px' }}
+                            >
+                              <span>
+                                {bgmType === 'none' ? 'オフ (None)' : 
+                                 bgmType === 'rain' ? '雨の音 (Rain)' : 'チル和音 (Pad)'}
+                              </span>
+                            </button>
+                          </div>
                         </div>
 
                         {/* 2. Data Backup & Sync Panel */}

@@ -1580,6 +1580,10 @@ export default function App() {
             badgeDetails={badgeDetails}
             skillsData={skillsData}
             onUnlockType={handleUnlockType}
+            theme={theme}
+            setTheme={setTheme}
+            muted={muted}
+            toggleMute={toggleMute}
             onStartReview={(gameId, questionId) => {
               playSound('click');
               let finalGameId = gameId;

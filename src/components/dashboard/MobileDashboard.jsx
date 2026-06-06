@@ -1069,6 +1069,40 @@ export default function MobileDashboard({
                       <span>{muted ? '消音中' : 'ON'}</span>
                     </button>
                   </div>
+
+                  {/* Keyboard ASMR Switcher */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>⌨️ タイピング音 (ASMR):</span>
+                    <button
+                      onClick={() => {
+                        playSound('click');
+                        setKeyboardEnabled(!keyboardEnabled);
+                      }}
+                      className="btn btn-secondary"
+                      style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', padding: '4px 10px' }}
+                    >
+                      <span>{keyboardEnabled ? 'ON' : 'OFF'}</span>
+                    </button>
+                  </div>
+
+                  {/* BGM Switcher */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>🎧 環境音 (BGM):</span>
+                    <button
+                      onClick={() => {
+                        playSound('click');
+                        const nextBgm = bgmType === 'none' ? 'rain' : bgmType === 'rain' ? 'cozy_pad' : 'none';
+                        setBgmType(nextBgm);
+                      }}
+                      className="btn btn-secondary"
+                      style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', padding: '4px 10px' }}
+                    >
+                      <span>
+                        {bgmType === 'none' ? 'OFF' : 
+                         bgmType === 'rain' ? '雨音' : 'チル和音'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* 2. Sync / Backup */}
