@@ -104,11 +104,11 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
       { text: '[KAERU_HINT] カエル分析官：感情的になりそうな時は一歩引き、前提にどんな「隠れた思い込み」があるかデバッグするケロ。', type: 'emerald' },
       { text: '[KAERU_HINT] カエル分析官：相手の議論を歪めて攻撃する「ストローマン論法」など、日常に潜む論理的誤謬を見分けるケロ。', type: 'emerald' },
 
-      // Satsuki LOGS (Rose)
-      { text: '[SATSUKI_LOG] 皐月：看護の現場でも、患者さんの「痛い（主観）」と「バイタル測定値（客観）」の切り分けは超重要です！', type: 'rose' },
-      { text: '[SATSUKI_LOG] 皐月：コミュニケーションでは、相手を責めず、自分も我慢しない「アサーティブ」な自己表現が摩擦を防ぎます。', type: 'rose' },
-      { text: '[SATSUKI_LOG] 皐月：共感とは相手にただ同調することではなく、「なぜそう考えるのか」背景を理解しようとする姿勢のことです。', type: 'rose' },
-      { text: '[SATSUKI_LOG] 皐月：頭がモヤモヤする時は、5分間「ジャーナリング（思考調律）」で書き出すだけで、驚くほどスッキリしますよ！', type: 'rose' }
+      // Trainer TIPS (Cyan)
+      { text: '[TRAINER_TIPS] トレーナー：会議での不毛な議論を避けるため、まず「ゴールの定義」と「前提条件の共有」を徹底しましょう。', type: 'cyan' },
+      { text: '[TRAINER_TIPS] トレーナー：批判的（クリティカル）に考える際は、人格の否定ではなく、「事象や構造」にフォーカスするのが鉄則です。', type: 'cyan' },
+      { text: '[TRAINER_TIPS] トレーナー：「伝えたいことが伝わらない」場合、結論ファースト（PREP法）が崩れ、背景説明が長すぎる傾向にあります。', type: 'cyan' },
+      { text: '[TRAINER_TIPS] トレーナー：自分の思考のクセを客観視する「メタ認知」は、ビジネスの意思決定力を高める最強のトレーニングです。', type: 'cyan' }
     ];
 
     const interval = setInterval(() => {
