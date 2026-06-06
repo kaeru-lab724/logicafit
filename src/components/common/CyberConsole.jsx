@@ -61,7 +61,7 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
   const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
   const unlockedBadgesCount = (gameState.badges || []).filter(Boolean).length;
 
-  // Initialize logs on mount
+  // Initialize logs on mount (Boot sequence simulation)
   useEffect(() => {
     const now = new Date();
     const formatTime = (dt) => dt.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -77,24 +77,38 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
   // Set up periodic logs output
   useEffect(() => {
     const logPool = [
-      { text: '[SYS_MON] SCANNING COGNITIVE FREQUENCIES... [OK]', type: 'info' },
-      { text: `[SYS_LCRE] CALIBRATING METRICS: L=${activeScores.logicalValidity || 0} C=${activeScores.fallacy || 0} R=${activeScores.logicTree || 0} E=${activeScores.empathyDialogue || 0}`, type: 'cyan' },
-      { text: '[SYS_COMP] COMPILING RADICAL OS CACHE STRATEGIES...', type: 'info' },
-      { text: '[SYS_MECE] VERIFIED MECE PATH INTEGRITY: STABLE', type: 'emerald' },
-      { text: '[SYS_TEMP] PROCESSOR FLOW SPEED: NORMAL // TEMP: 36.5°C', type: 'info' },
-      { text: '[SYS_REST] restored SPELL Restore key matching... [OK]', type: 'emerald' },
-      { text: `[SYS_MEM] RAM MEMORY STATUS: ${isTuningCompletedToday ? 'CLEARED [OK]' : 'OPTIMIZATION REQUIRED'}`, type: isTuningCompletedToday ? 'emerald' : 'warn' },
-      { text: `[SYS_GAME] PREloaded assets for "${recGameName.toUpperCase()}"`, type: 'info' },
-      { text: '[SYS_BIAS] SCANNING FOR LOGICAL FALLACIES... NONE ACTIVE', type: 'emerald' },
-      { text: '[SYS_EQ] EQ SIMULATOR EMOTIONAL RESONANCE: 94.2%', type: 'info' },
-      { text: '[SYS_DB] SYNCED COGNITIVE STATE WITH LOCAL STORAGE.', type: 'emerald' },
-      { text: '[SYS_IDLE] AWAITING COMMAND DIRECTIVE EXECUTION...', type: 'warn' },
-      { text: '[SYS_KAERU] KAERU ANALYZER: "Focus on facts, not opinions!"', type: 'cyan' },
-      { text: '[SYS_SATSUKI] SATSUKI THOUGHT COUPLING AGENT ONLINE.', type: 'info' },
-      { text: '[SYS_PING] COGNITIVE PULSE RESPONSE LATENCY: 14ms', type: 'info' },
-      { text: '[SYS_COMP] VALIDATED REASONING CONSTRAINTS: 100%', type: 'emerald' },
-      { text: '[SYS_BIAS] CHECKING CONFIRMATION BIAS LEVELS... [LOW]', type: 'emerald' },
-      { text: '[SYS_TUNING] JOURNALING MEMORY SEGMENTS FLUSHED TO MASTER', type: 'info' }
+      // Concept logs
+      { text: '[SYS_CONCEPT] 認知バイアスのバグをデバッグし、論理的思考力をブーストするシステム。', type: 'info' },
+      { text: '[SYS_CONCEPT] 感情に流されず、客観的データに基づいた的確な意思決定を下すマインド・デバッガー。', type: 'info' },
+      { text: '[SYS_CONCEPT] 日常の些細な「モヤモヤ」をロジカルに整理し、脳のメモリを解放します。', type: 'info' },
+
+      // Directive logs (Dynamic based on states)
+      { text: `[SYS_DIRECTIVE] 推奨アクション: 次の指令『${recGameName}』を実行し、論理パラメータを高めてください。`, type: 'cyan' },
+      { 
+        text: isTuningCompletedToday 
+          ? '[SYS_DIRECTIVE] 思考調律: 本日分のジャーナリング完了。脳内キャッシュはクリーンです。' 
+          : '[SYS_DIRECTIVE] 警告: 脳内メモリ負荷が高まっています。本日の「思考調律」を実行してください。', 
+        type: isTuningCompletedToday ? 'emerald' : 'warn' 
+      },
+      { 
+        text: activeBugsCount > 0 
+          ? `[SYS_DIRECTIVE] 警告: ${activeBugsCount}件の未解決の思考バグがあります。「バグノート」で復習しましょう。` 
+          : '[SYS_DIRECTIVE] システムスキャン: 検出された論理的バイアス・バグは 0 件です。良好。', 
+        type: activeBugsCount > 0 ? 'rose' : 'emerald' 
+      },
+
+      // Kaeru HINTS (Emerald)
+      { text: '[KAERU_HINT] カエル分析官：「事実」と「意見」を混同すると議論が空転するケロ。常に客観的な証拠を探すケロ！', type: 'emerald' },
+      { text: '[KAERU_HINT] カエル分析官：論理展開に飛躍がないか？「風が吹けば桶屋が儲かる」的な思考に注意するケロ。', type: 'emerald' },
+      { text: '[KAERU_HINT] カエル分析官：全体像を整理する時は「モレなく、ダブりなく（MECE）」が鉄則ケロ。ツリーで可視化しよう！', type: 'emerald' },
+      { text: '[KAERU_HINT] カエル分析官：感情的になりそうな時は一歩引き、前提にどんな「隠れた思い込み」があるかデバッグするケロ。', type: 'emerald' },
+      { text: '[KAERU_HINT] カエル分析官：相手の議論を歪めて攻撃する「ストローマン論法」など、日常に潜む論理的誤謬を見分けるケロ。', type: 'emerald' },
+
+      // Satsuki LOGS (Rose)
+      { text: '[SATSUKI_LOG] 皐月：看護の現場でも、患者さんの「痛い（主観）」と「バイタル測定値（客観）」の切り分けは超重要です！', type: 'rose' },
+      { text: '[SATSUKI_LOG] 皐月：コミュニケーションでは、相手を責めず、自分も我慢しない「アサーティブ」な自己表現が摩擦を防ぎます。', type: 'rose' },
+      { text: '[SATSUKI_LOG] 皐月：共感とは相手にただ同調することではなく、「なぜそう考えるのか」背景を理解しようとする姿勢のことです。', type: 'rose' },
+      { text: '[SATSUKI_LOG] 皐月：頭がモヤモヤする時は、5分間「ジャーナリング（思考調律）」で書き出すだけで、驚くほどスッキリしますよ！', type: 'rose' }
     ];
 
     const interval = setInterval(() => {
@@ -106,10 +120,10 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
         const nextId = prev.length > 0 ? prev[prev.length - 1].id + 1 : 1;
         return [...prev.slice(-14), { id: nextId, time: timeStr, text: randomLog.text, type: randomLog.type }];
       });
-    }, 2200);
+    }, 4000); // 4 seconds interval for comfortable reading of Japanese text
 
     return () => clearInterval(interval);
-  }, [activeScores, isTuningCompletedToday, recGameName]);
+  }, [activeScores, isTuningCompletedToday, recGameName, activeBugsCount]);
 
   // Auto-scroll logic (scroll container directly to bottom safely)
   useEffect(() => {
