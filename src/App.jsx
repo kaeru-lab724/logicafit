@@ -1089,7 +1089,7 @@ export default function App() {
           gap: isMobile ? '12px' : '0px',
           justifyContent: 'space-between',
           alignItems: isMobile ? 'stretch' : 'center',
-          padding: isMobile ? '14px 16px' : '16px 24px',
+          padding: isMobile ? '12px 12px' : '16px 24px',
           marginTop: '24px',
           borderRadius: '16px',
           borderWidth: '1px',
@@ -1097,68 +1097,77 @@ export default function App() {
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto', gap: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '16px', flexShrink: 0 }}>
             <button 
               onClick={() => { playSound('click'); setActiveGame(null); setCurrentView('portal'); }}
               className="btn btn-secondary"
               style={{
-                fontSize: '12px',
-                padding: '8px 14px',
+                fontSize: isMobile ? '11px' : '12px',
+                padding: isMobile ? '6px 8px' : '8px 14px',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: isMobile ? '4px' : '6px',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 background: 'rgba(255, 255, 255, 0.03)',
                 color: 'var(--text-secondary)',
                 transition: 'all 0.2s',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                flexShrink: 0,
+                minWidth: 'max-content',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--color-primary)';
-                e.currentTarget.style.color = 'var(--text-primary)';
-                e.currentTarget.style.background = 'rgba(139, 92, 246, 0.08)';
+                if (!isMobile) {
+                  e.currentTarget.style.borderColor = 'var(--color-primary)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.background = 'rgba(139, 92, 246, 0.08)';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                if (!isMobile) {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                }
               }}
             >
-              <ArrowLeft size={14} />
-              <span>ポータルへ戻る</span>
+              <ArrowLeft size={isMobile ? 12 : 14} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>ポータルへ戻る</span>
             </button>
 
-            <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />
+            {!isMobile && <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />}
 
             <div 
               onClick={() => { playSound('click'); setActiveGame(null); }}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+              style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '10px', cursor: 'pointer', flexShrink: 0 }}
             >
               <div 
                 style={{ 
                   background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-cyan) 100%)',
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
+                  width: isMobile ? '24px' : '36px',
+                  height: isMobile ? '24px' : '36px',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 0 15px rgba(139, 92, 246, 0.4)'
+                  boxShadow: '0 0 15px rgba(139, 92, 246, 0.4)',
+                  flexShrink: 0
                 }}
               >
-                <Brain size={20} color="#fff" />
+                <Brain size={isMobile ? 14 : 20} color="#fff" />
               </div>
               <span 
                 style={{ 
                   fontFamily: 'var(--font-display)', 
                   fontWeight: '800', 
-                  fontSize: '22px', 
+                  fontSize: isMobile ? '15px' : '22px',
                   letterSpacing: '1px',
                   background: 'linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%)',
                   WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
+                  WebkitTextFillColor: 'transparent',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 LogicaFit
@@ -1168,22 +1177,22 @@ export default function App() {
 
           {/* スマホ時のみ、ヘッダー上部の右側にテーマ切り替えと音量ボタンを配置 */}
           {isMobile && (
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexShrink: 0 }}>
               <button 
                 onClick={() => { playSound('click'); setTheme(prev => prev === 'dark' ? 'light' : 'dark'); }}
                 className="btn btn-secondary" 
-                style={{ padding: '8px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px' }}
+                style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
                 title={theme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
               >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
               </button>
 
               <button 
                 onClick={toggleMute}
                 className="btn btn-secondary" 
-                style={{ padding: '8px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px' }}
+                style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
               >
-                {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               </button>
             </div>
           )}
@@ -1328,6 +1337,7 @@ export default function App() {
             onImportData={handleImportData}
             onBack={() => setCurrentView('portal')} 
             playSound={playSound} 
+            isMobile={isMobile}
           />
         )}
 

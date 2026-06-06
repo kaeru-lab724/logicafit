@@ -46,7 +46,7 @@ const VIBE_DATA = {
   flat: { label: '低活性（億劫・思考フリーズ）', emoji: '🍵', themeColor: '#10b981', glowColor: 'rgba(16, 185, 129, 0.3)', question: '日常の中で、少しだけ「面倒だな」と感じた瞬間や思考が滞ったポイントを思い出して記述してください。' }
 };
 
-export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExportData, onImportData, onBack, playSound }) {
+export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExportData, onImportData, onBack, playSound, isMobile }) {
   const [activeTab, setActiveTab] = useState('workspace'); // 'workspace' | 'analytics'
   const [selectedEntryId, setSelectedEntryId] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -317,58 +317,104 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
       minHeight: '80vh'
     }}>
       {/* Top Bar Navigation */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      {/* Top Bar Navigation */}
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: isMobile ? 'column' : 'row',
+        justifyContent: 'space-between', 
+        alignItems: isMobile ? 'stretch' : 'center', 
+        borderBottom: '1px solid var(--border-color)', 
+        paddingBottom: '16px',
+        gap: isMobile ? '12px' : '0px'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: isMobile ? '4px' : '16px',
+          width: isMobile ? '100%' : 'auto',
+          justifyContent: isMobile ? 'space-between' : 'flex-start'
+        }}>
           <button 
             onClick={onBack} 
             className="btn btn-secondary" 
             style={{ 
-              padding: '8px 14px', 
-              fontSize: '12px',
+              padding: isMobile ? '6px 8px' : '8px 14px', 
+              fontSize: isMobile ? '11px' : '12px',
               display: 'flex', 
               alignItems: 'center', 
-              gap: '6px',
+              gap: isMobile ? '4px' : '6px',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               background: 'rgba(255, 255, 255, 0.03)',
               color: 'var(--text-secondary)',
               transition: 'all 0.2s',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              flexShrink: 0,
+              minWidth: 'max-content',
+              whiteSpace: 'nowrap'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-cyan)';
-              e.currentTarget.style.color = 'var(--text-primary)';
-              e.currentTarget.style.background = 'rgba(6, 182, 212, 0.08)';
+              if (!isMobile) {
+                e.currentTarget.style.borderColor = 'var(--color-cyan)';
+                e.currentTarget.style.color = 'var(--text-primary)';
+                e.currentTarget.style.background = 'rgba(6, 182, 212, 0.08)';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-              e.currentTarget.style.color = 'var(--text-secondary)';
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+              if (!isMobile) {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+              }
             }}
           >
-            <ArrowLeft size={14} />
-            <span>ポータルへ戻る</span>
+            <ArrowLeft size={isMobile ? 12 : 14} style={{ flexShrink: 0 }} />
+            <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>ポータルへ戻る</span>
           </button>
 
-          <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />
+          {!isMobile && <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <BookOpen size={22} style={{ color: 'var(--color-cyan)' }} />
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0, fontFamily: 'var(--font-display)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '8px', flexShrink: 0 }}>
+            <BookOpen size={isMobile ? 18 : 22} style={{ color: 'var(--color-cyan)', flexShrink: 0 }} />
+            <h2 style={{ 
+              fontSize: isMobile ? '16px' : '20px', 
+              fontWeight: 'bold', 
+              color: 'var(--text-primary)', 
+              margin: 0, 
+              fontFamily: 'var(--font-display)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}>
               LogiJournal
             </h2>
           </div>
         </div>
 
         {/* Tab Selector */}
-        <div style={{ display: 'flex', gap: '8px', background: 'rgba(255, 255, 255, 0.02)', padding: '4px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+        <div style={{ 
+          display: 'flex', 
+          gap: '8px', 
+          background: 'rgba(255, 255, 255, 0.02)', 
+          padding: '4px', 
+          borderRadius: '8px', 
+          border: '1px solid var(--border-color)',
+          width: isMobile ? '100%' : 'auto',
+          boxSizing: 'border-box'
+        }}>
           <button 
             onClick={() => { playSound('click'); setActiveTab('workspace'); }}
             style={{
-              padding: '8px 16px', borderRadius: '6px', fontSize: '13px', border: 'none', cursor: 'pointer',
+              padding: isMobile ? '6px 10px' : '8px 16px', 
+              borderRadius: '6px', 
+              fontSize: isMobile ? '12px' : '13px', 
+              border: 'none', 
+              cursor: 'pointer',
               background: activeTab === 'workspace' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
               color: activeTab === 'workspace' ? 'var(--color-cyan)' : 'var(--text-secondary)',
               fontWeight: activeTab === 'workspace' ? 'bold' : 'normal',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              flex: isMobile ? 1 : 'none',
+              textAlign: 'center',
+              whiteSpace: 'nowrap'
             }}
           >
             ワークスペース
@@ -376,16 +422,23 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
           <button 
             onClick={() => { playSound('click'); setActiveTab('analytics'); }}
             style={{
-              padding: '8px 16px', borderRadius: '6px', fontSize: '13px', border: 'none', cursor: 'pointer',
+              padding: isMobile ? '6px 10px' : '8px 16px', 
+              borderRadius: '6px', 
+              fontSize: isMobile ? '12px' : '13px', 
+              border: 'none', 
+              cursor: 'pointer',
               background: activeTab === 'analytics' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
               color: activeTab === 'analytics' ? 'var(--color-cyan)' : 'var(--text-secondary)',
               fontWeight: activeTab === 'analytics' ? 'bold' : 'normal',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              flex: isMobile ? 1 : 'none',
+              textAlign: 'center',
+              whiteSpace: 'nowrap'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <BarChart2 size={15} />
-              <span>思考クセの分析</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+              <BarChart2 size={isMobile ? 13 : 15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>思考クセの分析</span>
             </div>
           </button>
         </div>
