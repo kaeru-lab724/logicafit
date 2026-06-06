@@ -39,11 +39,11 @@ const BIAS_RULES = [
 ];
 
 const VIBE_DATA = {
-  anxious: { label: 'モヤモヤ・不安', emoji: '🌀', themeColor: '#06b6d4', glowColor: 'rgba(6, 182, 212, 0.3)', question: '今、どんな不安がありますか？「もし〇〇になったら最悪だ」の〇〇を書き出してください。' },
-  irritated: { label: 'イライラ・不満', emoji: '😤', themeColor: '#f43f5e', glowColor: 'rgba(244, 63, 94, 0.3)', question: '誰の、どんな行動にイラつきましたか？出来事や言葉をそのまま吐き出してみましょう。' },
-  sad: { label: '落ち込み・後悔', emoji: '🌧️', themeColor: '#818cf8', glowColor: 'rgba(129, 140, 248, 0.3)', question: '自分を責めてしまっていることや、後悔していることは？感情をそのまま書いてください。' },
-  rushed: { label: '焦り・義務感', emoji: '⏰', themeColor: '#f59e0b', glowColor: 'rgba(245, 158, 11, 0.3)', question: '何に追われていますか？「〜しなければならない」と思っていることを書き出してください。' },
-  flat: { label: '億劫・フラット', emoji: '🍵', themeColor: '#10b981', glowColor: 'rgba(16, 185, 129, 0.3)', question: '今日の中で、少しだけ「面倒だな」と感じた瞬間やノイズを思い出して書いてみてください。' }
+  anxious: { label: '思考ノイズ（不安・懸念）', emoji: '🌀', themeColor: '#06b6d4', glowColor: 'rgba(6, 182, 212, 0.3)', question: '今、どんな懸念がありますか？「もし〇〇になったら最悪だ」の〇〇を書き出してください。' },
+  irritated: { label: '感情バイアス（怒り・不満）', emoji: '😤', themeColor: '#f43f5e', glowColor: 'rgba(244, 63, 94, 0.3)', question: '誰の、どんな行動に葛藤や抵抗を感じましたか？事実と言葉をそのままダンプしてください。' },
+  sad: { label: '自己否定バイアス（後悔・反省）', emoji: '🌧️', themeColor: '#818cf8', glowColor: 'rgba(129, 140, 248, 0.3)', question: '自分を責めてしまっていることや、後悔していることは？頭の中の思考をそのまま記述してください。' },
+  rushed: { label: '認知歪曲（焦り・義務感）', emoji: '⏰', themeColor: '#f59e0b', glowColor: 'rgba(245, 158, 11, 0.3)', question: '何に追われていますか？「〜しなければならない」と思っているルールを書き出してください。' },
+  flat: { label: '低活性（億劫・思考フリーズ）', emoji: '🍵', themeColor: '#10b981', glowColor: 'rgba(16, 185, 129, 0.3)', question: '日常の中で、少しだけ「面倒だな」と感じた瞬間や思考が滞ったポイントを思い出して記述してください。' }
 };
 
 export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExportData, onImportData, onBack, playSound }) {
@@ -516,10 +516,10 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                 {wizardStep === 'vibeSelect' && (
                   <div style={{ textAlign: 'center', padding: '20px 0' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '8px' }}>
-                      感情を選択してください
+                      検出する思考ノイズ（バイアス）を選択してください
                     </h3>
                     <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
-                      現在、あなたの脳内でメモリ（RAM）を最も圧迫しているノイズはどれですか？
+                      現在、あなたの思考回路のフリーズ（負荷）を招いている主な要因はどれですか？
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px', margin: '0 auto' }}>
                       {Object.entries(VIBE_DATA).map(([key, info]) => (

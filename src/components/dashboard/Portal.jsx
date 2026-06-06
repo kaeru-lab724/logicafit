@@ -6,35 +6,24 @@ export default function Portal({ onSelectView, playSound }) {
     {
       id: 'logifit',
       title: 'LogiFit',
-      subtitle: 'CPU: 論理演算トレーニング',
-      description: '認知バイアスや推論のゆがみを検出する13の論理パズル＆意思決定ゲーム。自分の脳内バグを可視化して診断します。',
+      subtitle: 'ERROR DETECTION: 思考の論理診断',
+      description: '認知バイアスや推論のゆがみを検出する13の論理構造化トレーニング。自らの思考パターンに潜むバグを可視化・診断します。',
       icon: Cpu,
       themeColor: '#10b981', // green
       glowColor: 'rgba(16, 185, 129, 0.25)',
       status: 'ACTIVE',
-      actionText: 'Logic Engine を起動'
+      actionText: 'Diagnostic Engine を起動'
     },
     {
       id: 'logijournal',
       title: 'LogiJournal',
-      subtitle: 'RAM: 思考デフラグ & デバッグ',
-      description: 'モヤモヤした思考をダンプし、静的リンターでバイアスを自動解析。感情を整理して論理的な解決パッチへコンパイルします。',
+      subtitle: 'BUG REFACTORING: 思考のリファクタリング',
+      description: '脳内に滞留したノイズテキストをダンプし、静的リンターでバイアスを自動検出。論理的な解決パッチ（Fact & Action）へ再構成し、コンパイルします。',
       icon: BookOpen,
       themeColor: '#06b6d4', // cyan
       glowColor: 'rgba(6, 182, 212, 0.25)',
       status: 'ACTIVE',
-      actionText: 'Workspace を開く'
-    },
-    {
-      id: 'research',
-      title: 'Research Slot',
-      subtitle: 'DATA: 確率統計ラボ（開発中）',
-      description: 'ロト6確率研究モデル、ボートレース統計データベース。限定的な偏りを探索する拡張データマイニング領域。',
-      icon: Lock,
-      themeColor: '#64748b', // slate
-      glowColor: 'rgba(100, 116, 139, 0.1)',
-      status: 'LOCKED',
-      actionText: 'アクセス制限中'
+      actionText: 'Refactoring Workspace を開く'
     }
   ];
 
@@ -72,7 +61,7 @@ export default function Portal({ onSelectView, playSound }) {
           marginBottom: '16px'
         }}>
           <Terminal size={12} />
-          <span>SYSTEM MULTI-FLOW PORTAL</span>
+          <span>THOUGHT DEBUG LAB GATEWAY</span>
         </div>
         <h1 style={{
           fontFamily: 'var(--font-display)',
@@ -82,7 +71,7 @@ export default function Portal({ onSelectView, playSound }) {
           letterSpacing: '-0.5px',
           margin: '0 0 12px 0'
         }}>
-          MSO Control Hub
+          Thought Debug Lab
         </h1>
         <p style={{
           fontSize: '14px',
@@ -91,7 +80,7 @@ export default function Portal({ onSelectView, playSound }) {
           margin: '0 auto',
           lineHeight: '1.6'
         }}>
-          論理回路を鍛え上げるトレーニングジムと、溢れかえった思考メモリ（RAM）をデフラグする静的解析エディタ。2つのエンジンを切り替え、脳のパフォーマンスをチューニングします。
+          思考のエラーを検出する「論理診断（LogiFit）」と、ノイズを論理的なパッチへ再構成する「思考リファクタリング（LogiJournal）」。2つのエンジンで脳のバグをデバッグします。
         </p>
       </div>
 
