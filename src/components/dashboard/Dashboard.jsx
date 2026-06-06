@@ -23,6 +23,7 @@ import FrictionMatcher from './FrictionMatcher';
 import BugLibrary from './BugLibrary';
 import BadgeModal from './BadgeModal';
 import MobileDashboard from './MobileDashboard';
+import CyberConsole from '../common/CyberConsole';
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
@@ -254,6 +255,17 @@ export default function Dashboard({
             {/* メインカラム（全情報を中央寄せ1カラムに統合） */}
             <div className="dashboard-main-column" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', minWidth: 0 }}>
               
+              {/* Cyber Console Terminal Status Ticker */}
+              {(activeTab === 'home' || activeTab === 'achievements' || activeTab === 'training' || activeTab === 'bugNote' || activeTab === 'diagnostics' || activeTab === 'encyclopedia') && (
+                <CyberConsole 
+                  gameState={gameState}
+                  activeScores={activeScores}
+                  playSound={playSound}
+                  setActiveGame={setActiveGame}
+                  setActiveTab={setActiveTab}
+                />
+              )}
+
               {/* Tab Navigation Menu */}
               {(activeTab === 'home' || activeTab === 'achievements') && (
                 <div className="dashboard-tab-navigation" id="training-menu">

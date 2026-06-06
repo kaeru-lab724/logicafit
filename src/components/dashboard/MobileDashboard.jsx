@@ -26,6 +26,7 @@ import RakutenWidget from '../common/RakutenWidget';
 import FrictionMatcher from './FrictionMatcher';
 import BugLibrary from './BugLibrary';
 import BadgeModal from './BadgeModal';
+import CyberConsole from '../common/CyberConsole';
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
@@ -280,6 +281,19 @@ export default function MobileDashboard({
               <ChevronLeft size={16} />
               <span>← ダッシュボードに戻る</span>
             </button>
+          </div>
+        )}
+
+        {/* Cyber Console Terminal Status Ticker */}
+        {(activeTab === 'home' || activeTab === 'achievements' || activeTab === 'training' || activeTab === 'bugNote' || activeTab === 'encyclopedia' || activeTab === undefined) && (
+          <div style={{ marginBottom: '16px' }}>
+            <CyberConsole 
+              gameState={gameState}
+              activeScores={activeScores}
+              playSound={playSound}
+              setActiveGame={setActiveGame}
+              setActiveTab={setActiveTab}
+            />
           </div>
         )}
         
