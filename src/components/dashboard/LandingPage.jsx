@@ -17,15 +17,15 @@ export default function LandingPage({
         <div className="scan-bg-glow"></div>
         <div className="landing-badge-wrapper">
           <span className="game-badge landing-badge">
-            🔬 COGNITIVE DEBUG SYSTEM
+            🔬 COGNITIVE TRAINING SYSTEM
           </span>
         </div>
         <h1 className="text-glow landing-title">
-          「なぜか話が噛み合わない…」<br />その脳内のバグ、スキャンしませんか？
+          「なぜか話が噛み合わない…」<br />その脳内のクセ、スキャンしませんか？
         </h1>
         <p className="landing-desc">
-          LogicaFit（ロジカフィット）は、思考スキャン診断であなたの認知の偏りを可視化し、<br className="desktop-only" />
-          ゲーム感覚で脳内OSをアップデートする総合思考トレーニングシステムです。
+          LogicaFit（ロジカフィット）は、思考スキャン診断であなたの考え方の偏りを可視化し、<br className="desktop-only" />
+          ゲーム感覚で思考力を高め、頭の整理をサポートする総合思考トレーニングシステムです。
         </p>
         {showCTA && (
           <div className="landing-cta-wrapper">
@@ -42,10 +42,10 @@ export default function LandingPage({
       {/* ② 脳内の「思考バグ」共感エリア (Pain Points) */}
       <div className="glass-panel landing-section-panel">
         <h2 className="landing-section-title">
-          日常生活や仕事で、こんな「思考バグ」ありませんか？
+          日常生活や仕事で、こんな「思考のクセ」ありませんか？
         </h2>
         <p className="landing-section-subtitle">
-          私たちは無意識のうちに、自分特有 of 認知バイアス（思考の偏り）をシステムに読み込んでしまっています。
+          私たちは無意識のうちに、自分特有の認知バイアス（思考の偏り）を身につけてしまっています。
         </p>
         
         <div className="landing-pain-grid">
@@ -55,7 +55,7 @@ export default function LandingPage({
               ロジハラ型（正論エラー）
             </h3>
             <p className="landing-pain-card-desc">
-              「正しいこと（正論）」を言っているはずなのに、なぜか相手の反発を招いたり、人間関係をフリーズさせてしまうバグ。
+              「正しいこと（正論）」を言っているはずなのに、なぜか相手の反発を招いたり、人間関係をぎくしゃくさせてしまう偏り。
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export default function LandingPage({
               昭和バイアス（過去基準エラー）
             </h3>
             <p className="landing-pain-card-desc">
-              「自分の若い頃は〜」「普通は〜」と、無意識のうちに過去の精神論やマイルールを現代の環境に押し付けてしまうバグ。
+              「自分の若い頃は〜」「普通は〜」と、無意識のうちに過去の精神論やマイルールを現在の環境に押し付けてしまう偏り。
             </p>
           </div>
 
@@ -75,7 +75,7 @@ export default function LandingPage({
               令和バイアス（効率過信エラー）
             </h3>
             <p className="landing-pain-card-desc">
-              合理性やタイパ（時間対効果）を極端に重視するあまり、感情のプロセスを省いて冷たい印象を与え、対話を崩壊させるバグ。
+              合理性やタイパ（時間対効果）を極端に重視するあまり、相手の感情を置いてけぼりにして対話を壊してしまう偏り。
             </p>
           </div>
         </div>
@@ -84,10 +84,10 @@ export default function LandingPage({
       {/* ③ 得られるメリット (Benefits/Values) */}
       <div className="glass-panel landing-section-panel">
         <h2 className="landing-section-title">
-          LogicaFitでデバッグする「4つの論理・感情回路」
+          LogicaFitで鍛える「4つの思考・感情の軸」
         </h2>
         <p className="landing-section-subtitle">
-          診断結果から思考力パラメーターをレーダーチャートで可視化。偏りを見極め、各ルームでデバッグ学習を行います。
+          診断結果から思考力パラメーターをレーダーチャートで可視化。自分の特徴を見極め、各ルームで効果的なトレーニングを行います。
         </p>
         
         <div className="landing-features-grid">
@@ -103,7 +103,7 @@ export default function LandingPage({
             <div className="landing-feature-icon-wrapper color-rose-bg">🔍</div>
             <div>
               <h4 className="landing-feature-title">クリティカル思考（バイアスと誤謬の検知）</h4>
-              <p className="landing-feature-desc">相手の論点すり替えや、自分自身の無意識の歪みに素早く気づき、詭弁やヘリくつを無効化する力。</p>
+              <p className="landing-feature-desc">相手の論点すり替えや、自分自身の無意識の歪みに素早く気づき、詭弁やヘリくつをスッキリ見抜く力。</p>
             </div>
           </div>
 
@@ -119,7 +119,7 @@ export default function LandingPage({
             <div className="landing-feature-icon-wrapper color-primary-bg">🤝</div>
             <div>
               <h4 className="landing-feature-title">エモーショナル思考（共感と受容の傾聴）</h4>
-              <p className="landing-feature-desc">正論で論破するのではなく、相手の感情に優しく寄り添うことで、深い信頼のネットワークを築く力。</p>
+              <p className="landing-feature-desc">正論で論破するのではなく、相手の感情に優しく寄り添うことで、深い信頼関係を築く力。</p>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@ export default function LandingPage({
       <div className="glass-panel landing-section-panel text-center">
         <h2 className="landing-step-main-title">
           <Sparkles size={18} className="color-cyan-icon" />
-          脳内OSをアップデートする 3 STEP
+          思考力を鍛えて整える 3 STEP
         </h2>
         <div className="landing-steps-container">
           {/* Step 1 */}
@@ -151,10 +151,10 @@ export default function LandingPage({
               STEP 02
             </div>
             <h3 className="landing-step-title">
-              🎯 弱点をデバッグする
+              🎯 弱点をトレーニングする
             </h3>
             <p className="landing-step-desc">
-              診断で見つかった「思考のバグ（弱点）」を克服するトレーニングゲーム（事実vs意見、誤謬特定など）に挑戦します。
+              診断で見つかった「思考のクセ（弱点）」を克服するトレーニングゲーム（事実vs意見、誤謬特定など）に挑戦します。
             </p>
           </div>
 
@@ -164,7 +164,7 @@ export default function LandingPage({
               STEP 03
             </div>
             <h3 className="landing-step-title">
-              🚀 脳内OSをアップデート
+              🚀 思考力をアップデート
             </h3>
             <p className="landing-step-desc">
               トレーニングのベストスコアが蓄積され、パラメータ（レーダーチャート）とあなたの「進化クラス（肩書き）」が成長します。

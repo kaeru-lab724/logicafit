@@ -1,29 +1,29 @@
 import React from 'react';
-import { Cpu, BookOpen, Lock, Terminal } from 'lucide-react';
+import { Brain, BookOpen, Lock, Sparkles } from 'lucide-react';
 
 export default function Portal({ onSelectView, playSound }) {
   const cards = [
     {
       id: 'logicafit',
       title: 'LogicaFit',
-      subtitle: 'ERROR DETECTION: 思考の論理診断',
-      description: '認知バイアスや推論のゆがみを検出する13の論理構造化トレーニング。自らの思考パターンに潜むバグを可視化・診断します。',
-      icon: Cpu,
+      subtitle: 'TRAINING & DIAGNOSTICS: 思考トレーニング＆論理診断',
+      description: '考え方の偏りや推論のゆがみをチェックする13の思考トレーニング。クイズ形式で楽しみながら、自分の「思考力パラメーター」を可視化・診断できます。',
+      icon: Sparkles,
       themeColor: '#10b981', // green
       glowColor: 'rgba(16, 185, 129, 0.25)',
       status: 'ACTIVE',
-      actionText: 'Diagnostic Engine を起動'
+      actionText: 'トレーニング＆診断ルームへ'
     },
     {
       id: 'logijournal',
       title: 'LogiJournal',
-      subtitle: 'BUG REFACTORING: 思考のリファクタリング',
-      description: '脳内に滞留したノイズテキストをダンプし、静的リンターでバイアスを自動検出。論理的な解決パッチ（Fact & Action）へ再構成し、コンパイルします。',
+      subtitle: 'MIND WRITING & TUNING: 思考の書き出し＆整理ノート',
+      description: '頭の中のモヤモヤや悩み事をそのまま書き出し、客観的な事実と次のアクションにスッキリ整理するノート。心のバランスを整え、次の一歩をサポートします。',
       icon: BookOpen,
       themeColor: '#06b6d4', // cyan
       glowColor: 'rgba(6, 182, 212, 0.25)',
       status: 'ACTIVE',
-      actionText: 'Refactoring Workspace を開く'
+      actionText: '整理ノートを開く'
     }
   ];
 
@@ -60,8 +60,8 @@ export default function Portal({ onSelectView, playSound }) {
           color: 'var(--text-muted)',
           marginBottom: '16px'
         }}>
-          <Terminal size={12} />
-          <span>THOUGHT DEBUG LAB GATEWAY</span>
+          <Brain size={12} />
+          <span>THOUGHT TRAINING & TUNING LAB</span>
         </div>
         <h1 style={{
           fontFamily: 'var(--font-display)',
@@ -71,7 +71,7 @@ export default function Portal({ onSelectView, playSound }) {
           letterSpacing: '-0.5px',
           margin: '0 0 12px 0'
         }}>
-          Thought Debug Lab
+          LogicaFit Portal
         </h1>
         <p style={{
           fontSize: '14px',
@@ -80,7 +80,7 @@ export default function Portal({ onSelectView, playSound }) {
           margin: '0 auto',
           lineHeight: '1.6'
         }}>
-          思考のエラーを検出する「論理診断（LogicaFit）」と、ノイズを論理的なパッチへ再構成する「思考リファクタリング（LogiJournal）」。2つのエンジンで脳のバグをデバッグします。
+          クイズ形式で考え方の偏りを鍛える「思考トレーニング＆診断（LogicaFit）」と、頭のモヤモヤを書き出してスッキリ整理する「思考整理ノート（LogiJournal）」。2つのアプローチで、あなたの思考の調律をサポートします。
         </p>
       </div>
 

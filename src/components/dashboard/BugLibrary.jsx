@@ -37,7 +37,7 @@ export default function BugLibrary({
               onClick={() => { playSound('click'); setLibrarySubTab('bug'); }}
               className={`btn library-tab-btn ${librarySubTab === 'bug' ? 'active' : ''}`}
             >
-              🐛 脳内バグ ({unlockedCount}/{totalBugs})
+              🧠 思考のクセ ({unlockedCount}/{totalBugs})
             </button>
             <button
               onClick={() => { playSound('click'); setLibrarySubTab('skill'); }}
@@ -52,7 +52,7 @@ export default function BugLibrary({
           /* 脳内バグ図鑑のコンテンツ */
           <div className="fade-in">
             <p className="library-intro-text">
-              診断や他人のスキャン、相性チェック（コード共有）によって見つかった思考バグのタイプがここに記録されます。
+              診断や他人のスキャン、相性チェック（コード共有）によって見つかった思考タイプのクセがここに記録されます。
               他人のブレインコードを入力するか、他者スキャンを行うことで図鑑が埋まっていきます。
             </p>
 
@@ -81,7 +81,7 @@ export default function BugLibrary({
                       </span>
                       <div>
                         <h3 className={`library-bug-name ${isUnlocked ? '' : 'text-muted'}`}>
-                          {isUnlocked ? type.name : '未確認の脳内バグ (???)'}
+                          {isUnlocked ? type.name : '未確認の思考タイプ (???)'}
                         </h3>
                         {isUnlocked && (
                           <p className="library-bug-tagline">
@@ -120,12 +120,12 @@ export default function BugLibrary({
                           <span className="library-detail-label color-emerald block-label">📋 取扱説明書</span>
                           <span className="library-sub-label color-rose">● 地雷ポイント</span>
                           <p className="library-detail-text label-spacing">{type.torisetsu.jealousPoint}</p>
-                          <span className="library-sub-label color-emerald">● デバッグコマンド</span>
+                          <span className="library-sub-label color-emerald">● 調律コマンド</span>
                           <p className="library-detail-text">{type.torisetsu.debugSpell}</p>
                         </div>
                         {type.recommendedGame && (
                           <div className="library-detail-block recommended-block">
-                            <span className="library-detail-label color-primary">🎯 推奨デバッグトレーニング</span>
+                            <span className="library-detail-label color-primary">🎯 推奨トレーニング</span>
                             <p className="library-detail-text">{type.recommendedReason}</p>
                           </div>
                         )}

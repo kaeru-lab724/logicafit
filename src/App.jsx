@@ -126,8 +126,8 @@ const getCharacterClass = (scores, level) => {
     if (maxScore === fo && fo >= maxScore - 5) return { title: 'データ主義 of ファクト探偵', desc: '主観や推測を排除し、冷徹な客観的「事実」のみを証拠として積み上げる分析のスペシャリスト。' };
     if (maxScore === lv && lv >= maxScore - 5) return { title: '論理の絶対守護者 (司法官)', desc: '寸の狂いもない三段論法と推論規則を駆使し、議論に正しい道筋を示すロジックの使い手。' };
     if (maxScore === lt && lt >= maxScore - 5) return { title: '思考の構造化アーキテクト', desc: '複雑に絡み合った課題をMECEに分解し、一目で全体像と原因を整理してしまう構造化の達人。' };
-    if (maxScore === fa && fa >= maxScore - 5) return { title: '詭弁を暴くサイバーハンター', desc: '対話や文章の小さなほころび、ストローマン等の論理的誤謬を決して見逃さない批判思考の探偵。' };
-    if (maxScore === st && st >= maxScore - 5) return { title: '二律背反を解くコンパイラー', desc: 'ジレンマとトレードオフの構造を分析し、両立させる介入戦略パッチを華麗に適用する戦略思考の達人。' };
+    if (maxScore === fa && fa >= maxScore - 5) return { title: '詭弁を見抜く論理の探偵', desc: '対話や文章の小さなほころび、ストローマン等の論理的誤謬を決して見逃さない批判思考の探偵。' };
+    if (maxScore === st && st >= maxScore - 5) return { title: '対立を紐解く戦略アドバイザー', desc: 'ジレンマとトレードオフの構造を分析し、両立させる介入戦略を華麗に適用する戦略思考の達人。' };
   }
   
   if (level >= 5) return { title: '鍛え上げられた思考の兵士', desc: '日々の筋トレを継続し、思考の体力を身につけた実戦的な論理のプレイヤー。' };
@@ -176,10 +176,10 @@ const getGameName = (key) => {
     logicalValidity: '論理の妥当性',
     logicTree: 'ロジックツリー',
     fallacy: '論理的誤謬の特定',
-    hiddenAssumption: '前提のデバッグ',
+    hiddenAssumption: '隠れた前提の特定',
     causalLoop: '因果ループ',
     assertiveRewrite: 'アサーティブ',
-    strategic: '戦略コンパイラー'
+    strategic: '戦略的介入シミュレーター'
   };
   return names[key] || '';
 };

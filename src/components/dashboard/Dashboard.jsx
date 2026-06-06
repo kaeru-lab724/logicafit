@@ -77,11 +77,11 @@ const getGameName = (key) => {
     logicalValidity: '論理の妥当性',
     logicTree: 'ロジックツリー',
     fallacy: '論理的誤謬の特定',
-    hiddenAssumption: '前提のデバッグ',
+    hiddenAssumption: '隠れた前提の特定',
     causalLoop: '因果ループ',
     assertiveRewrite: 'アサーティブ',
-    strategic: '戦略コンパイラー',
-    gameTheory: 'ゲーム理論デバッガー',
+    strategic: '戦略介入シミュレーター',
+    gameTheory: 'ゲーム理論・戦略的選択',
     empathyDialogue: '共感対話'
   };
   return names[key] || '';
@@ -341,7 +341,7 @@ export default function Dashboard({
                     <div className="department-lobby-wrapper">
                       <h2 className="department-lobby-title">🧠 ダッシュボード / DASHBOARD</h2>
                       <p className="department-lobby-desc">
-                        LogicaFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考バグのチェックを実行できます。
+                        LogicaFitシステムダッシュボード。各モジュールを起動し、論理思考のトレーニング、認知バイアスの調律・復習、思考力パラメーター分析、および思考クセのチェックを実行できます。
                       </p>
                       
                       <div className="tenants-grid">
@@ -376,7 +376,7 @@ export default function Dashboard({
                           <h3 className="tenant-title">思考調律・復習</h3>
                           <p className="tenant-tagline">認知ノイズの除去 ＆ 弱点克服</p>
                           <p className="tenant-desc">
-                            トレーニングで間違えた問題（脳内バグ）の復習や、主観的バイアスを調整して客観的思考に整える調律を行います。
+                            トレーニングで間違えた問題（弱点ポイント）の復習や、主観的バイアスを調整して客観的思考に整える調律を行います。
                           </p>
                           <div className="tenant-footer">
                             <span className="tenant-action-text">調律セッション起動 <ChevronRight size={14} /></span>

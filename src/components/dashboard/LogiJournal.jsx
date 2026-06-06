@@ -138,7 +138,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
     }, 1500);
   };
 
-  // 脳内RAMコンパイル開始
+  // 思考の整理・実行開始
   const handleCompile = () => {
     if (!refactoredText.trim()) return;
     playSound('click');
@@ -147,11 +147,11 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
     setRamUsage(90);
 
     const logs = [
-      '[OK] Initiating LogiJournal compiler...',
-      '[OK] Purging cognitive bias templates...',
-      '[OK] Analyzing fact-opinion structures...',
-      '[OK] Releasing workspace memory (RAM)...',
-      '[SUCCESS] Compile finished. Thought defragged.'
+      '[OK] 思考整理ノートの解析を開始します...',
+      '[OK] 感情のノイズや思い込みを特定中...',
+      '[OK] 事実（Fact）と行動（Action）に整理中...',
+      '[OK] 頭のモヤモヤをスッキリ解放中...',
+      '[SUCCESS] 整理が完了しました。頭が軽くなりました！'
     ];
 
     logs.forEach((log, index) => {
@@ -357,7 +357,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <BarChart2 size={15} />
-              <span>バグ分析</span>
+              <span>思考クセの分析</span>
             </div>
           </button>
         </div>
@@ -469,7 +469,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                           background: entry.status === 'patched' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(244, 63, 94, 0.1)',
                           color: entry.status === 'patched' ? '#10b981' : '#f43f5e'
                         }}>
-                          {entry.status === 'patched' ? 'PATCHED' : 'UNRESOLVED'}
+                          {entry.status === 'patched' ? '整理完了' : '未整理'}
                         </span>
                       </div>
                       <p style={{
@@ -535,7 +535,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                           <span style={{ fontSize: '20px' }}>{info.emoji}</span>
                           <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <span style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{info.label}</span>
-                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>思考デバッガーをロードします</span>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>思考整理シートを準備します</span>
                           </div>
                         </button>
                       ))}
@@ -596,7 +596,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                         className="btn btn-primary"
                         style={{ flex: 1, background: VIBE_DATA[selectedVibe].themeColor, border: 'none', boxShadow: `0 4px 12px ${VIBE_DATA[selectedVibe].glowColor}` }}
                       >
-                        🔍 静的解析（Linter）を実行
+                        🔍 思考クセのチェックを実行
                       </button>
                     </div>
                   </div>
@@ -620,13 +620,13 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                   <div style={{ textAlign: 'left' }}>
                     <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span>🔬</span>
-                      <span>思考のデバッグ & パッチ適用</span>
+                      <span>思考のチェック & 整理</span>
                     </h3>
 
                     {/* Highlighted text output */}
                     <div style={{ background: 'rgba(10, 11, 16, 0.4)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', marginBottom: '16px' }}>
                       <span style={{ fontSize: '10px', color: '#f43f5e', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
-                        🔴 検出されたバイアス（感情ノイズ）
+                        🔴 気づき：無意識の思考クセ（感情ノイズ）
                       </span>
                       <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
                         {renderHighlightedText(rawText)}
@@ -649,17 +649,17 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                     ) : (
                       <div style={{ background: 'rgba(16, 185, 129, 0.02)', border: '1px solid rgba(16, 185, 129, 0.08)', padding: '12px', borderRadius: '8px', fontSize: '12.5px', color: '#10b981', display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '20px' }}>
                         <CheckCircle size={16} />
-                        <span>顕著な極端語（バグパターン）は検出されませんでした。</span>
+                        <span>顕著な極端語（偏った表現）は検出されませんでした。</span>
                       </div>
                     )}
 
                     {/* Refactoring Guide */}
                     <div style={{ background: 'rgba(16, 185, 129, 0.03)', border: '1px solid rgba(16, 185, 129, 0.1)', padding: '14px', borderRadius: '8px', marginBottom: '16px' }}>
                       <span style={{ fontSize: '11px', color: '#10b981', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-                        💡 メタ認知リファクタリング・ガイド
+                        💡 客観的な視点で整理するためのガイド
                       </span>
                       <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                        感情論を取り除き、**「今起こっている客観的事実」**と**「それに対する現実的な見解・パッチ（行動）」**に整理して以下に入力してください。
+                        感情論を一旦脇に置いて、**「客観的な事実（Fact）」**と**「これから取れる具体的な行動（Action）」**に整理して、以下に入力してみましょう。
                       </p>
                     </div>
 
@@ -685,7 +685,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                         className="btn btn-primary"
                         style={{ flex: 1, background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', border: 'none', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)' }}
                       >
-                        🚀 思考をコンパイル
+                        🚀 思考をスッキリ整理する
                       </button>
                     </div>
                   </div>
@@ -695,7 +695,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                 {wizardStep === 'compiling' && (
                   <div style={{ textAlign: 'center', padding: '30px 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '360px', margin: '0 auto 12px auto', fontSize: '12px' }}>
-                      <span style={{ color: 'var(--text-secondary)' }}>RAMメモリ解放率</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>頭のモヤモヤ解消率</span>
                       <span style={{ color: '#10b981', fontWeight: 'bold' }}>{100 - ramUsage}%</span>
                     </div>
                     <div style={{ width: '360px', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', margin: '0 auto 24px auto', overflow: 'hidden' }}>
@@ -748,7 +748,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                       color: selectedEntry.status === 'patched' ? '#10b981' : '#f43f5e',
                       border: `1px solid ${selectedEntry.status === 'patched' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)'}`
                     }}>
-                      {selectedEntry.status === 'patched' ? '● PATCHED / 解決済み' : '▲ UNRESOLVED / 観察中'}
+                      {selectedEntry.status === 'patched' ? '● 整理完了' : '▲ 未整理・観察中'}
                     </span>
                   </div>
                 </div>
@@ -757,7 +757,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   <div style={{ background: 'rgba(244, 63, 94, 0.01)', border: '1px solid rgba(244, 63, 94, 0.08)', padding: '16px', borderRadius: '8px' }}>
                     <span style={{ fontSize: '11px', color: '#f43f5e', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
-                      🔴 修正前の感情ダンプ (バグ混入)
+                      🔴 整理前のモヤモヤ（無意識のクセ）
                     </span>
                     <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
                       {renderHighlightedText(selectedEntry.rawText)}
@@ -766,7 +766,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
 
                   <div style={{ background: 'rgba(16, 185, 129, 0.01)', border: '1px solid rgba(16, 185, 129, 0.08)', padding: '16px', borderRadius: '8px' }}>
                     <span style={{ fontSize: '11px', color: '#10b981', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
-                      🟢 デバッグ・リファクタリング済
+                      🟢 客観的な事実 ＆ 取るべき行動
                     </span>
                     <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
                       {selectedEntry.refactoredText}
@@ -778,7 +778,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                 {selectedEntry.summary ? (
                   <div style={{ background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.12)', padding: '16px', borderRadius: '8px' }}>
                     <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
-                      ⚡ 140字の結晶化サマリー (Refactored Point)
+                      ⚡ 140字の結晶化サマリー（思考の調律ポイント）
                     </span>
                     <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-primary)', lineHeight: '1.5', fontStyle: 'italic' }}>
                       「{selectedEntry.summary}」
@@ -834,7 +834,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                 {selectedEntry.followUpNote && (
                   <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px' }}>
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
-                      📝 追記されたデバッグ経過
+                      📝 追記された経過ノート
                     </span>
                     <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
                       {selectedEntry.followUpNote}
@@ -855,7 +855,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                     style={{ padding: '8px 16px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start' }}
                   >
                     <Edit3 size={14} />
-                    <span>状況の再検証・パッチの更新 (再デバッグ)</span>
+                    <span>状況の再検証 ＆ 振り返り</span>
                   </button>
                 ) : (
                   <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -869,7 +869,7 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                           checked={reDebugStatus === 'patched'} 
                           onChange={() => setReDebugStatus('patched')} 
                         />
-                        <span>PATCHED (解決済み)</span>
+                        <span>整理完了（スッキリした）</span>
                       </label>
                       <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#f43f5e', cursor: 'pointer' }}>
                         <input 
@@ -879,12 +879,12 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
                           checked={reDebugStatus === 'unresolved'} 
                           onChange={() => setReDebugStatus('unresolved')} 
                         />
-                        <span>UNRESOLVED (観察中)</span>
+                        <span>未解決（まだモヤモヤする）</span>
                       </label>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>追記コメント（パッチ適用の結果など）：</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>追記コメント（その後どう行動したかなど）：</span>
                       <input 
                         type="text" 
                         value={reDebugNote}
@@ -916,10 +916,10 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
               <div className="glass-panel" style={{ padding: '80px 40px', borderRadius: '12px', background: 'var(--hero-bg)', border: '1px solid var(--border-color)', textAlign: 'center' }}>
                 <Brain size={48} style={{ color: 'var(--text-muted)', opacity: 0.5, margin: '0 auto 16px' }} />
                 <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '8px' }}>
-                  LogiJournal ワークスペースへようこそ
+                  LogiJournal 思考整理ノートへようこそ
                 </h3>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto 24px' }}>
-                  日常の感情ノイズをスキャンし、論理的な見解へ書き換えるデバッグジャーナルです。最初のログを作成してみましょう。
+                  日常のモヤモヤを書き出して整理し、客観的な事実と次のアクションに整えるノートです。最初のログを作成してみましょう。
                 </p>
                 <button 
                   onClick={handleStartCreate}
@@ -946,10 +946,10 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
         }}>
           <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <BarChart2 size={20} style={{ color: 'var(--color-cyan)' }} />
-            <span>脳内バグ分析スタッツ</span>
+            <span>思考クセ分析スタッツ</span>
           </h3>
           <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
-            これまでにLogiJournalでスキャンされた感情ノイズと認知バグの集計データです。
+            これまでにLogiJournalで整理されたモヤモヤと、無意識の思考パターンを集計データです。
           </p>
 
           {/* Quick Metrics */}
@@ -959,13 +959,13 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
               <div style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--text-primary)', fontFamily: 'monospace' }}>{totalEntries}</div>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>解決率 (PATCHED)</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>整理完了率</div>
               <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#10b981', fontFamily: 'monospace' }}>
                 {totalEntries > 0 ? Math.round((resolvedEntries / totalEntries) * 100) : 0}%
               </div>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>未解決バグ (UNRESOLVED)</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>未解決のモヤモヤ</div>
               <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#f43f5e', fontFamily: 'monospace' }}>{totalEntries - resolvedEntries}</div>
             </div>
           </div>
@@ -974,12 +974,12 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
             <div style={{ background: 'rgba(0,0,0,0.1)', border: '1px solid var(--border-color)', padding: '20px', borderRadius: '8px' }}>
               <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
-                頻出する認知バイアス（思考バグパターン）
+                頻出する認知バイアス（偏りがちな思考パターン）
               </h4>
               
               {Object.keys(biasCounts).length === 0 ? (
                 <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12.5px' }}>
-                  バグデータが集計されていません
+                  データが集計されていません
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -1009,17 +1009,17 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Brain style={{ color: '#10b981' }} size={20} />
                 <h4 style={{ fontSize: '14px', fontWeight: 'bold', color: '#10b981', margin: 0 }}>
-                  カエル分析官の認知チューニング・アドバイス
+                  カエル分析官の思考調律アドバイス
                 </h4>
               </div>
               
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6', margin: 0 }}>
                 {totalEntries === 0 ? (
-                  "まずは今日の終わりにLogiJournalでモヤモヤをダンプし、最初のデータを蓄積してください。思考の癖が見えてくることで、客観視が容易になります。"
+                  "まずは今日の終わりにLogiJournalでモヤモヤを書き出し、最初のデータを蓄積してください。思考の癖が見えてくることで、客観視が容易になります。"
                 ) : Object.keys(biasCounts).length > 0 ? (
-                  `現在、あなたのログからは「${Object.entries(biasCounts).sort((a,b) => b[1]-a[1])[0][0]}」の傾向が最も高く検出されています。このバグが出現したときは、まず「その決めつけを証明する『物理的な証拠』が目の前にあるか？」と自分に問いかけるデバッグルーチンを実行してください。`
+                  `現在、あなたのログからは「${Object.entries(biasCounts).sort((a,b) => b[1]-a[1])[0][0]}」の傾向が最も高く検出されています。このパターンが現れたときは、まず「その決めつけを証明する『客観的な証拠』が本当にそこにあるか？」と自分に問いかける習慣をつけてみましょう。`
                 ) : (
-                  "思考バグは未検出です。非常に良好な論理的バランスを維持できています。この調子で客観的な事実と主観を明確に切り分ける習慣を継続しましょう。"
+                  "極端な偏りは未検出です。非常に良好な論理的バランスを維持できています。この調子で客観的な事実と主観を明確に切り分ける習慣を継続しましょう。"
                 )}
               </p>
             </div>
