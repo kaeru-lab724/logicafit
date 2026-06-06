@@ -437,13 +437,6 @@ export default function HiddenAssumption({ onFinish, playSound, muted, toggleMut
 
             <RakutenWidget />
 
-            <button 
-              onClick={() => onFinish('hiddenAssumption', Math.round((score / questions.length) * 100), true)}
-              className="btn btn-primary"
-              style={{ width: '100%', maxWidth: '320px', padding: '14px', background: 'linear-gradient(135deg, var(--color-rose) 0%, #be123c 100%)', border: 'none' }}
-            >
-              ← ダッシュボードに戻る
-            </button>
           </div>
         ) : (
           /* Game Screens */

@@ -1198,10 +1198,19 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
       
       const nextStepKey = choice.nextStep;
 
+      const triggerClear = () => {
+        if (reviewQuestionId && onFinishReview) {
+          onFinishReview('eqSimulator', reviewQuestionId);
+        } else {
+          onFinish(trust, false);
+          setGameStatus('clear');
+        }
+      };
+
       // 次のステップが finish の場合は、ここで対話終了処理（結果画面へ）
       if (nextStepKey === 'finish') {
         setTimeout(() => {
-          setGameStatus('clear');
+          triggerClear();
         }, 1000);
         return;
       }
@@ -1211,7 +1220,7 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
 
       if (!nextStep) {
         // セーフティ
-        setGameStatus('clear');
+        triggerClear();
         return;
       }
 
@@ -1229,7 +1238,7 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
       // 対話終了判定（次の選択肢がない ＝ fail など）
       if (!nextStep.choices || nextStep.choices.length === 0) {
         setTimeout(() => {
-          setGameStatus('clear');
+          triggerClear();
         }, 2000);
       } else {
         setIsAnswered(false);
@@ -1243,7 +1252,7 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
     if (reviewQuestionId && onFinishReview) {
       onFinishReview('eqSimulator', reviewQuestionId);
     } else {
-      onFinish(trust);
+      onFinish(trust, false);
     }
   };
 
@@ -1527,8 +1536,7 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
           </div>
 
           <div style={{ display: 'flex', gap: '16px' }}>
-            <button onClick={onBack} className="btn btn-secondary" style={{ flex: 1 }}>ラボに戻る</button>
-            <button onClick={startTraining} className="btn btn-primary" style={{ flex: 2, background: 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)', boxShadow: '0 4px 15px var(--color-primary-glow)' }}>
+            <button onClick={startTraining} className="btn btn-primary" style={{ width: '100%', background: 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)', boxShadow: '0 4px 15px var(--color-primary-glow)' }}>
               <Play size={16} style={{ marginRight: '6px' }} />
               対話を始める
             </button>
@@ -1828,18 +1836,6 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
 
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
             <button onClick={() => setGameStatus('select')} className="btn btn-secondary">別のシナリオへ</button>
-            <button 
-              onClick={handleFinishGame} 
-              className="btn btn-primary" 
-              style={{ 
-                padding: '12px 32px',
-                background: 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)', 
-                boxShadow: '0 4px 15px var(--color-primary-glow)' 
-              }}
-            >
-              結果を記録してラボに戻る
-              <ArrowRight size={16} style={{ marginLeft: '6px' }} />
-            </button>
           </div>
 
           {/* 推奨デバッガー装備 */}

@@ -346,13 +346,6 @@ export default function CausalLoop({ onFinish, playSound, muted, toggleMute, mod
 
             <RakutenWidget />
 
-            <button 
-              onClick={() => onFinish('causalLoop', Math.round((score / questions.length) * 100), true)}
-              className="btn btn-primary"
-              style={{ width: '100%', maxWidth: '320px', padding: '14px', background: 'linear-gradient(135deg, var(--color-amber) 0%, #d97706 100%)', border: 'none' }}
-            >
-              ← ダッシュボードに戻る
-            </button>
           </div>
         ) : (
           /* Game Screens */

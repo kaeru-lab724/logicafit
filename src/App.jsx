@@ -230,7 +230,16 @@ const getFallbackStatement = (gameId, questionId) => {
 
 export default function App() {
   const { playSound, muted, toggleMute } = useSound();
-  const [activeGame, setActiveGame] = useState(null);
+  const [isGameCompleted, setIsGameCompleted] = useState(false);
+  const [activeGame, _setActiveGame] = useState(null);
+  
+  const setActiveGame = (gameId) => {
+    _setActiveGame(gameId);
+    if (gameId !== null) {
+      setIsGameCompleted(false);
+    }
+  };
+
   const [currentView, setCurrentView] = useState('portal');
   const [mode, setMode] = useState('daily');
   const [showGuideModal, setShowGuideModal] = useState(false);
@@ -721,6 +730,9 @@ export default function App() {
 
     if (shouldExit) {
       setActiveGame(null);
+      setIsGameCompleted(false);
+    } else {
+      setIsGameCompleted(true);
     }
   };
 
@@ -1100,7 +1112,24 @@ export default function App() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto', gap: '4px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '16px', flexShrink: 0 }}>
             <button 
-              onClick={() => { playSound('click'); setActiveGame(null); setCurrentView('portal'); }}
+              onClick={() => {
+                playSound('click');
+                if (activeGame !== null) {
+                  if (isGameCompleted) {
+                    setActiveGame(null);
+                    setIsGameCompleted(false);
+                  } else {
+                    const confirmExit = window.confirm("トレーニングを中断してダッシュボードに戻りますか？\n（現在の進捗状況はリセットされます）");
+                    if (confirmExit) {
+                      setActiveGame(null);
+                      setIsGameCompleted(false);
+                    }
+                  }
+                } else {
+                  setActiveGame(null);
+                  setCurrentView('portal');
+                }
+              }}
               className="btn btn-secondary"
               style={{
                 fontSize: isMobile ? '11px' : '12px',
@@ -1134,7 +1163,9 @@ export default function App() {
               }}
             >
               <ArrowLeft size={isMobile ? 12 : 14} style={{ flexShrink: 0 }} />
-              <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>ポータルへ戻る</span>
+              <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
+                {activeGame !== null ? 'ダッシュボードへ戻る' : 'ポータルへ戻る'}
+              </span>
             </button>
 
             {!isMobile && <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />}
@@ -1445,8 +1476,8 @@ export default function App() {
         )}
         {activeGame === 'fallacyHunter' && (
           <FallacyHunter 
-            onFinish={(score) => {
-              handleGameFinish('fallacyHunter', score);
+            onFinish={(score, shouldExit = true) => {
+              handleGameFinish('fallacyHunter', score, shouldExit);
             }}
             playSound={playSound}
             muted={muted}
@@ -1459,8 +1490,8 @@ export default function App() {
         )}
         {activeGame === 'treeQuest' && (
           <TreeQuest 
-            onFinish={(score) => {
-              handleGameFinish('treeQuest', score);
+            onFinish={(score, shouldExit = true) => {
+              handleGameFinish('treeQuest', score, shouldExit);
             }}
             playSound={playSound}
             muted={muted}
@@ -1473,8 +1504,8 @@ export default function App() {
         )}
         {activeGame === 'eqSimulator' && (
           <EqSimulator 
-            onFinish={(score) => {
-              handleGameFinish('eqSimulator', score);
+            onFinish={(score, shouldExit = true) => {
+              handleGameFinish('eqSimulator', score, shouldExit);
             }}
             playSound={playSound}
             muted={muted}

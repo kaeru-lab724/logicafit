@@ -362,7 +362,16 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
     } else {
       // 全ステージクリア！
       playSound('success');
-      setGameStatus('clear');
+      if (reviewQuestionId && onFinishReview) {
+        onFinishReview('treeQuest', reviewQuestionId);
+      } else {
+        const nextScanCounts = [...scanCounts, stageScanCount];
+        const nextAccuracy = nextScanCounts.length > 0 
+          ? Math.round(nextScanCounts.reduce((sum, c) => sum + getStageAccuracy(c), 0) / nextScanCounts.length)
+          : 100;
+        onFinish(nextAccuracy, false);
+        setGameStatus('clear');
+      }
     }
   };
 
@@ -734,8 +743,7 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
           </div>
 
           <div style={{ display: 'flex', gap: '16px' }}>
-            <button onClick={onBack} className="btn btn-secondary" style={{ flex: 1 }}>ラボに戻る</button>
-            <button onClick={startQuest} className="btn btn-primary" style={{ flex: 2, background: 'linear-gradient(135deg, var(--color-amber) 0%, #d97706 100%)', boxShadow: '0 4px 15px var(--color-amber-glow)' }}>
+            <button onClick={startQuest} className="btn btn-primary" style={{ width: '100%', background: 'linear-gradient(135deg, var(--color-amber) 0%, #d97706 100%)', boxShadow: '0 4px 15px var(--color-amber-glow)' }}>
               <Play size={16} style={{ marginRight: '6px' }} />
               スキャンを開始する
             </button>
@@ -1193,18 +1201,6 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
             <button onClick={handleReset} className="btn btn-secondary">
               <RotateCcw size={16} style={{ marginRight: '6px' }} />
               もう一度挑戦
-            </button>
-            <button 
-              onClick={handleFinishGame} 
-              className="btn btn-primary" 
-              style={{ 
-                padding: '12px 32px',
-                background: 'linear-gradient(135deg, var(--color-emerald) 0%, #059669 100%)', 
-                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)' 
-              }}
-            >
-              結果を記録して戻る
-              <ArrowRight size={16} style={{ marginLeft: '6px' }} />
             </button>
           </div>
 

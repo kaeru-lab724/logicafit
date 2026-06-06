@@ -333,25 +333,7 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
 
   return (
     <div className="game-container fade-in">
-      {/* 戻るナビゲーション */}
-      {onBack && (
-        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px' }}>
-          <button 
-            onClick={() => { playSound('click'); onBack(); }}
-            className="btn btn-secondary"
-            style={{
-              padding: '8px 16px',
-              fontSize: '13px',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            <span>← ダッシュボードに戻る</span>
-          </button>
-        </div>
-      )}
+
 
       <div className="glass-panel" style={{ padding: '24px', position: 'relative', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
         {/* Header */}
@@ -745,13 +727,7 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
               >
                 𝕏 でシェア
               </button>
-              <button 
-                onClick={() => onFinish('gameTheory', Math.min(100, Math.max(0, Math.round((score / (questions.length * 10)) * 100))))} 
-                className="btn btn-primary" 
-                style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', boxShadow: '0 4px 15px rgba(99, 102, 241, 0.3)' }}
-              >
-                ← ダッシュボードに戻る
-              </button>
+
             </div>
           </div>
         )}

@@ -383,9 +383,6 @@ export default function FactsOpinions({ onFinish, playSound, muted, toggleMute, 
               >
                 𝕏 でシェア
               </button>
-              <button onClick={() => onFinish('factsOpinions', Math.round((score / questions.length) * 100))} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, var(--color-cyan) 0%, #0891b2 100%)', boxShadow: '0 4px 15px var(--color-cyan-glow)' }}>
-                ← ダッシュボードに戻る
-              </button>
             </div>
           </div>
         )}

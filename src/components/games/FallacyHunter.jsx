@@ -759,7 +759,13 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
     } else {
       // 6問すべて終了。診断完了！
       playSound('success');
-      setGameStatus('clear');
+      if (reviewQuestionId && onFinishReview) {
+        onFinishReview('fallacyHunter', reviewQuestionId);
+      } else {
+        const accuracyScore = Math.round((totalCorrectAnswers / questions.length) * 100);
+        onFinish(accuracyScore, false);
+        setGameStatus('clear');
+      }
     }
   };
 
@@ -1011,8 +1017,7 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
           </div>
 
           <div style={{ display: 'flex', gap: '16px' }}>
-            <button onClick={onBack} className="btn btn-secondary" style={{ flex: 1 }}>ラボに戻る</button>
-            <button onClick={startDiagnostics} className="btn btn-primary" style={{ flex: 2, background: 'linear-gradient(135deg, var(--color-rose) 0%, #e11d48 100%)', boxShadow: '0 4px 15px var(--color-rose-glow)' }}>
+            <button onClick={startDiagnostics} className="btn btn-primary" style={{ width: '100%', background: 'linear-gradient(135deg, var(--color-rose) 0%, #e11d48 100%)', boxShadow: '0 4px 15px var(--color-rose-glow)' }}>
               <Play size={16} style={{ marginRight: '6px' }} />
               システムスキャナーを起動
             </button>
@@ -1333,18 +1338,6 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             <button onClick={handleRetry} className="btn btn-secondary">
               <RotateCcw size={16} style={{ marginRight: '6px' }} />
               もう一度スキャン
-            </button>
-            <button 
-              onClick={handleFinishGame} 
-              className="btn btn-primary" 
-              style={{ 
-                padding: '12px 32px',
-                background: 'linear-gradient(135deg, var(--color-emerald) 0%, #059669 100%)', 
-                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)' 
-              }}
-            >
-              ログをセーブして戻る
-              <ArrowRight size={16} style={{ marginLeft: '6px' }} />
             </button>
           </div>
         </div>

@@ -422,26 +422,7 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
 
   return (
     <div className={`game-container fade-in ${shakeActive ? 'incorrect-shake' : ''}`}>
-      {/* 戻るナビゲーション */}
-      {onBack && (
-        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px' }}>
-          <button 
-            onClick={() => { playSound('click'); onBack(); }}
-            className="btn btn-secondary"
-            style={{
-              padding: '8px 16px',
-              fontSize: '13px',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            <ChevronLeft size={16} />
-            ← ダッシュボードに戻る
-          </button>
-        </div>
-      )}
+
 
       <div 
         className="glass-panel" 
@@ -866,16 +847,6 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
               <button onClick={handleReset} className="btn btn-secondary">
                 <RotateCcw size={16} /> もう一度プレイ
-              </button>
-              <button 
-                onClick={() => onFinish('strategic', Math.min(100, Math.max(0, Math.round((totalScore / (scenarios.length * 10) * 100)))), false)}
-                className="btn btn-primary"
-                style={{
-                  background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-                  boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)'
-                }}
-              >
-                ← ダッシュボードに戻る
               </button>
             </div>
           </div>

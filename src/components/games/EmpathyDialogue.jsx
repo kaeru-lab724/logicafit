@@ -570,22 +570,6 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
                 Xで称号をポスト
               </a>
 
-              <button 
-                onClick={() => {
-                  if (reviewQuestionId && onFinishReview) {
-                    onFinishReview('empathyDialogue', reviewQuestionId);
-                  } else {
-                    onFinish('empathyDialogue', Math.round((score / questions.length) * 100));
-                  }
-                }} 
-                className="btn btn-primary" 
-                style={{ 
-                  background: 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)', 
-                  boxShadow: '0 4px 15px var(--color-primary-glow)' 
-                }}
-              >
-                ← ダッシュボードに戻る
-              </button>
             </div>
 
             {/* 広告ウィジェット */}

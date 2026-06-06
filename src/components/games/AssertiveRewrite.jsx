@@ -374,20 +374,6 @@ export default function AssertiveRewrite({ onFinish, playSound, muted, toggleMut
             </div>
 
             <RakutenWidget />
-
-            <button 
-              onClick={() => {
-                if (reviewQuestionId && onFinishReview) {
-                  onFinishReview('assertiveRewrite', reviewQuestionId);
-                } else {
-                  onFinish('assertiveRewrite', Math.round((score / questions.length) * 100), true);
-                }
-              }}
-              className="btn btn-primary"
-              style={{ width: '100%', maxWidth: '320px', padding: '14px', background: 'linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%)', border: 'none' }}
-            >
-              ← ダッシュボードに戻る
-            </button>
           </div>
         ) : (
           /* Game Screens */

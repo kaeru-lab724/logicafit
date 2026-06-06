@@ -413,9 +413,6 @@ export default function LogicalValidity({ onFinish, playSound, muted, toggleMute
               >
                 𝕏 でシェア
               </button>
-              <button onClick={() => onFinish('logicalValidity', Math.round((score / questions.length) * 100))} className="btn btn-primary" style={{ background: 'linear-gradient(135deg, var(--color-emerald) 0%, #059669 100%)', boxShadow: '0 4px 15px var(--color-emerald-glow)' }}>
-                ← ダッシュボードに戻る
-              </button>
             </div>
           </div>
         )}
