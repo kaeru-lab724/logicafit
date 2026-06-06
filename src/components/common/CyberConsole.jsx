@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Activity, AlertTriangle, Terminal } from 'lucide-react';
+import React from 'react';
+import { Sparkles, Activity, AlertTriangle, Terminal, ChevronRight } from 'lucide-react';
 
 const GAME_NAMES = {
   factsOpinions: '事実 vs 意見',
@@ -35,10 +35,7 @@ const getRecommendedGameKey = (scores) => {
 };
 
 export default function CyberConsole({ gameState, activeScores, playSound, setActiveGame, setActiveTab }) {
-  const [msgIndex, setMsgIndex] = useState(0);
-  const [fadeKey, setFadeKey] = useState(0);
-
-  // Compute dynamic messages
+  // Compute dynamic states
   const recGameKey = getRecommendedGameKey(activeScores || {});
   const recGameName = GAME_NAMES[recGameKey] || recGameKey;
   const activeBugsCount = (gameState.bugNote || []).filter(b => !b.solved).length;
@@ -47,89 +44,22 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
   const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
   const unlockedBadgesCount = (gameState.badges || []).filter(Boolean).length;
 
-  const messages = [
-    {
-      prefix: 'OS_STATUS',
-      text: `LOGIFIT_OS v2.4.0: LEVEL ${gameState.level} / XP ${gameState.xp} [ESTABLISHED]`,
-      action: null,
-      icon: <Activity size={12} style={{ color: 'var(--color-cyan)' }} />
-    },
-    {
-      prefix: 'OS_RECOMMEND',
-      text: `推奨デバッグ: 「${recGameName}」をプレイしてスコアを最適化してください。`,
-      action: () => {
-        playSound('click');
-        setActiveGame(recGameKey);
-      },
-      icon: <Sparkles size={12} style={{ color: 'var(--color-primary)' }} />
-    },
-    {
-      prefix: 'OS_BUG_ALERT',
-      text: activeBugsCount > 0 
-        ? `警告: 未解決の思考バグが ${activeBugsCount} 件検出されています。デバッグを起動してください。`
-        : `ステータス: 思考回路内の深刻なバグは現在検出されていません [CLEAN]`,
-      action: () => {
-        playSound('click');
-        setActiveTab('bugNote');
-      },
-      icon: <AlertTriangle size={12} style={{ color: activeBugsCount > 0 ? 'var(--color-rose)' : '#10b981' }} />
-    },
-    {
-      prefix: 'OS_MEMORY',
-      text: isTuningCompletedToday
-        ? `調律ログ: 脳内メモリ（RAM）調律完了。動作空き領域は十分に確保されています。`
-        : `注意: 脳内メモリ負荷上昇。本日の「思考調律（ジャーナリング）」を起動してください。`,
-      action: () => {
-        playSound('click');
-        setActiveTab('bugNote');
-      },
-      icon: <Terminal size={12} style={{ color: isTuningCompletedToday ? '#10b981' : 'var(--color-amber)' }} />
-    },
-    {
-      prefix: 'OS_ARCHIVE',
-      text: `実績データ: 現在 ${unlockedBadgesCount} / 5 個の思考バッジが活性化されています。`,
-      action: () => {
-        playSound('click');
-        setActiveTab('achievements');
-      },
-      icon: <Activity size={12} style={{ color: 'var(--color-primary)' }} />
-    }
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setMsgIndex((prev) => (prev + 1) % messages.length);
-      setFadeKey((prev) => prev + 1);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [messages.length]);
-
-  const currentMsg = messages[msgIndex];
-
   return (
     <div 
-      className="glass-panel cyber-console-bar hover-lift"
+      className="glass-panel cyber-console-window"
       style={{
         display: 'flex',
-        alignItems: 'center',
-        padding: '10px 14px',
-        background: 'rgba(10, 11, 16, 0.7)',
-        border: '1px solid rgba(6, 182, 212, 0.25)',
-        borderLeft: '4px solid var(--color-cyan)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(6, 182, 212, 0.05)',
-        borderRadius: '10px',
-        fontSize: '12px',
+        flexDirection: 'column',
+        background: 'rgba(10, 11, 16, 0.85)',
+        border: '1px solid rgba(6, 182, 212, 0.3)',
+        borderRadius: '12px',
+        boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(6, 182, 212, 0.05)',
         fontFamily: 'monospace, var(--font-display)',
-        color: 'rgba(255, 255, 255, 0.85)',
-        gap: '10px',
-        cursor: currentMsg.action ? 'pointer' : 'default',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        minHeight: '38px',
-        boxSizing: 'border-box',
         overflow: 'hidden',
-        width: '100%'
+        width: '100%',
+        boxSizing: 'border-box',
+        transition: 'all 0.3s ease'
       }}
-      onClick={currentMsg.action || undefined}
     >
       <style>{`
         @keyframes terminalBlink {
@@ -140,70 +70,206 @@ export default function CyberConsole({ gameState, activeScores, playSound, setAc
           animation: terminalBlink 1.2s infinite;
           color: var(--color-cyan);
           font-weight: bold;
-          margin-left: 2px;
         }
-        @keyframes consoleFadeIn {
-          from { opacity: 0; transform: translateX(4px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .console-text-fade {
-          animation: consoleFadeIn 0.4s ease-out forwards;
+        .terminal-line {
           display: flex;
-          alignItems: center;
-          gap: 8px;
-          flex: 1;
-          min-width: 0;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 11.5px;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
+          text-align: left;
+          border: 1px solid transparent;
         }
-        .console-prefix {
+        .terminal-line-text {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .terminal-prefix {
           color: var(--color-cyan);
           font-weight: bold;
-          margin-right: 4px;
+          flex-shrink: 0;
         }
-        .cyber-console-bar:hover {
+        .terminal-line-cyan:hover {
+          background: rgba(6, 182, 212, 0.12);
+          border-color: rgba(6, 182, 212, 0.3);
+          color: var(--color-cyan);
+          transform: translateX(4px);
+        }
+        .terminal-line-rose:hover {
+          background: rgba(244, 63, 94, 0.12);
+          border-color: rgba(244, 63, 94, 0.3);
+          color: var(--color-rose);
+          transform: translateX(4px);
+        }
+        .terminal-line-emerald:hover {
+          background: rgba(16, 185, 129, 0.12);
+          border-color: rgba(16, 185, 129, 0.3);
+          color: #10b981;
+          transform: translateX(4px);
+        }
+        .terminal-line-amber:hover {
+          background: rgba(245, 158, 11, 0.12);
+          border-color: rgba(245, 158, 11, 0.3);
+          color: var(--color-amber);
+          transform: translateX(4px);
+        }
+        .terminal-action-btn {
+          font-size: 9px;
+          font-weight: bold;
+          padding: 2px 6px;
+          border-radius: 4px;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+          flex-shrink: 0;
+          margin-left: 10px;
+        }
+        .terminal-line:hover .terminal-action-btn {
+          opacity: 1;
+        }
+        .cyber-console-window:hover {
           border-color: rgba(6, 182, 212, 0.5);
-          box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+          box-shadow: 0 16px 40px rgba(6, 182, 212, 0.15);
         }
       `}</style>
 
-      {/* Terminal Prompt symbol */}
-      <span style={{ color: 'var(--color-cyan)', fontWeight: 'bold', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-        &gt;
-      </span>
-
-      {/* Icon & Message Text */}
-      <div key={fadeKey} className="console-text-fade">
-        <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-          {currentMsg.icon}
+      {/* Console Window Header Bar */}
+      <div 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          padding: '6px 12px',
+          background: 'rgba(20, 22, 30, 0.9)',
+          borderBottom: '1px solid rgba(6, 182, 212, 0.2)',
+          fontSize: '10px',
+          color: 'var(--text-muted)',
+          gap: '8px'
+        }}
+      >
+        <div style={{ display: 'flex', gap: '5px', flexShrink: 0 }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ff5f56' }} />
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ffbd2e' }} />
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#27c93f' }} />
+        </div>
+        <span style={{ margin: '0 auto', fontSize: '9px', letterSpacing: '1px', fontWeight: 'bold', textShadow: '0 0 4px rgba(6, 182, 212, 0.4)' }}>
+          LOGIFIT COGNITIVE CONSOLE v2.4
         </span>
-        <span style={{ textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '11px', letterSpacing: '0.2px' }}>
-          <span className="console-prefix">[{currentMsg.prefix}]</span>
-          {currentMsg.text}
-        </span>
+        <span style={{ width: '34px', flexShrink: 0 }} />
       </div>
 
-      {/* Blinking Prompt Cursor */}
-      <span className="terminal-cursor" style={{ flexShrink: 0 }}>_</span>
-      
-      {currentMsg.action && (
-        <span 
-          style={{ 
-            fontSize: '9px', 
-            background: 'rgba(6, 182, 212, 0.15)', 
-            border: '1px solid rgba(6, 182, 212, 0.3)', 
-            color: 'var(--color-cyan)', 
-            padding: '2px 6px', 
-            borderRadius: '4px',
-            marginLeft: 'auto',
-            flexShrink: 0,
-            transform: 'scale(0.9)'
+      {/* Console Screen Body */}
+      <div 
+        style={{
+          padding: '12px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px'
+        }}
+      >
+        {/* Line 1: System Status (Achievements / Profile) */}
+        <div 
+          className="terminal-line terminal-line-cyan"
+          onClick={() => {
+            playSound('click');
+            setActiveTab('achievements');
           }}
         >
-          EXECUTE
-        </span>
-      )}
+          <div className="terminal-line-text">
+            <span className="terminal-prefix">&gt;_STATUS:</span>
+            <Activity size={12} style={{ color: 'var(--color-cyan)', flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              LEVEL {gameState.level} (XP: {gameState.xp}) // UNLOCKED BADGES: {unlockedBadgesCount} / 5
+            </span>
+          </div>
+          <span className="terminal-action-btn" style={{ background: 'rgba(6, 182, 212, 0.15)', border: '1px solid rgba(6, 182, 212, 0.3)', color: 'var(--color-cyan)' }}>
+            SETTINGS
+          </span>
+        </div>
+
+        {/* Line 2: Diagnostic Scan (Bugs / Mind Tuning Alerts) */}
+        {activeBugsCount > 0 ? (
+          <div 
+            className="terminal-line terminal-line-rose"
+            onClick={() => {
+              playSound('click');
+              setActiveTab('bugNote');
+            }}
+          >
+            <div className="terminal-line-text">
+              <span className="terminal-prefix">&gt;_SCAN:</span>
+              <AlertTriangle size={12} style={{ color: 'var(--color-rose)', flexShrink: 0 }} />
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                WARNING: {activeBugsCount} COGNITIVE BUG(S) DETECTED IN THOUGHT PROCESS.
+              </span>
+            </div>
+            <span className="terminal-action-btn" style={{ background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.3)', color: 'var(--color-rose)' }}>
+              DEBUG_NOW
+            </span>
+          </div>
+        ) : (
+          <div 
+            className={isTuningCompletedToday ? "terminal-line terminal-line-emerald" : "terminal-line terminal-line-amber"}
+            onClick={() => {
+              playSound('click');
+              setActiveTab('bugNote');
+            }}
+          >
+            <div className="terminal-line-text">
+              <span className="terminal-prefix">&gt;_SCAN:</span>
+              {isTuningCompletedToday ? (
+                <Terminal size={12} style={{ color: '#10b981', flexShrink: 0 }} />
+              ) : (
+                <AlertTriangle size={12} style={{ color: 'var(--color-amber)', flexShrink: 0 }} />
+              )}
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {isTuningCompletedToday 
+                  ? 'HEALTH: NO BIAS LEAKS DETECTED. RAM MEMORY FREED [OK]' 
+                  : 'HEALTH: MEMORY LOAD HIGH. ACTION REQUIRED: RUN MIND TUNING'}
+              </span>
+            </div>
+            <span 
+              className="terminal-action-btn" 
+              style={{ 
+                background: isTuningCompletedToday ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)', 
+                border: isTuningCompletedToday ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.3)', 
+                color: isTuningCompletedToday ? '#10b981' : 'var(--color-amber)' 
+              }}
+            >
+              {isTuningCompletedToday ? 'VIEW_LOG' : 'RUN_TUNING'}
+            </span>
+          </div>
+        )}
+
+        {/* Line 3: Directive / Recommended Action */}
+        <div 
+          className="terminal-line terminal-line-cyan"
+          onClick={() => {
+            playSound('click');
+            setActiveGame(recGameKey);
+          }}
+        >
+          <div className="terminal-line-text">
+            <span className="terminal-prefix">&gt;_COMMAND:</span>
+            <Sparkles size={12} style={{ color: 'var(--color-primary)', flexShrink: 0 }} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              NEXT DIRECTIVE: RUN "{recGameName.toUpperCase()}" <span className="terminal-cursor">_</span>
+            </span>
+          </div>
+          <span className="terminal-action-btn" style={{ background: 'rgba(6, 182, 212, 0.15)', border: '1px solid rgba(6, 182, 212, 0.3)', color: 'var(--color-cyan)' }}>
+            EXECUTE
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
