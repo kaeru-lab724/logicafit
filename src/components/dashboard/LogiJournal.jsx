@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   BookOpen, Plus, Search, Download, Upload, Trash2, 
   AlertCircle, CheckCircle, Brain, Clock, Sparkles, 
-  BarChart2, ArrowLeft, Check, Edit3, HelpCircle 
+  BarChart2, ArrowLeft, Check, Edit3, HelpCircle,
+  Sun, Moon, Volume2, VolumeX
 } from 'lucide-react';
 
 const BIAS_RULES = [
@@ -46,7 +47,10 @@ const VIBE_DATA = {
   flat: { label: '低活性（億劫・思考フリーズ）', emoji: '🍵', themeColor: '#10b981', glowColor: 'rgba(16, 185, 129, 0.3)', question: '日常の中で、少しだけ「面倒だな」と感じた瞬間や思考が滞ったポイントを思い出して記述してください。' }
 };
 
-export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExportData, onImportData, onBack, playSound, isMobile }) {
+export default function LogiJournal({ 
+  gameState, onSaveLog, onUpdateLog, onExportData, onImportData, onBack, playSound, isMobile,
+  theme, setTheme, muted, toggleMute
+}) {
   const [activeTab, setActiveTab] = useState('workspace'); // 'workspace' | 'analytics'
   const [selectedEntryId, setSelectedEntryId] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -387,60 +391,113 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
               LogiJournal
             </h2>
           </div>
+
+          {/* スマホ時のみ、ヘッダー上部の右側にテーマ切り替えと音量ボタンを配置 */}
+          {isMobile && (
+            <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexShrink: 0 }}>
+              <button 
+                onClick={() => { playSound('click'); setTheme(prev => prev === 'dark' ? 'light' : 'dark'); }}
+                className="btn btn-secondary" 
+                style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
+                title={theme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
+              >
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+
+              <button 
+                onClick={toggleMute}
+                className="btn btn-secondary" 
+                style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
+              >
+                {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Tab Selector */}
+        {/* Tab Selector & Theme controls */}
         <div style={{ 
           display: 'flex', 
-          gap: '8px', 
-          background: 'rgba(255, 255, 255, 0.02)', 
-          padding: '4px', 
-          borderRadius: '8px', 
-          border: '1px solid var(--border-color)',
+          gap: '12px', 
+          alignItems: 'center',
           width: isMobile ? '100%' : 'auto',
-          boxSizing: 'border-box'
+          justifyContent: isMobile ? 'stretch' : 'flex-end'
         }}>
-          <button 
-            onClick={() => { playSound('click'); setActiveTab('workspace'); }}
-            style={{
-              padding: isMobile ? '6px 10px' : '8px 16px', 
-              borderRadius: '6px', 
-              fontSize: isMobile ? '12px' : '13px', 
-              border: 'none', 
-              cursor: 'pointer',
-              background: activeTab === 'workspace' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
-              color: activeTab === 'workspace' ? 'var(--color-cyan)' : 'var(--text-secondary)',
-              fontWeight: activeTab === 'workspace' ? 'bold' : 'normal',
-              transition: 'all 0.2s',
-              flex: isMobile ? 1 : 'none',
-              textAlign: 'center',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            ワークスペース
-          </button>
-          <button 
-            onClick={() => { playSound('click'); setActiveTab('analytics'); }}
-            style={{
-              padding: isMobile ? '6px 10px' : '8px 16px', 
-              borderRadius: '6px', 
-              fontSize: isMobile ? '12px' : '13px', 
-              border: 'none', 
-              cursor: 'pointer',
-              background: activeTab === 'analytics' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
-              color: activeTab === 'analytics' ? 'var(--color-cyan)' : 'var(--text-secondary)',
-              fontWeight: activeTab === 'analytics' ? 'bold' : 'normal',
-              transition: 'all 0.2s',
-              flex: isMobile ? 1 : 'none',
-              textAlign: 'center',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: isMobile ? 'center' : 'flex-start' }}>
-              <BarChart2 size={isMobile ? 13 : 15} style={{ flexShrink: 0 }} />
-              <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>思考クセの分析</span>
+          {/* Tab Selector */}
+          <div style={{ 
+            display: 'flex', 
+            gap: '8px', 
+            background: 'rgba(255, 255, 255, 0.02)', 
+            padding: '4px', 
+            borderRadius: '8px', 
+            border: '1px solid var(--border-color)',
+            width: isMobile ? '100%' : 'auto',
+            boxSizing: 'border-box'
+          }}>
+            <button 
+              onClick={() => { playSound('click'); setActiveTab('workspace'); }}
+              style={{
+                padding: isMobile ? '6px 10px' : '8px 16px', 
+                borderRadius: '6px', 
+                fontSize: isMobile ? '12px' : '13px', 
+                border: 'none', 
+                cursor: 'pointer',
+                background: activeTab === 'workspace' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                color: activeTab === 'workspace' ? 'var(--color-cyan)' : 'var(--text-secondary)',
+                fontWeight: activeTab === 'workspace' ? 'bold' : 'normal',
+                transition: 'all 0.2s',
+                flex: isMobile ? 1 : 'none',
+                textAlign: 'center',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              ワークスペース
+            </button>
+            <button 
+              onClick={() => { playSound('click'); setActiveTab('analytics'); }}
+              style={{
+                padding: isMobile ? '6px 10px' : '8px 16px', 
+                borderRadius: '6px', 
+                fontSize: isMobile ? '12px' : '13px', 
+                border: 'none', 
+                cursor: 'pointer',
+                background: activeTab === 'analytics' ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
+                color: activeTab === 'analytics' ? 'var(--color-cyan)' : 'var(--text-secondary)',
+                fontWeight: activeTab === 'analytics' ? 'bold' : 'normal',
+                transition: 'all 0.2s',
+                flex: isMobile ? 1 : 'none',
+                textAlign: 'center',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+                <BarChart2 size={isMobile ? 13 : 15} style={{ flexShrink: 0 }} />
+                <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>思考クセの分析</span>
+              </div>
+            </button>
+          </div>
+
+          {/* Theme controls for PC */}
+          {!isMobile && (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+              <button 
+                onClick={() => { playSound('click'); setTheme(prev => prev === 'dark' ? 'light' : 'dark'); }}
+                className="btn btn-secondary" 
+                style={{ padding: '8px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px' }}
+                title={theme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
+              >
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+
+              <button 
+                onClick={toggleMute}
+                className="btn btn-secondary" 
+                style={{ padding: '8px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px' }}
+              >
+                {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
             </div>
-          </button>
+          )}
         </div>
       </div>
 

@@ -1338,6 +1338,10 @@ export default function App() {
             onBack={() => setCurrentView('portal')} 
             playSound={playSound} 
             isMobile={isMobile}
+            theme={theme}
+            setTheme={setTheme}
+            muted={muted}
+            toggleMute={toggleMute}
           />
         )}
 
