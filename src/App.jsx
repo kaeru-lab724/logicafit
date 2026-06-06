@@ -1097,8 +1097,41 @@ export default function App() {
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: isMobile ? '100%' : 'auto', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button 
+              onClick={() => { playSound('click'); setActiveGame(null); setCurrentView('portal'); }}
+              className="btn btn-secondary"
+              style={{
+                fontSize: '12px',
+                padding: '8px 14px',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                color: 'var(--text-secondary)',
+                transition: 'all 0.2s',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-primary)';
+                e.currentTarget.style.color = 'var(--text-primary)';
+                e.currentTarget.style.background = 'rgba(139, 92, 246, 0.08)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+              }}
+            >
+              <ArrowLeft size={14} />
+              <span>ポータルへ戻る</span>
+            </button>
+
+            <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />
+
             <div 
               onClick={() => { playSound('click'); setActiveGame(null); }}
               style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
@@ -1131,23 +1164,6 @@ export default function App() {
                 LogicaFit
               </span>
             </div>
-
-            <button 
-              onClick={() => { playSound('click'); setActiveGame(null); setCurrentView('portal'); }}
-              className="btn btn-secondary"
-              style={{
-                fontSize: '11px',
-                padding: '6px 12px',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                marginLeft: '8px'
-              }}
-            >
-              <ArrowLeft size={12} />
-              <span>ポータル</span>
-            </button>
           </div>
 
           {/* スマホ時のみ、ヘッダー上部の右側にテーマ切り替えと音量ボタンを配置 */}

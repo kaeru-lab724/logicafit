@@ -318,11 +318,39 @@ export default function LogiJournal({ gameState, onSaveLog, onUpdateLog, onExpor
     }}>
       {/* Top Bar Navigation */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button onClick={onBack} className="btn btn-secondary" style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ArrowLeft size={16} />
-            <span>ポータル</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button 
+            onClick={onBack} 
+            className="btn btn-secondary" 
+            style={{ 
+              padding: '8px 14px', 
+              fontSize: '12px',
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '6px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 255, 255, 0.03)',
+              color: 'var(--text-secondary)',
+              transition: 'all 0.2s',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-cyan)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+              e.currentTarget.style.background = 'rgba(6, 182, 212, 0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+            }}
+          >
+            <ArrowLeft size={14} />
+            <span>ポータルへ戻る</span>
           </button>
+
+          <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <BookOpen size={22} style={{ color: 'var(--color-cyan)' }} />
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0, fontFamily: 'var(--font-display)' }}>
