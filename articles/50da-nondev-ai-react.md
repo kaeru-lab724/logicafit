@@ -3,7 +3,7 @@ title: "50代非開発者がAIエージェントとReactアプリを爆速でデ
 emoji: "🐸"
 type: "tech"
 topics: ["react", "vite", "ai", "個人開発", "生存戦略"]
-published: false
+published: true
 ---
 
 ## ■ はじめに：老眼とフリーズと、秒速のAI部下
