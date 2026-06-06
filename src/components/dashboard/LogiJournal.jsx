@@ -322,15 +322,22 @@ export default function LogiJournal({
     }}>
       {/* Top Bar Navigation */}
       {/* Top Bar Navigation */}
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between', 
-        alignItems: isMobile ? 'stretch' : 'center', 
-        borderBottom: '1px solid var(--border-color)', 
-        paddingBottom: '16px',
-        gap: isMobile ? '12px' : '0px'
-      }}>
+      <header 
+        className="glass-panel"
+        style={{ 
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between', 
+          alignItems: isMobile ? 'stretch' : 'center', 
+          padding: isMobile ? '12px 12px' : '16px 24px',
+          marginTop: '24px',
+          borderRadius: '16px',
+          borderWidth: '1px',
+          width: '100%',
+          boxSizing: 'border-box',
+          gap: isMobile ? '12px' : '0px'
+        }}
+      >
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
@@ -499,7 +506,7 @@ export default function LogiJournal({
             </div>
           )}
         </div>
-      </div>
+      </header>
 
       {/* Hidden file input for import */}
       <input 
