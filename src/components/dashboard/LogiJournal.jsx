@@ -315,11 +315,13 @@ export default function LogiJournal({
     <div className="fade-in" style={{
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '24px',
+      padding: isMobile ? '12px' : '24px',
       display: 'flex',
       flexDirection: 'column',
       gap: '20px',
-      minHeight: '80vh'
+      minHeight: '80vh',
+      boxSizing: 'border-box',
+      width: '100%'
     }}>
       {/* Top Bar Navigation */}
       {/* Top Bar Navigation */}
@@ -330,8 +332,8 @@ export default function LogiJournal({
           flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'space-between', 
           alignItems: isMobile ? 'stretch' : 'center', 
-          padding: isMobile ? '12px 12px' : '16px 24px',
-          marginTop: '24px',
+          padding: isMobile ? '12px' : '16px 24px',
+          marginTop: isMobile ? '12px' : '24px',
           borderRadius: '16px',
           borderWidth: '1px',
           width: '100%',
@@ -341,85 +343,115 @@ export default function LogiJournal({
       >
         <div style={{ 
           display: 'flex', 
-          alignItems: 'center', 
-          gap: isMobile ? '4px' : '16px',
-          width: isMobile ? '100%' : 'auto',
-          justifyContent: isMobile ? 'space-between' : 'flex-start'
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: isMobile ? 'stretch' : 'center', 
+          gap: isMobile ? '8px' : '16px',
+          width: isMobile ? '100%' : 'auto'
         }}>
-          <button 
-            onClick={onBack} 
-            className="btn btn-secondary" 
-            style={{ 
-              padding: isMobile ? '6px 8px' : '8px 14px', 
-              fontSize: isMobile ? '11px' : '12px',
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: isMobile ? '4px' : '6px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'rgba(255, 255, 255, 0.03)',
-              color: 'var(--text-secondary)',
-              transition: 'all 0.2s',
-              cursor: 'pointer',
-              flexShrink: 0,
-              minWidth: 'max-content',
-              whiteSpace: 'nowrap'
-            }}
-            onMouseEnter={(e) => {
-              if (!isMobile) {
-                e.currentTarget.style.borderColor = 'var(--color-cyan)';
-                e.currentTarget.style.color = 'var(--text-primary)';
-                e.currentTarget.style.background = 'rgba(6, 182, 212, 0.08)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isMobile) {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-              }
-            }}
-          >
-            <ArrowLeft size={isMobile ? 12 : 14} style={{ flexShrink: 0 }} />
-            <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>ポータルへ戻る</span>
-          </button>
+          {isMobile ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <BookOpen size={18} style={{ color: 'var(--color-cyan)', flexShrink: 0 }} />
+                  <h2 style={{ 
+                    fontSize: '16px', 
+                    fontWeight: 'bold', 
+                    color: 'var(--text-primary)', 
+                    margin: 0, 
+                    fontFamily: 'var(--font-display)',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    LogiJournal
+                  </h2>
+                </div>
+                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                  <button 
+                    onClick={() => { playSound('click'); setTheme(prev => prev === 'dark' ? 'light' : 'dark'); }}
+                    className="btn btn-secondary" 
+                    style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
+                    title={theme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
+                  >
+                    {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                  </button>
 
-          {!isMobile && <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />}
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '8px', flexShrink: 0 }}>
-            <BookOpen size={isMobile ? 18 : 22} style={{ color: 'var(--color-cyan)', flexShrink: 0 }} />
-            <h2 style={{ 
-              fontSize: isMobile ? '16px' : '20px', 
-              fontWeight: 'bold', 
-              color: 'var(--text-primary)', 
-              margin: 0, 
-              fontFamily: 'var(--font-display)',
-              whiteSpace: 'nowrap',
-              flexShrink: 0
-            }}>
-              LogiJournal
-            </h2>
-          </div>
-
-          {/* スマホ時のみ、ヘッダー上部の右側にテーマ切り替えと音量ボタンを配置 */}
-          {isMobile && (
-            <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexShrink: 0 }}>
+                  <button 
+                    onClick={toggleMute}
+                    className="btn btn-secondary" 
+                    style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
+                  >
+                    {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                  </button>
+                </div>
+              </div>
               <button 
-                onClick={() => { playSound('click'); setTheme(prev => prev === 'dark' ? 'light' : 'dark'); }}
+                onClick={onBack} 
                 className="btn btn-secondary" 
-                style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
-                title={theme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
+                style={{ 
+                  padding: '6px 10px', 
+                  fontSize: '11px',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  gap: '4px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  color: 'var(--text-secondary)',
+                  width: '100%'
+                }}
               >
-                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-              </button>
-
-              <button 
-                onClick={toggleMute}
-                className="btn btn-secondary" 
-                style={{ padding: '6px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px' }}
-              >
-                {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                <ArrowLeft size={12} />
+                <span>ポータルへ戻る</span>
               </button>
             </div>
+          ) : (
+            <>
+              <button 
+                onClick={onBack} 
+                className="btn btn-secondary" 
+                style={{ 
+                  padding: '8px 14px', 
+                  fontSize: '12px',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  color: 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-cyan)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.background = 'rgba(6, 182, 212, 0.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                }}
+              >
+                <ArrowLeft size={14} />
+                <span>ポータルへ戻る</span>
+              </button>
+
+              <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.1)' }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                <BookOpen size={22} style={{ color: 'var(--color-cyan)', flexShrink: 0 }} />
+                <h2 style={{ 
+                  fontSize: '20px', 
+                  fontWeight: 'bold', 
+                  color: 'var(--text-primary)', 
+                  margin: 0, 
+                  fontFamily: 'var(--font-display)',
+                  whiteSpace: 'nowrap'
+                }}>
+                  LogiJournal
+                </h2>
+              </div>
+            </>
           )}
         </div>
 
@@ -524,19 +556,21 @@ export default function LogiJournal({
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : '320px 1fr',
           gap: isMobile ? '16px' : '24px',
-          alignItems: 'start'
+          alignItems: 'start',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
           {/* Left Panel Container (Sidebar + Desktop Ad) */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
-            width: isMobile ? '100%' : '320px',
-            flexShrink: 0
+            width: '100%',
+            boxSizing: 'border-box'
           }}>
             {/* Left Panel: History Sidebar */}
             <div className="glass-panel" style={{
-              padding: '16px',
+              padding: isMobile ? '12px' : '16px',
               borderRadius: '12px',
               background: 'var(--hero-bg)',
               border: '1px solid var(--border-color)',
@@ -681,11 +715,11 @@ export default function LogiJournal({
           </div>
 
           {/* Right Panel: Workspace Area */}
-          <div className="workspace-main-panel">
+          <div className="workspace-main-panel" style={{ width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
             
             {/* A. 新規作成ウィザード */}
             {isCreating && (
-              <div className="glass-panel fade-in" style={{ padding: '24px', borderRadius: '12px', background: 'var(--hero-bg)', border: '1px solid var(--border-color)' }}>
+              <div className="glass-panel fade-in" style={{ padding: isMobile ? '16px' : '24px', borderRadius: '12px', background: 'var(--hero-bg)', border: '1px solid var(--border-color)', width: '100%', boxSizing: 'border-box' }}>
                 
                 {/* A-1. Vibe Selection */}
                 {wizardStep === 'vibeSelect' && (
@@ -748,7 +782,7 @@ export default function LogiJournal({
                         width: '100%', minHeight: '160px', borderRadius: '8px', border: '1px solid var(--border-color)',
                         padding: '16px', fontSize: '13.5px', lineHeight: '1.6', color: 'var(--text-primary)',
                         background: 'rgba(0,0,0,0.15)', outline: 'none', resize: 'none', fontFamily: 'inherit',
-                        marginBottom: '12px'
+                        marginBottom: '12px', boxSizing: 'border-box'
                       }}
                     />
                     
@@ -846,7 +880,7 @@ export default function LogiJournal({
                         width: '100%', minHeight: '100px', borderRadius: '8px', border: '1px solid var(--border-color)',
                         padding: '12px 16px', fontSize: '13.5px', color: 'var(--text-primary)',
                         background: 'rgba(0,0,0,0.15)', outline: 'none', resize: 'none', fontFamily: 'inherit',
-                        marginBottom: '16px'
+                        marginBottom: '16px', boxSizing: 'border-box'
                       }}
                     />
 
@@ -868,18 +902,18 @@ export default function LogiJournal({
 
                 {/* A-5. Compiling Animation */}
                 {wizardStep === 'compiling' && (
-                  <div style={{ textAlign: 'center', padding: '30px 0' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '360px', margin: '0 auto 12px auto', fontSize: '12px' }}>
+                  <div style={{ textAlign: 'center', padding: '30px 0', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '360px', margin: '0 auto 12px auto', fontSize: '12px', boxSizing: 'border-box' }}>
                       <span style={{ color: 'var(--text-secondary)' }}>頭のモヤモヤ解消率</span>
                       <span style={{ color: '#10b981', fontWeight: 'bold' }}>{100 - ramUsage}%</span>
                     </div>
-                    <div style={{ width: '360px', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', margin: '0 auto 24px auto', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', maxWidth: '360px', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', margin: '0 auto 24px auto', overflow: 'hidden', boxSizing: 'border-box' }}>
                       <div style={{ width: `${100 - ramUsage}%`, height: '100%', background: '#10b981', borderRadius: '3px', transition: 'width 0.3s' }} />
                     </div>
                     <div style={{
-                      maxWidth: '360px', margin: '0 auto', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)',
+                      width: '100%', maxWidth: '360px', margin: '0 auto', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)',
                       padding: '12px', borderRadius: '6px', fontFamily: 'monospace', fontSize: '11px', color: '#10b981',
-                      textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '4px', minHeight: '90px'
+                      textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '4px', minHeight: '90px', boxSizing: 'border-box'
                     }}>
                       {compileLogs.map((log, idx) => <div key={idx}>{log}</div>)}
                     </div>
@@ -892,19 +926,32 @@ export default function LogiJournal({
             {/* B. ログ詳細表示モード */}
             {selectedEntry && !isCreating && (
               <div className="glass-panel fade-in" style={{
-                padding: '24px',
+                padding: isMobile ? '16px' : '24px',
                 borderRadius: '12px',
                 background: 'var(--hero-bg)',
                 border: '1px solid var(--border-color)',
                 textAlign: 'left',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '20px'
+                gap: '20px',
+                width: '100%',
+                boxSizing: 'border-box',
+                minWidth: 0
               }}>
                 {/* Meta details header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border-color)', paddingBottom: '16px' }}>
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: isMobile ? 'column' : 'row',
+                  justifyContent: 'space-between', 
+                  alignItems: isMobile ? 'flex-start' : 'center', 
+                  borderBottom: '1px solid var(--border-color)', 
+                  paddingBottom: '16px',
+                  gap: isMobile ? '12px' : '0px',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                       <span style={{ fontSize: '20px' }}>{(VIBE_DATA[selectedEntry.vibe] || {}).emoji}</span>
                       <span style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--text-primary)' }}>
                         {(VIBE_DATA[selectedEntry.vibe] || {}).label}
@@ -916,12 +963,13 @@ export default function LogiJournal({
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '8px', width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
                     <span style={{
                       fontSize: '11px', fontWeight: 'bold', padding: '4px 10px', borderRadius: '6px',
                       background: selectedEntry.status === 'patched' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)',
                       color: selectedEntry.status === 'patched' ? '#10b981' : '#f43f5e',
-                      border: `1px solid ${selectedEntry.status === 'patched' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)'}`
+                      border: `1px solid ${selectedEntry.status === 'patched' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)'}`,
+                      whiteSpace: 'nowrap'
                     }}>
                       {selectedEntry.status === 'patched' ? '● 整理完了' : '▲ 未整理・観察中'}
                     </span>
@@ -929,8 +977,8 @@ export default function LogiJournal({
                 </div>
 
                 {/* Raw vs Refactored Text views */}
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '20px' }}>
-                  <div style={{ background: 'rgba(244, 63, 94, 0.01)', border: '1px solid rgba(244, 63, 94, 0.08)', padding: '16px', borderRadius: '8px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '12px' : '20px', width: '100%', boxSizing: 'border-box', minWidth: 0 }}>
+                  <div style={{ background: 'rgba(244, 63, 94, 0.01)', border: '1px solid rgba(244, 63, 94, 0.08)', padding: '16px', borderRadius: '8px', wordBreak: 'break-all', overflowWrap: 'break-word', minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', color: '#f43f5e', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
                       🔴 整理前のモヤモヤ（無意識のクセ）
                     </span>
@@ -939,7 +987,7 @@ export default function LogiJournal({
                     </p>
                   </div>
 
-                  <div style={{ background: 'rgba(16, 185, 129, 0.01)', border: '1px solid rgba(16, 185, 129, 0.08)', padding: '16px', borderRadius: '8px' }}>
+                  <div style={{ background: 'rgba(16, 185, 129, 0.01)', border: '1px solid rgba(16, 185, 129, 0.08)', padding: '16px', borderRadius: '8px', wordBreak: 'break-all', overflowWrap: 'break-word', minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', color: '#10b981', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
                       🟢 客観的な事実 ＆ 取るべき行動
                     </span>
@@ -951,7 +999,7 @@ export default function LogiJournal({
 
                 {/* 140-char Summary (Gimmick) */}
                 {selectedEntry.summary ? (
-                  <div style={{ background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.12)', padding: '16px', borderRadius: '8px' }}>
+                  <div style={{ background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.12)', padding: '16px', borderRadius: '8px', wordBreak: 'break-all', overflowWrap: 'break-word', minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
                       ⚡ 140字の結晶化サマリー（思考の調律ポイント）
                     </span>
@@ -964,17 +1012,17 @@ export default function LogiJournal({
                     <button 
                       onClick={() => { playSound('click'); setIsSummarizing(true); }}
                       className="btn btn-secondary"
-                      style={{ padding: '8px 16px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start' }}
+                      style={{ padding: '8px 16px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', alignSelf: 'flex-start', textAlign: 'left' }}
                     >
-                      <Sparkles size={14} style={{ color: 'var(--color-cyan)' }} />
-                      <span>140字でこの知見を要約・結晶化する (メタ認知クエスト)</span>
+                      <Sparkles size={14} style={{ color: 'var(--color-cyan)', flexShrink: 0 }} />
+                      <span style={{ whiteSpace: 'normal', lineHeight: '1.4' }}>140字でこの知見を要約・結晶化する (メタ認知クエスト)</span>
                     </button>
                   )
                 )}
 
                 {/* 140-char summary edit box */}
                 {isSummarizing && (
-                  <div style={{ background: 'rgba(6, 182, 212, 0.02)', border: '1px solid rgba(6, 182, 212, 0.1)', padding: '16px', borderRadius: '8px' }}>
+                  <div style={{ background: 'rgba(6, 182, 212, 0.02)', border: '1px solid rgba(6, 182, 212, 0.1)', padding: '16px', borderRadius: '8px', width: '100%', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
                       140文字で要約する
                     </span>
@@ -986,7 +1034,7 @@ export default function LogiJournal({
                       style={{
                         width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)',
                         background: 'rgba(0,0,0,0.15)', color: 'var(--text-primary)', fontSize: '12.5px', outline: 'none',
-                        marginBottom: '10px'
+                        marginBottom: '10px', boxSizing: 'border-box'
                       }}
                     />
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
@@ -1007,7 +1055,7 @@ export default function LogiJournal({
 
                 {/* Follow up / Re-debug Notes */}
                 {selectedEntry.followUpNote && (
-                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px' }}>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', wordBreak: 'break-all', overflowWrap: 'break-word', minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
                       📝 追記された経過ノート
                     </span>
@@ -1033,8 +1081,8 @@ export default function LogiJournal({
                     <span>状況の再検証 ＆ 振り返り</span>
                   </button>
                 ) : (
-                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? '10px' : '16px', alignItems: isMobile ? 'flex-start' : 'center' }}>
                       <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-secondary)' }}>ステータス更新:</span>
                       <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#10b981', cursor: 'pointer' }}>
                         <input 
@@ -1067,7 +1115,8 @@ export default function LogiJournal({
                         placeholder="例：実際にアジェンダを書き出して会議に出たところ、焦らずロジカルに進行できた。"
                         style={{
                           width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)',
-                          background: 'rgba(0,0,0,0.15)', color: 'var(--text-primary)', fontSize: '12.5px', outline: 'none'
+                          background: 'rgba(0,0,0,0.15)', color: 'var(--text-primary)', fontSize: '12.5px', outline: 'none',
+                          boxSizing: 'border-box'
                         }}
                       />
                     </div>
