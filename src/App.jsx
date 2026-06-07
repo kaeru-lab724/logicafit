@@ -32,7 +32,6 @@ import HarassmentScanner from './components/HarassmentScanner';
 import RakutenWidget from './components/common/RakutenWidget';
 import Dashboard from './components/dashboard/Dashboard';
 import DebugLab from './components/DebugLab';
-import MindTuning from './components/games/MindTuning';
 import Portal from './components/dashboard/Portal';
 import LogiJournal from './components/dashboard/LogiJournal';
 import { 
@@ -558,17 +557,6 @@ export default function App() {
     });
   };
 
-  // テスト用: 本日の思考調律完了状態を解除
-  const handleClearTuningToday = () => {
-    setGameState(prev => {
-      const updatedState = {
-        ...prev,
-        lastTuningDate: null
-      };
-      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
-      return updatedState;
-    });
-  };
 
 
   // 復習デバッグ完了処理
@@ -1575,14 +1563,6 @@ export default function App() {
           />
         )}
 
-        {activeGame === 'mindTuning' && (
-          <MindTuning 
-            onBack={() => setActiveGame(null)}
-            playSound={playSound}
-            onSaveLog={handleSaveTuningLog}
-          />
-        )}
-
         {/* Dashboard Home */}
         {activeGame === null && (
           <Dashboard
@@ -1595,7 +1575,6 @@ export default function App() {
             setActiveGame={setActiveGame}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            onClearTuningToday={handleClearTuningToday}
             mode={mode}
             displayScores={displayScores}
             primaryDebugCategory={primaryDebugCategory}

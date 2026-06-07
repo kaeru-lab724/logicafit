@@ -106,7 +106,6 @@ export default function MobileDashboard({
   skillsData,
   onUnlockType,
   onStartReview,
-  onClearTuningToday,
   setMode,
   theme,
   setTheme,
@@ -751,66 +750,35 @@ export default function MobileDashboard({
                   間違えた問題が自動記録されます。復習デバッグに正解すると <b>+50 XP</b>！
                 </p>
 
-                {/* 思考調律（ジャーナリング）起動バナー */}
-                {(() => {
-                  const todayStr = new Date().toLocaleDateString('sv');
-                  const isTuningCompletedToday = gameState.lastTuningDate === todayStr;
-                  return (
-                    <div 
-                      className="glass-panel"
-                      style={{
-                        padding: '14px',
-                        background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)',
-                        border: '1px solid rgba(6, 182, 212, 0.25)',
-                        borderRadius: '12px',
-                        marginBottom: '16px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px'
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span className="game-badge" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.25)", color: "#10b981", padding: "3px 8px", borderRadius: "10px", fontSize: '10px', fontWeight: 'bold' }}>
-                          🧠 DAILY MIND TUNING
-                        </span>
-                        {!isTuningCompletedToday && (
-                          <span className="xp-gold-badge" style={{ fontSize: '9px', padding: '1px 5px', background: 'var(--color-primary-soft)', border: '1px solid var(--color-primary)', color: 'var(--color-primary)', borderRadius: '4px', fontWeight: 'bold' }}>+100 XP</span>
-                        )}
-                      </div>
-                      <div>
-                        <h4 style={{ fontSize: '13px', fontWeight: 'bold', margin: '0 0 4px 0', color: 'var(--text-primary)', textAlign: 'left' }}>
-                          本日の思考調律を起動
-                        </h4>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.4', margin: 0, textAlign: 'left' }}>
-                          日々頭の中に溜まるモヤモヤ（本音）を吐き出し、客観的事実ベースにデバッグ（書き換え）して脳のメモリを解放するジャーナリング体験です。
-                        </p>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button
-                          onClick={() => {
-                            playSound('click');
-                            setActiveGame('mindTuning');
-                          }}
-                          className="btn btn-primary"
-                          style={{
-                            background: isTuningCompletedToday 
-                              ? 'rgba(255, 255, 255, 0.05)'
-                              : 'linear-gradient(135deg, var(--color-cyan) 0%, var(--color-primary) 100%)',
-                            border: isTuningCompletedToday ? '1px solid var(--border-color)' : 'none',
-                            color: isTuningCompletedToday ? 'var(--text-secondary)' : '#fff',
-                            padding: '6px 14px',
-                            fontSize: '11.5px',
-                            borderRadius: '8px',
-                            fontWeight: 'bold',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          {isTuningCompletedToday ? '🔄 再起動（完了済み）' : '🧠 思考調律を開始'}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })()}
+                {/* 思考調律（ジャーナリング）移行バナー */}
+                <div 
+                  className="glass-panel"
+                  style={{
+                    padding: '14px',
+                    background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.04) 0%, rgba(16, 185, 129, 0.02) 100%)',
+                    border: '1px solid rgba(6, 182, 212, 0.15)',
+                    borderRadius: '12px',
+                    marginBottom: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="game-badge" style={{ background: "rgba(6, 182, 212, 0.05)", border: "1px solid rgba(6, 182, 212, 0.15)", color: "var(--color-cyan)", padding: "3px 8px", borderRadius: "10px", fontSize: '9px', fontWeight: 'bold' }}>
+                      📢 お知らせ
+                    </span>
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '13px', fontWeight: 'bold', margin: '0 0 4px 0', color: 'var(--text-primary)', textAlign: 'left' }}>
+                      思考調律は「LogiJournal（整理ノート）」へ移行しました
+                    </h4>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.4', margin: 0, textAlign: 'left' }}>
+                      思考のモヤモヤを整理・デバッグする「思考調律」機能は、より高度なメタ認知分析が可能な専用ツール<b>「LogiJournal（思考整理ノート）」</b>として一本化されました。
+                      ジャーナリングや思考の整理を行いたい場合は、ポータル画面から「整理ノートを開く」を選択してください。
+                    </p>
+                  </div>
+                </div>
 
                 {(() => {
                   const bugs = gameState.bugNote || [];
@@ -923,6 +891,24 @@ export default function MobileDashboard({
             {/* 実績バッジ */}
             <section style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <h2 style={{ fontSize: '14px', fontWeight: 'bold', margin: 0 }}>🏆 獲得実績バッジ</h2>
+
+              {/* 思考統計サマリー */}
+              <div className="glass-panel" style={{ padding: '12px', borderRadius: '8px', display: 'flex', gap: '16px', alignItems: 'center', background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.15)' }}>
+                <div style={{ textAlign: 'left', flex: 1 }}>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>🧠 合計思考調律数</span>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-cyan)', marginTop: '2px' }}>
+                    {(gameState.tuningLog || []).length} <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>回</span>
+                  </div>
+                </div>
+                <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.1)' }} />
+                <div style={{ textAlign: 'left', flex: 1 }}>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>🏆 獲得実績バッジ</span>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981', marginTop: '2px' }}>
+                    {Object.values(gameState.badges || {}).filter(Boolean).length} <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>/ {badgeDetails.length}</span>
+                  </div>
+                </div>
+              </div>
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {badgeDetails.map((badge, idx) => {
                   const isUnlocked = gameState.badges[idx];
@@ -968,43 +954,6 @@ export default function MobileDashboard({
                   );
                 })}
               </div>
-            </section>
-
-            {/* 思考調律ログ履歴 */}
-            <section id="tuning-log-section" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '14px', fontWeight: 'bold', margin: 0 }}>🧠 思考調律履歴</h2>
-                <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
-                  調律: {(gameState.tuningHistory || []).length}回
-                </span>
-              </div>
-
-              {(!gameState.tuningHistory || gameState.tuningHistory.length === 0) ? (
-                <div className="glass-panel text-center" style={{ padding: '16px', fontSize: '11px', color: 'var(--text-muted)', borderRadius: '12px' }}>
-                  🧠 思考調律の記録がありません。「思考調律」を実行しましょう。
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {gameState.tuningHistory.map((item, index) => (
-                    <div key={index} className="glass-panel" style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '6px', borderRadius: '8px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', fontWeight: 'bold' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>📅 {item.date}</span>
-                        {item.detectedBias && <span style={{ color: 'var(--color-cyan)' }}>🔍 {item.detectedBias}</span>}
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <div style={{ background: 'rgba(244, 63, 94, 0.02)', padding: '6px', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
-                          <span style={{ fontSize: '8px', color: 'var(--color-rose)', fontWeight: 'bold' }}>主観</span>
-                          <p style={{ fontSize: '11px', margin: '2px 0 0 0', lineHeight: '1.3' }}>{item.rawText}</p>
-                        </div>
-                        <div style={{ background: 'rgba(16, 185, 129, 0.02)', padding: '6px', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
-                          <span style={{ fontSize: '8px', color: 'var(--color-emerald)', fontWeight: 'bold' }}>事実</span>
-                          <p style={{ fontSize: '11px', margin: '2px 0 0 0', lineHeight: '1.3' }}>{item.tunedText}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </section>
 
             {/* システム設定・データ同期 */}
