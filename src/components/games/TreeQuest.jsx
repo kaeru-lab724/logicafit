@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import RakutenWidget from '../common/RakutenWidget';
 import { 
   Compass, 
   HelpCircle, 
@@ -1197,10 +1198,29 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <button onClick={handleReset} className="btn btn-secondary">
-              <RotateCcw size={16} style={{ marginRight: '6px' }} />
+          <RakutenWidget />
+
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '24px', marginBottom: '24px' }}>
+            <button onClick={handleReset} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <RotateCcw size={16} />
               もう一度挑戦
+            </button>
+            <button
+              onClick={() => {
+                playSound('click');
+                let rank = "【漏れ・ダブり注意 ⚠️】脳内整理が必要";
+                if (totalAccuracy === 100) rank = "【ツリーマスター 🏆】MECE回路率100%";
+                else if (totalAccuracy >= 80) rank = "【MECEアナリスト 🎯】構造化のセンスあり";
+                else if (totalAccuracy >= 60) rank = "【構造化リハビリ中 🧠】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で診断完了！\n種目：ツリークエスト（ロジックツリー構造化）\n構造化精度：${totalAccuracy}%\nスキャン試行総数：${totalScans}回\n評価：${rank}\n\nあなたは課題を「漏れなくダブりなく（MECE）」に整理できますか？\n#LogicaFit #ロジカフィット #ロジックツリー`;
+                const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+              }}
+              className="btn btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              𝕏 でシェア
             </button>
           </div>
 

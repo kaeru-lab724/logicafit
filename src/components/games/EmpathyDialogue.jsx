@@ -239,12 +239,7 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
     return '冷徹な正論サイコパス';
   };
 
-  const shareText = `【LogicaFit/エモーショナルルーム】で共感対話トレーニングを完了！
-モード: ${mode === 'business' ? 'ビジネス編' : '日常編'}
-正解数: ${score} / ${questions.length} (スコア: ${Math.round((score / questions.length) * 100)}%)
-称号: 【${getEmpathyTitle(score)}】
-正論で論破するのをやめ、心のチューナーを合わせよう！
-#LogicaFit #ロジカフィット #論理的思考 #EQ`;
+  const shareText = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：エモーショナル思考 (Empathy Dialogue)\nスコア：${Math.round((score / questions.length) * 100)}% (${score} / ${questions.length} 問正解)\n称号：【${getEmpathyTitle(score)}】\n\n正論で論破するのをやめ、心のチューナーを合わせよう！\n#LogicaFit #ロジカフィット #EQ`;
 
   return (
     <div className="game-container fade-in">
@@ -549,26 +544,21 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
                 もう一度プレイ
               </button>
               
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }}
                 className="btn btn-secondary"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  background: 'linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 100%)',
-                  boxShadow: '0 4px 15px rgba(29, 161, 242, 0.3)',
-                  color: 'white',
-                  border: 'none'
+                  gap: '8px'
                 }}
               >
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-                Xで称号をポスト
-              </a>
+                𝕏 でシェア
+              </button>
 
             </div>
 

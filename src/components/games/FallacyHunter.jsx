@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import RakutenWidget from '../common/RakutenWidget';
 import { 
   Heart, 
   ShieldAlert, 
@@ -1334,10 +1335,30 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <button onClick={handleRetry} className="btn btn-secondary">
-              <RotateCcw size={16} style={{ marginRight: '6px' }} />
+          <RakutenWidget />
+
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '24px' }}>
+            <button onClick={handleRetry} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <RotateCcw size={16} />
               もう一度スキャン
+            </button>
+            <button
+              onClick={() => {
+                if (playSound) playSound('click');
+                const finalPercent = Math.round((totalCorrectAnswers / questions.length) * 100);
+                let rank = "【一般脳 🧠】昭和・令和バイアスの影あり";
+                if (finalPercent === 100) rank = "【詭弁デバッガー 🏆】バイアスゼロ・論理の守護者";
+                else if (finalPercent >= 80) rank = "【冷静なアナリスト 🎯】バイアス検知率優秀";
+                else if (finalPercent >= 60) rank = "【論理リハビリ中 ⚠️】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で診断完了！\n種目：詭弁ハンター（上級）\nスコア：${finalPercent}% (${totalCorrectAnswers} / ${questions.length} 問正解)\n判定：${diagnosis.title} (${rank})\n\nあなたは巧妙な詭弁や認知の歪みを見抜けますか？\n#LogicaFit #ロジカフィット #詭弁ハンター`;
+                const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+              }}
+              className="btn btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              𝕏 でシェア
             </button>
           </div>
         </div>

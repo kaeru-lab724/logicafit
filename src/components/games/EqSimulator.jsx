@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import RakutenWidget from '../common/RakutenWidget';
 import { 
   MessageSquare, 
   Send, 
@@ -1834,8 +1835,28 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <button onClick={() => setGameStatus('select')} className="btn btn-secondary">別のシナリオへ</button>
+          <RakutenWidget />
+
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '24px', marginBottom: '24px' }}>
+            <button onClick={() => setGameStatus('select')} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              別のシナリオへ
+            </button>
+            <button
+              onClick={() => {
+                playSound('click');
+                let rank = "【ロジハラ警報 ⚠️】アドバイス過剰";
+                if (trust >= 90) rank = "【EQマスター 🏆】共感の達人";
+                else if (trust >= 70) rank = "【寄り添い上手 🎯】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で対話シミュレーション完了！\n種目：EQ・共感対話スタイル（${selectedScenario.name.split('（')[0]}編）\n同調信頼度：${trust}%\n判定：${diagnosis.title} (${rank})\n\nあなたはアドバイス（正論）で相手の心を閉ざさせていませんか？\n#LogicaFit #ロジカフィット #EQシミュレーター`;
+                const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+              }}
+              className="btn btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              𝕏 でシェア
+            </button>
           </div>
 
           {/* 推奨デバッガー装備 */}

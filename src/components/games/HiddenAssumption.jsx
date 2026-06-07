@@ -437,6 +437,31 @@ export default function HiddenAssumption({ onFinish, playSound, muted, toggleMut
 
             <RakutenWidget />
 
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginTop: '24px' }}>
+              <button onClick={initializeQuestions} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <RotateCcw size={16} />
+                もう一度挑戦
+              </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.round((score / questions.length) * 100);
+                  let rank = "【認知歪み検知 ⚠️】隠れた前提に縛られています！";
+                  if (finalPercent === 100) rank = "【前提スキャナー 🏆】";
+                  else if (finalPercent >= 80) rank = "【客観デバッガー 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】デバッグ推奨";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：前提・隠れた仮定の特定 (${modeText})\nスコア：${finalPercent}% (${score} / ${questions.length} 問正解)\n評価：${rank}\n\nあなたは無意識の「隠れた前提・仮定」を特定できますか？\n#LogicaFit #ロジカフィット #論理的思考`;
+                  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                𝕏 でシェア
+              </button>
+            </div>
           </div>
         ) : (
           /* Game Screens */
