@@ -553,8 +553,9 @@ export default function LogiJournal({
       {/* Active Tab Workspace */}
       {activeTab === 'workspace' && (
         <div className="journal-workspace-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : '320px 1fr',
+          display: isMobile ? 'flex' : 'grid',
+          flexDirection: isMobile ? 'column' : 'row',
+          gridTemplateColumns: isMobile ? 'none' : '320px 1fr',
           gap: isMobile ? '16px' : '24px',
           alignItems: 'start',
           width: '100%',
@@ -982,7 +983,7 @@ export default function LogiJournal({
                     <span style={{ fontSize: '11px', color: '#f43f5e', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
                       🔴 整理前のモヤモヤ（無意識のクセ）
                     </span>
-                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6', wordBreak: 'break-all', overflowWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
                       {renderHighlightedText(selectedEntry.rawText)}
                     </p>
                   </div>
@@ -991,7 +992,7 @@ export default function LogiJournal({
                     <span style={{ fontSize: '11px', color: '#10b981', fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>
                       🟢 客観的な事実 ＆ 取るべき行動
                     </span>
-                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.6', wordBreak: 'break-all', overflowWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
                       {selectedEntry.refactoredText}
                     </p>
                   </div>
@@ -1003,7 +1004,7 @@ export default function LogiJournal({
                     <span style={{ fontSize: '11px', color: 'var(--color-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
                       ⚡ 140字の結晶化サマリー（思考の調律ポイント）
                     </span>
-                    <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-primary)', lineHeight: '1.5', fontStyle: 'italic' }}>
+                    <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-primary)', lineHeight: '1.5', fontStyle: 'italic', wordBreak: 'break-all', overflowWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
                       「{selectedEntry.summary}」
                     </p>
                   </div>
@@ -1059,7 +1060,7 @@ export default function LogiJournal({
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold', display: 'block', marginBottom: '6px' }}>
                       📝 追記された経過ノート
                     </span>
-                    <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                    <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5', wordBreak: 'break-all', overflowWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
                       {selectedEntry.followUpNote}
                     </p>
                   </div>
