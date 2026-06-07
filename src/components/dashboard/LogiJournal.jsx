@@ -715,8 +715,15 @@ export default function LogiJournal({
                   <button 
                     onClick={() => {
                       playSound('click');
-                      const shareUrl = encodeURIComponent("https://www.logicafit.site/");
-                      window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank');
+                      const shareText = "頭の中のモヤモヤを整理して客観的な事実とアクションに分解できる思考調律ツール『LogiJournal』がすごくスッキリするからおすすめ！";
+                      navigator.clipboard.writeText(shareText).then(() => {
+                        alert("紹介テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                        const shareUrl = encodeURIComponent("https://www.logicafit.site/");
+                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank');
+                      }).catch(() => {
+                        const shareUrl = encodeURIComponent("https://www.logicafit.site/");
+                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank');
+                      });
                     }}
                     className="btn btn-secondary"
                     style={{ flex: 1, padding: '6px', fontSize: '10.5px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', background: 'rgba(6, 182, 212, 0.04)', borderColor: 'rgba(6, 182, 212, 0.15)' }}

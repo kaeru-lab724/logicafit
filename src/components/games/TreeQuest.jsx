@@ -1225,8 +1225,21 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
             <button
               onClick={() => {
                 playSound('click');
-                const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
-                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                let rank = "【漏れ・ダブり注意 ⚠️】脳内整理が必要";
+                if (totalAccuracy === 100) rank = "【ツリーマスター 🏆】MECE回路率100%";
+                else if (totalAccuracy >= 80) rank = "【MECEアナリスト 🎯】構造化のセンスあり";
+                else if (totalAccuracy >= 60) rank = "【構造化リハビリ中 🧠】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で診断完了！\n種目：ツリークエスト（ロジックツリー構造化）\n構造化精度：${totalAccuracy}%\nスキャン試行総数：${totalScans}回\n評価：${rank}\n\nあなたは課題を「漏れなくダブりなく（MECE）」に整理できますか？\n#LogicaFit #ロジカフィット #ロジックツリー`;
+
+                navigator.clipboard.writeText(text).then(() => {
+                  alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }).catch(() => {
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                });
               }}
               className="btn btn-secondary"
               style={{ display: 'flex', alignItems: 'center', gap: '6px' }}

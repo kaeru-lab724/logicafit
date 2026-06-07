@@ -562,8 +562,14 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
               <button
                 onClick={() => {
                   playSound('click');
-                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
-                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  navigator.clipboard.writeText(shareText).then(() => {
+                    alert("称号結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  }).catch(() => {
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  });
                 }}
                 className="btn btn-secondary"
                 style={{

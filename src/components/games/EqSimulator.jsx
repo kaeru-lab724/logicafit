@@ -1860,8 +1860,20 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
             <button
               onClick={() => {
                 playSound('click');
-                const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
-                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                let rank = "【ロジハラ警報 ⚠️】アドバイス過剰";
+                if (trust >= 90) rank = "【EQマスター 🏆】共感の達人";
+                else if (trust >= 70) rank = "【寄り添い上手 🎯】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で対話シミュレーション完了！\n種目：EQ・共感対話スタイル（${selectedScenario.name.split('（')[0]}編）\n同調信頼度：${trust}%\n判定：${diagnosis.title} (${rank})\n\nあなたはアドバイス（正論）で相手の心を閉ざさせていませんか？\n#LogicaFit #ロジカフィット #EQシミュレーター`;
+
+                navigator.clipboard.writeText(text).then(() => {
+                  alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }).catch(() => {
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                });
               }}
               className="btn btn-secondary"
               style={{ display: 'flex', alignItems: 'center', gap: '6px' }}

@@ -1363,8 +1363,22 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             <button
               onClick={() => {
                 if (playSound) playSound('click');
-                const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
-                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                const finalPercent = Math.round((totalCorrectAnswers / questions.length) * 100);
+                let rank = "【一般脳 🧠】昭和・令和バイアスの影あり";
+                if (finalPercent === 100) rank = "【詭弁デバッガー 🏆】バイアスゼロ・論理の守護者";
+                else if (finalPercent >= 80) rank = "【冷静なアナリスト 🎯】バイアス検知率優秀";
+                else if (finalPercent >= 60) rank = "【論理リハビリ中 ⚠️】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で診断完了！\n種目：詭弁ハンター（上級）\nスコア：${finalPercent}% (${totalCorrectAnswers} / ${questions.length} 問正解)\n判定：${diagnosis.title} (${rank})\n\nあなたは巧妙な詭弁や認知の歪みを見抜けますか？\n#LogicaFit #ロジカフィット #詭弁ハンター`;
+
+                navigator.clipboard.writeText(text).then(() => {
+                  alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }).catch(() => {
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                });
               }}
               className="btn btn-secondary"
               style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
