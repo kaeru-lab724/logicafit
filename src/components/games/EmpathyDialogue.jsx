@@ -580,6 +580,22 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
               >
                 Facebook
               </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  navigator.clipboard.writeText(shareText).then(() => {
+                    alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                結果をコピー
+              </button>
 
             </div>
 

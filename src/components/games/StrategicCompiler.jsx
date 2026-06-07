@@ -867,6 +867,53 @@ export default function StrategicCompiler({ onFinish, playSound, muted, toggleMu
               >
                 𝕏 でシェア
               </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.min(100, Math.max(0, Math.round((totalScore / (scenarios.length * 10) * 100))));
+                  let rank = "【妥協バグ発生 ⚠️】二律背反を解消できていません！";
+                  if (finalPercent === 100) rank = "【二律背反コンパイラー 🏆】";
+                  else if (finalPercent >= 80) rank = "【対立を紐解く戦略アドバイザー 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】デバッガー推奨";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：戦略コンパイラー (${modeText})\nスコア：${finalPercent}% (${(totalScore / 10).toFixed(1)} / ${scenarios.length} 問正解相当)\n評価：${rank}\n\nあなたは二律背反を解消する「戦略パッチ」を見つけられますか？\n#LogicaFit #ロジカフィット #戦略的思考`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  }).catch(() => {
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                Facebook
+              </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.min(100, Math.max(0, Math.round((totalScore / (scenarios.length * 10) * 100))));
+                  let rank = "【妥協バグ発生 ⚠️】二律背反を解消できていません！";
+                  if (finalPercent === 100) rank = "【二律背反コンパイラー 🏆】";
+                  else if (finalPercent >= 80) rank = "【対立を紐解く戦略アドバイザー 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】デバッガー推奨";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：戦略コンパイラー (${modeText})\nスコア：${finalPercent}% (${(totalScore / 10).toFixed(1)} / ${scenarios.length} 問正解相当)\n評価：${rank}\n\nあなたは二律背反を解消する「戦略パッチ」を見つけられますか？\nhttps://www.logicafit.site/ #LogicaFit`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                結果をコピー
+              </button>
             </div>
           </div>
         )}

@@ -265,6 +265,35 @@ export default function App() {
     }
   }, []);
 
+  // 動的タイトル（ブラウザタブ）の切り替え
+  useEffect(() => {
+    let title = 'LogicaFit | 前提知識ゼロから始める論理的思考トレーニングジム';
+    
+    if (currentView === 'logijournal') {
+      title = 'LogiJournal (思考整理ノート) | LogicaFit';
+    } else if (activeGame) {
+      const gameNames = {
+        factsOpinions: '事実と意見',
+        logicalValidity: '論理的妥当性',
+        logicTreeAssembler: 'ロジックツリー',
+        fallacyHunter: '詭弁ハンター',
+        empathyDialogue: 'エモーショナル思考',
+        eqSimulator: '感情指数シミュレーター',
+        causalLoop: '因果ループ図',
+        assertiveRewrite: 'アサーティブ書き換え',
+        hiddenAssumption: '隠れた前提',
+        strategicCompiler: '戦略的コンパイラー',
+        harassmentScanner: 'ハラスメントスキャナー',
+        treeQuest: 'ツリークエスト',
+        fallacyDetective: '論理的誤謬'
+      };
+      const gameName = gameNames[activeGame] || 'トレーニング中';
+      title = `【特訓】${gameName} | LogicaFit`;
+    }
+    
+    document.title = title;
+  }, [currentView, activeGame]);
+
   useEffect(() => {
     if (window.gtag) {
       window.gtag('event', 'mode_change', {
@@ -796,6 +825,25 @@ export default function App() {
     const appUrl = 'https://www.logicafit.site/';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
     window.open(shareUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleShareToFacebook = (text) => {
+    playSound('click');
+    navigator.clipboard.writeText(text).then(() => {
+      alert("実績テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+      const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+      window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    }).catch(() => {
+      const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+      window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    });
+  };
+
+  const handleCopyText = (text) => {
+    playSound('click');
+    navigator.clipboard.writeText(text).then(() => {
+      alert("実績テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+    });
   };
 
   const handleCopySpell = (spellText) => {
@@ -1659,22 +1707,46 @@ export default function App() {
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-              <button
-                onClick={() => handleShareToX(
-                  rewardModal.type === 'level'
-                    ? `✨ 思考の筋トレ「LogicaFit」でレベルアップ！\n【${rewardModal.value}】に到達しました！脳の回路が活性化中。\n\n#LogicaFit #ロジカフィット #論理的思考`
-                    : `🏆 思考の筋トレ「LogicaFit」で実績アンロック！\n称号【${rewardModal.value}】を獲得しました！\n\n#LogicaFit #ロジカフィット #論理的思考`
-                )}
-                className="btn btn-secondary"
-                style={{ flex: 1, padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '14px' }}
-              >
-                𝕏 でシェア
-              </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => handleShareToX(
+                    rewardModal.type === 'level'
+                      ? `✨ 思考の筋トレ「LogicaFit」でレベルアップ！\n【${rewardModal.value}】に到達しました！脳の回路が活性化中。\n\n#LogicaFit #ロジカフィット #論理的思考`
+                      : `🏆 思考の筋トレ「LogicaFit」で実績アンロック！\n称号【${rewardModal.value}】を獲得しました！\n\n#LogicaFit #ロジカフィット #論理的思考`
+                  )}
+                  className="btn btn-secondary"
+                  style={{ flex: '1 1 auto', minWidth: '100px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '13px' }}
+                >
+                  𝕏 でシェア
+                </button>
+                <button
+                  onClick={() => handleShareToFacebook(
+                    rewardModal.type === 'level'
+                      ? `✨ 思考の筋トレ「LogicaFit」でレベルアップ！\n【${rewardModal.value}】に到達しました！脳の回路が活性化中。\n\n#LogicaFit #ロジカフィット #論理的思考`
+                      : `🏆 思考の筋トレ「LogicaFit」で実績アンロック！\n称号【${rewardModal.value}】を獲得しました！\n\n#LogicaFit #ロジカフィット #論理的思考`
+                  )}
+                  className="btn btn-secondary"
+                  style={{ flex: '1 1 auto', minWidth: '100px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '13px' }}
+                >
+                  Facebook
+                </button>
+                <button
+                  onClick={() => handleCopyText(
+                    rewardModal.type === 'level'
+                      ? `✨ 思考の筋トレ「LogicaFit」でレベルアップ！\n【${rewardModal.value}】に到達しました！脳の回路が活性化中。\nhttps://www.logicafit.site/ #LogicaFit`
+                      : `🏆 思考の筋トレ「LogicaFit」で実績アンロック！\n称号【${rewardModal.value}】を獲得しました！\nhttps://www.logicafit.site/ #LogicaFit`
+                  )}
+                  className="btn btn-secondary"
+                  style={{ flex: '1 1 auto', minWidth: '120px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '13px' }}
+                >
+                  結果をコピー
+                </button>
+              </div>
               <button 
                 onClick={() => setRewardModal(prev => ({ ...prev, show: false }))} 
                 className="btn btn-primary" 
-                style={{ flex: 1, padding: '12px', fontSize: '14px' }}
+                style={{ width: '100%', padding: '12px', fontSize: '14px', marginTop: '4px' }}
               >
                 閉じる
               </button>

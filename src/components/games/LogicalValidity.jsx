@@ -413,6 +413,53 @@ export default function LogicalValidity({ onFinish, playSound, muted, toggleMute
               >
                 𝕏 でシェア
               </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.round((score / questions.length) * 100);
+                  let rank = "【脳のフリーズを検知 ⚠️】要リハビリ！";
+                  if (finalPercent === 100) rank = "【論理マスター 🏆】";
+                  else if (finalPercent >= 80) rank = "【優秀なデバッガー 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】デバッグの余地あり";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：論理の妥当性 (${modeText})\nスコア：${finalPercent}% (${score} / ${questions.length} 問正解)\n評価：${rank}\n\n前提から導き出される結論の妥当性を見分けられますか？\n#LogicaFit #ロジカフィット #論理的思考`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  }).catch(() => {
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                Facebook
+              </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.round((score / questions.length) * 100);
+                  let rank = "【脳のフリーズを検知 ⚠️】要リハビリ！";
+                  if (finalPercent === 100) rank = "【論理マスター 🏆】";
+                  else if (finalPercent >= 80) rank = "【優秀なデバッガー 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】デバッグの余地あり";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：論理の妥当性 (${modeText})\nスコア：${finalPercent}% (${score} / ${questions.length} 問正解)\n評価：${rank}\n\n前提から導き出される結論の妥当性を見分けられますか？\nhttps://www.logicafit.site/ #LogicaFit`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                結果をコピー
+              </button>
             </div>
           </div>
         )}

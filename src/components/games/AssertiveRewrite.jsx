@@ -399,6 +399,53 @@ export default function AssertiveRewrite({ onFinish, playSound, muted, toggleMut
               >
                 𝕏 でシェア
               </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.round((score / questions.length) * 100);
+                  let rank = "【対話エラー ⚠️】感情に振り回され中！";
+                  if (finalPercent === 100) rank = "【アサーティブの達人 🏆】";
+                  else if (finalPercent >= 80) rank = "【対等な交渉人 🎯】";
+                  else if (finalPercent >= 60) rank = "【自己抑制気味 🧠】リライト推奨";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：アサーティブ・リライター (${modeText})\nスコア：${finalPercent}% (${(score).toFixed(1)} / ${questions.length} 問正解)\n評価：${rank}\n\nあなたは怒りや我慢を「対等な対話（DESC法）」に変換できますか？\n#LogicaFit #ロジカフィット #アサーティブ`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  }).catch(() => {
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                Facebook
+              </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.round((score / questions.length) * 100);
+                  let rank = "【対話エラー ⚠️】感情に振り回され中！";
+                  if (finalPercent === 100) rank = "【アサーティブの達人 🏆】";
+                  else if (finalPercent >= 80) rank = "【対等な交渉人 🎯】";
+                  else if (finalPercent >= 60) rank = "【自己抑制気味 🧠】リライト推奨";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：アサーティブ・リライター (${modeText})\nスコア：${finalPercent}% (${(score).toFixed(1)} / ${questions.length} 問正解)\n評価：${rank}\n\nあなたは怒りや我慢を「対等な対話（DESC法）」に変換できますか？\nhttps://www.logicafit.site/ #LogicaFit`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                結果をコピー
+              </button>
             </div>
           </div>
         ) : (

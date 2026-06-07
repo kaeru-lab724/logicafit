@@ -91,7 +91,7 @@ export default function BadgeModal({
                 {badge.template}
               </p>
               
-              <div className="badge-action-buttons">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(badge.template);
@@ -102,21 +102,60 @@ export default function BadgeModal({
                   className="btn btn-primary badge-copy-btn"
                   style={{
                     background: `linear-gradient(135deg, ${badge.color} 0%, var(--color-primary) 100%)`,
-                    boxShadow: `0 4px 12px rgba(${badge.colorRgb}, 0.2)`
+                    boxShadow: `0 4px 12px rgba(${badge.colorRgb}, 0.2)`,
+                    width: '100%',
+                    padding: '12px 16px',
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    borderRadius: '8px'
                   }}
                 >
                   {copiedBadgeIdx === selectedBadgeIndex ? '✅ コピー完了！' : '📋 テンプレートをコピー'}
                 </button>
-                
-                <button
-                  onClick={() => {
-                    const tweetText = `🏆 「LogicaFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogicaFit #思考デバッグ`;
-                    handleShareToX(tweetText);
-                  }}
-                  className="btn btn-secondary badge-share-btn"
-                >
-                  𝕏 でシェアする
-                </button>
+
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', width: '100%' }}>
+                  <button
+                    onClick={() => {
+                      const tweetText = `🏆 「LogicaFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogicaFit #思考デバッグ`;
+                      handleShareToX(tweetText);
+                    }}
+                    className="btn btn-secondary badge-share-btn"
+                    style={{ flex: '1 1 auto', minWidth: '90px', padding: '10px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  >
+                    𝕏 でシェア
+                  </button>
+                  <button
+                    onClick={() => {
+                      const shareText = `🏆 「LogicaFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogicaFit #思考デバッグ`;
+                      playSound('click');
+                      navigator.clipboard.writeText(shareText).then(() => {
+                        alert("実績獲得テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                        window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                      }).catch(() => {
+                        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                        window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                      });
+                    }}
+                    className="btn btn-secondary"
+                    style={{ flex: '1 1 auto', minWidth: '90px', padding: '10px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  >
+                    Facebook
+                  </button>
+                  <button
+                    onClick={() => {
+                      const shareText = `🏆 「LogicaFit」で実績【${badge.title}】を獲得！\n「${badge.tagline}」スキルをマスターしました。\n👉 特効薬フレーズ：\n${badge.template}\n\n#LogicaFit #思考デバッグ`;
+                      playSound('click');
+                      navigator.clipboard.writeText(shareText).then(() => {
+                        alert("実績獲得テキストをクリップボードにコピーしました！SlackやLINE、Discord等で共有してください。");
+                      });
+                    }}
+                    className="btn btn-secondary"
+                    style={{ flex: '1 1 auto', minWidth: '100px', padding: '10px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                  >
+                    実績をコピー
+                  </button>
+                </div>
               </div>
             </div>
           </div>

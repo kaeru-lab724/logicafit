@@ -727,6 +727,53 @@ export default function GameTheory({ onFinish, playSound, muted, toggleMute, mod
               >
                 𝕏 でシェア
               </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.min(100, Math.max(0, Math.round((score / (questions.length * 10)) * 100)));
+                  let rank = "【脳のフリーズを検知 ⚠️】要リハビリ！";
+                  if (finalPercent === 100) rank = "【戦略デバッガー 🏆】";
+                  else if (finalPercent >= 80) rank = "【優秀なネゴシエーター 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】ジレンマに陥る可能性あり";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：ゲーム理論デバッガー (${modeText})\nスコア：${finalPercent}% \n評価：${rank}\n\nジレンマを解消し、お互いの最大利益を導き出せるか？\n#LogicaFit #ロジカフィット #ゲーム理論`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("診断結果テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  }).catch(() => {
+                    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                Facebook
+              </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const finalPercent = Math.min(100, Math.max(0, Math.round((score / (questions.length * 10)) * 100)));
+                  let rank = "【脳のフリーズを検知 ⚠️】要リハビリ！";
+                  if (finalPercent === 100) rank = "【戦略デバッガー 🏆】";
+                  else if (finalPercent >= 80) rank = "【優秀なネゴシエーター 🎯】";
+                  else if (finalPercent >= 60) rank = "【一般脳 🧠】ジレンマに陥る可能性あり";
+
+                  const modeText = mode === 'business' ? 'ビジネス編' : '日常編・入門';
+                  const text = `🎯 思考の筋トレ「LogicaFit」でトレーニング完了！\n種目：ゲーム理論デバッガー (${modeText})\nスコア：${finalPercent}% \n評価：${rank}\n\nジレンマを解消し、お互いの最大利益を導き出せるか？\nhttps://www.logicafit.site/ #LogicaFit`;
+
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                  });
+                }}
+                className="btn btn-secondary"
+                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                結果をコピー
+              </button>
 
             </div>
           </div>
