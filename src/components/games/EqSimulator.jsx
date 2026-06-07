@@ -1857,6 +1857,17 @@ export default function EqSimulator({ onFinish, playSound, muted, toggleMute, on
             >
               𝕏 でシェア
             </button>
+            <button
+              onClick={() => {
+                playSound('click');
+                const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+              }}
+              className="btn btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              Facebook
+            </button>
           </div>
 
           {/* 推奨デバッガー装備 */}

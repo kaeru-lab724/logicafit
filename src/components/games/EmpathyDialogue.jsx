@@ -559,6 +559,21 @@ export default function EmpathyDialogue({ onFinish, playSound, muted, toggleMute
               >
                 𝕏 でシェア
               </button>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://www.logicafit.site/')}`;
+                  window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                }}
+                className="btn btn-secondary"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                Facebook
+              </button>
 
             </div>
 

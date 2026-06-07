@@ -693,6 +693,38 @@ export default function LogiJournal({
                   <span>インポート</span>
                 </button>
               </div>
+
+              {/* Share / Viral block */}
+              <div style={{ borderTop: '1px solid var(--border-color)', marginTop: '12px', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--text-muted)', textAlign: 'center', display: 'block' }}>
+                  ツールを友達に紹介する
+                </span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={() => {
+                      playSound('click');
+                      const shareText = encodeURIComponent("頭の中のモヤモヤを整理して客観的な事実とアクションに分解できる思考調律ツール『LogiJournal』がすごくスッキリするからおすすめ！\n");
+                      const shareUrl = encodeURIComponent("https://www.logicafit.site/");
+                      window.open(`https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}`, '_blank');
+                    }}
+                    className="btn btn-secondary"
+                    style={{ flex: 1, padding: '6px', fontSize: '10.5px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', background: 'rgba(6, 182, 212, 0.04)', borderColor: 'rgba(6, 182, 212, 0.15)' }}
+                  >
+                    <span>💬 LINE</span>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      playSound('click');
+                      const shareUrl = encodeURIComponent("https://www.logicafit.site/");
+                      window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`, '_blank');
+                    }}
+                    className="btn btn-secondary"
+                    style={{ flex: 1, padding: '6px', fontSize: '10.5px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', background: 'rgba(6, 182, 212, 0.04)', borderColor: 'rgba(6, 182, 212, 0.15)' }}
+                  >
+                    <span>👥 Facebook</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Sponsored Link (Desktop only) */}
