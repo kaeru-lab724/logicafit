@@ -699,7 +699,7 @@ export default function LogiJournal({
                 <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--text-muted)', textAlign: 'center', display: 'block' }}>
                   ツールを友達に紹介する
                 </span>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '6px' }}>
                   <button 
                     onClick={() => {
                       playSound('click');

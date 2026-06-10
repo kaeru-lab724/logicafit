@@ -1246,6 +1246,25 @@ export default function TreeQuest({ onFinish, playSound, muted, toggleMute, onBa
             >
               Facebook
             </button>
+            <button
+              onClick={() => {
+                playSound('click');
+                let rank = "【漏れ・ダブり注意 ⚠️】脳内整理が必要";
+                if (totalAccuracy === 100) rank = "【ツリーマスター 🏆】MECE回路率100%";
+                else if (totalAccuracy >= 80) rank = "【MECEアナリスト 🎯】構造化のセンスあり";
+                else if (totalAccuracy >= 60) rank = "【構造化リハビリ中 🧠】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で診断完了！\n種目：ツリークエスト（ロジックツリー構造化）\n構造化精度：${totalAccuracy}%\nスキャン試行総数：${totalScans}回\n評価：${rank}\n\nあなたは課題を「漏れなくダブりなく（MECE）」に整理できますか？\nhttps://www.logicafit.site/ #LogicaFit`;
+
+                navigator.clipboard.writeText(text).then(() => {
+                  alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                });
+              }}
+              className="btn btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              結果をコピー
+            </button>
           </div>
 
           {/* 推奨デバッガー装備 */}

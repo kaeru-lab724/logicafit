@@ -1385,6 +1385,26 @@ export default function FallacyHunter({ onFinish, playSound, muted, toggleMute, 
             >
               Facebook
             </button>
+            <button
+              onClick={() => {
+                if (playSound) playSound('click');
+                const finalPercent = Math.round((totalCorrectAnswers / questions.length) * 100);
+                let rank = "【一般脳 🧠】昭和・令和バイアスの影あり";
+                if (finalPercent === 100) rank = "【詭弁デバッガー 🏆】バイアスゼロ・論理の守護者";
+                else if (finalPercent >= 80) rank = "【冷静なアナリスト 🎯】バイアス検知率優秀";
+                else if (finalPercent >= 60) rank = "【論理リハビリ中 ⚠️】";
+
+                const text = `🎯 思考の筋トレ「LogicaFit」で診断完了！\n種目：詭弁ハンター（上級）\nスコア：${finalPercent}% (${totalCorrectAnswers} / ${questions.length} 問正解)\n判定：${diagnosis.title} (${rank})\n\nあなたは巧妙な詭弁や認知の歪みを見抜けますか？\nhttps://www.logicafit.site/ #LogicaFit`;
+
+                navigator.clipboard.writeText(text).then(() => {
+                  alert("結果テキストをクリップボードにコピーしました！SlackやLINE、Discordなどで共有してください。");
+                });
+              }}
+              className="btn btn-secondary"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              結果をコピー
+            </button>
           </div>
         </div>
       )}
