@@ -21,6 +21,16 @@ export default function MeaninglessPage({ onBack, playSound }) {
   const [glitchStyle, setGlitchStyle] = useState({});
   const [scrambleActive, setScrambleActive] = useState(false);
 
+  // レイアウト崩壊・UI/UX破壊のためのステート群
+  const [headerStyle, setHeaderStyle] = useState({});
+  const [leftPanelStyle, setLeftPanelStyle] = useState({});
+  const [rightPanelStyle, setRightPanelStyle] = useState({});
+  const [terminalStyle, setTerminalStyle] = useState({});
+  const [backButtonOffset, setBackButtonOffset] = useState({ x: 0, y: 0 });
+  const [backButtonText, setBackButtonText] = useState('← ポータルに戻る');
+  const [containerTransform, setContainerTransform] = useState('');
+  const [cursorStyle, setCursorStyle] = useState('default');
+
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -61,32 +71,100 @@ export default function MeaninglessPage({ onBack, playSound }) {
     return () => clearInterval(interval);
   }, []);
 
+  // メインボタンを画面全体の広範囲に瞬間移動させる（UI無視）
   const teleportButton = () => {
-    const rangeX = isMobile ? 80 : 180;
-    const rangeY = isMobile ? 50 : 110;
+    // 画面全体（親の glass-panel のサイズ）を基準にするため、かなり広めの範囲でランダム座標を設定
+    const rangeX = isMobile ? 130 : 380;
+    const rangeY = isMobile ? 220 : 320;
     const newX = (Math.random() - 0.5) * rangeX * 2;
     const newY = (Math.random() - 0.5) * rangeY * 2;
     setButtonOffset({ x: newX, y: newY });
   };
 
   const handleMouseEnterButton = () => {
-    // 35%の確率でマウスホバー時にボタンが逃げる
-    if (Math.random() < 0.35) {
+    // マウスホバー時に55%の超高確率で瞬間移動して逃げる
+    if (Math.random() < 0.55) {
       teleportButton();
       setLogs(prev => [
         ...prev,
-        { time: new Date().toLocaleTimeString(), text: '【EVADE】ボタンが接触を回避して瞬間移動しました。' }
+        { time: new Date().toLocaleTimeString(), text: '【EVADE】メインスイッチが高速で回避しました。' }
       ].slice(-20));
     }
   };
 
+  // 戻るボタンを逃がすギミック（UXの破壊）
+  const teleportBackButton = () => {
+    const rangeX = isMobile ? 120 : 250;
+    const rangeY = isMobile ? 60 : 130;
+    const newX = (Math.random() - 0.5) * rangeX * 2;
+    const newY = (Math.random() - 0.5) * rangeY * 2;
+    setBackButtonOffset({ x: newX, y: newY });
+
+    const responses = [
+      '← 脱出不能',
+      '← 戻れません',
+      '← ポータルは消失しました',
+      '← 虚無の果てへ',
+      '← 諦めてください',
+      '← SYSTEM ERROR',
+      '← ここがあなたの家です',
+      '← 留まりましょう',
+      '← 不要なボタン'
+    ];
+    setBackButtonText(responses[Math.floor(Math.random() * responses.length)]);
+  };
+
+  const handleMouseEnterBack = () => {
+    // 70%の確率で戻るボタンが逃げる
+    if (Math.random() < 0.70) {
+      teleportBackButton();
+      setLogs(prev => [
+        ...prev,
+        { time: new Date().toLocaleTimeString(), text: '【EVADE】脱出ゲートが消失しました。' }
+      ].slice(-20));
+    }
+  };
+
+  const handleBackClick = () => {
+    // クリックしても50%の確率で逃げるだけ
+    if (Math.random() < 0.50) {
+      teleportBackButton();
+      setLogs(prev => [
+        ...prev,
+        { time: new Date().toLocaleTimeString(), text: '【EVADE】戻るボタンをクリック回避しました！' }
+      ].slice(-20));
+    } else {
+      onBack();
+    }
+  };
+
+  // 画面のレイアウト構成そのものを破壊する関数
+  const randomizeLayout = () => {
+    const randomTransform = (scaleRange = 0.15) => {
+      const x = (Math.random() - 0.5) * 160;
+      const y = (Math.random() - 0.5) * 160;
+      const rot = (Math.random() - 0.5) * 45; // 最大45度回転
+      const scale = 1 + (Math.random() - 0.5) * scaleRange;
+      return {
+        transform: `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${scale})`,
+        transition: 'transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)',
+        zIndex: Math.floor(Math.random() * 20),
+        pointerEvents: Math.random() < 0.9 ? 'auto' : 'none' // 稀にクリックできなくする
+      };
+    };
+    setHeaderStyle(randomTransform(0.2));
+    setLeftPanelStyle(randomTransform(0.1));
+    setRightPanelStyle(randomTransform(0.1));
+    setTerminalStyle(randomTransform(0.1));
+  };
+
   const spawnEmojis = () => {
-    const emojis = ['🍄', '🌀', '🛸', '🐸', '🐟', '👾', '🧩', '💎', '💤', '👻', '🫧', '🕳️'];
-    const newEmojis = Array.from({ length: 3 }).map((_, i) => ({
+    const emojis = ['🍄', '🌀', '🛸', '🐸', '🐟', '👾', '🧩', '💎', '💤', '👻', '🫧', '🕳️', '💀', '🤡', '🌪️'];
+    const newEmojis = Array.from({ length: 4 }).map((_, i) => ({
       id: Date.now() + i + Math.random(),
-      x: Math.random() * 80 + 10,
+      x: Math.random() * 90 + 5,
       emoji: emojis[Math.floor(Math.random() * emojis.length)],
-      delay: Math.random() * 0.2
+      delay: Math.random() * 0.3
     }));
     setFloatingEmojis(prev => [...prev, ...newEmojis]);
 
@@ -101,14 +179,14 @@ export default function MeaninglessPage({ onBack, playSound }) {
     setBlackoutOpacity(1);
     
     // 点々の光（星）を生成
-    const numStars = Math.floor(Math.random() * 40) + 30;
+    const numStars = Math.floor(Math.random() * 50) + 40;
     const newStars = Array.from({ length: numStars }).map((_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 3 + 1,
+      size: Math.random() * 4 + 1.5,
       delay: Math.random() * 2.0,
-      color: ['#f472b6', '#db2777', '#a78bfa', '#38bdf8', '#34d399', '#ffffff'][Math.floor(Math.random() * 6)]
+      color: ['#f472b6', '#db2777', '#a78bfa', '#38bdf8', '#34d399', '#ffffff', '#eab308'][Math.floor(Math.random() * 7)]
     }));
     setStars(newStars);
 
@@ -144,7 +222,33 @@ export default function MeaninglessPage({ onBack, playSound }) {
     // 2. ボタンの瞬間移動
     teleportButton();
 
-    // 3. ランダムなボタンテキスト変更
+    // 3. レイアウト全体の崩壊・ランダムシャッフル
+    randomizeLayout();
+
+    // 4. マウスカーソルのUX破壊
+    const cursors = ['wait', 'help', 'not-allowed', 'none', 'cell', 'crosshair', 'zoom-in', 'grab', 'default'];
+    setCursorStyle(cursors[Math.floor(Math.random() * cursors.length)]);
+
+    // 5. 画面全体のトランスフォーム（天地逆転、歪みなど）
+    const transforms = [
+      '',
+      'rotate(180deg)',
+      'skew(12deg, 12deg)',
+      'scaleY(-1)',
+      'scaleX(-1)',
+      'rotate(90deg) scale(0.8)',
+      'rotate(-90deg) scale(0.8)',
+      'scale(0.9) translate(10px, 10px)'
+    ];
+    // 25%の確率で画面全体を歪ませる
+    if (Math.random() < 0.25) {
+      const selectedTsf = transforms[Math.floor(Math.random() * transforms.length)];
+      setContainerTransform(selectedTsf);
+      // 1.5秒後に元に戻す
+      setTimeout(() => setContainerTransform(''), 1500);
+    }
+
+    // 6. ランダムなボタンテキスト変更
     const texts = [
       'エントロピーを消費する',
       '無を生産する',
@@ -159,26 +263,29 @@ export default function MeaninglessPage({ onBack, playSound }) {
       '虚無の極致',
       'クリックの墓場',
       'ボタンを追いかけて！',
-      '逃げるボタン'
+      '逃げるボタン',
+      '押しても無駄',
+      'UI/UXはゴミ箱へ',
+      '崩壊するインターフェース'
     ];
     setBtnText(texts[Math.floor(Math.random() * texts.length)]);
 
-    // 4. ランダムグリッチ（約30%の確率）
+    // 7. ランダムグリッチ（約40%の確率）
     const randGlitch = Math.random();
-    if (randGlitch < 0.1) {
+    if (randGlitch < 0.15) {
       setGlitchStyle({ filter: 'invert(1) hue-rotate(180deg)', transition: 'none' });
       setTimeout(() => setGlitchStyle({}), 150);
-    } else if (randGlitch < 0.2) {
+    } else if (randGlitch < 0.30) {
       setGlitchStyle({ transform: 'rotate(1.5deg) scale(0.99)', filter: 'blur(2px)', transition: 'none' });
       setTimeout(() => setGlitchStyle({}), 250);
-    } else if (randGlitch < 0.3) {
+    } else if (randGlitch < 0.45) {
       setScrambleActive(true);
-      setTimeout(() => setScrambleActive(false), 500);
+      setTimeout(() => setScrambleActive(false), 600);
     }
 
-    // 5. ブラックアウトのトリガー (12%の確率、または特定のエントロピー段階)
+    // 8. ブラックアウトのトリガー (15%の確率、または特定のエントロピー段階)
     const nextEntropy = entropy + 5;
-    const triggerBlackoutChance = Math.random() < 0.12 || nextEntropy === 40 || nextEntropy === 80;
+    const triggerBlackoutChance = Math.random() < 0.15 || nextEntropy === 40 || nextEntropy === 80;
 
     if (triggerBlackoutChance && !isBlackout) {
       setEntropy(nextEntropy >= 100 ? 0 : nextEntropy);
@@ -196,13 +303,13 @@ export default function MeaninglessPage({ onBack, playSound }) {
       } else {
         setEntropy(nextEntropy);
         const logOptions = [
-          `ボタンが瞬間移動しました。(座標シフト完了)`,
-          `時間をエントロピーに等価交換しました。(効率: 0%)`,
-          `宇宙のエントロピーが微増しました。`,
-          `[INFO] 画面の傾きを検知しましたが無視されました。`,
-          `[ACTION] 時間の切り売り(クリック数: ${clickCount + 1}回)`,
-          `[SUCCESS] 完全に無駄な電力が消費されました。`,
-          `警告: この行動に意味を見出そうとしないでください。`
+          `メインスイッチが次元跳躍しました。(座標リロケーション)`,
+          `画面構成要素の相対座標がランダムにシフトしました。`,
+          `カーソル属性が一時的に歪められました。`,
+          `宇宙のエントロピーが劇的に増加しています。`,
+          `[ACTION] システム崩壊プロセスの観察(クリック: ${clickCount + 1}回)`,
+          `[SUCCESS] 完全に無駄な電磁エネルギーが発散されました。`,
+          `警告: このページにおいてUX理論は通用しません。`
         ];
         const randomLog = logOptions[Math.floor(Math.random() * logOptions.length)];
         setLogs(prev => [
@@ -218,16 +325,24 @@ export default function MeaninglessPage({ onBack, playSound }) {
     setEntropy(0);
     setClickCount(0);
     setButtonOffset({ x: 0, y: 0 });
+    setBackButtonOffset({ x: 0, y: 0 });
+    setBackButtonText('← ポータルに戻る');
     setBtnText('エントロピーを消費する');
     setGlitchStyle({});
+    setContainerTransform('');
+    setCursorStyle('default');
+    setHeaderStyle({});
+    setLeftPanelStyle({});
+    setRightPanelStyle({});
+    setTerminalStyle({});
     setLogs([
       { time: new Date().toLocaleTimeString(), text: 'SYSTEM RESET: 虚無の調整室をリセットしました。' },
-      { time: new Date().toLocaleTimeString(), text: 'STATUS: 再び何も起きない状態からスタートします。' }
+      { time: new Date().toLocaleTimeString(), text: 'STATUS: レイアウトおよびUI変数を初期状態に調律しました。' }
     ]);
   };
 
   return (
-    <div className="game-container fade-in" style={{ width: '100%', maxWidth: '960px', margin: '0 auto', boxSizing: 'border-box', ...glitchStyle }}>
+    <div className="game-container fade-in" style={{ width: '100%', maxWidth: '960px', margin: '0 auto', boxSizing: 'border-box', ...glitchStyle, transform: containerTransform, cursor: cursorStyle }}>
       <style>{`
         @keyframes voidStarFadeIn {
           0% { opacity: 0; transform: scale(0.5); }
@@ -241,7 +356,7 @@ export default function MeaninglessPage({ onBack, playSound }) {
         }
       `}</style>
 
-      <div className="glass-panel" style={{ padding: isMobile ? '20px' : '32px', position: 'relative', border: '1px solid rgba(236, 72, 153, 0.2)', overflow: 'hidden' }}>
+      <div className="glass-panel" style={{ padding: isMobile ? '20px' : '32px', position: 'relative', border: '1px solid rgba(236, 72, 153, 0.2)', overflow: 'hidden', minHeight: '500px' }}>
         
         {/* Floating Emojis */}
         {floatingEmojis.map((e) => (
@@ -315,8 +430,40 @@ export default function MeaninglessPage({ onBack, playSound }) {
           </div>
         )}
 
+        {/* Floating Evasive Main Switch (Absolute Positioned over parent glass-panel) */}
+        <button
+          onClick={handleConsumeEntropy}
+          onMouseEnter={handleMouseEnterButton}
+          className="btn"
+          style={{
+            position: 'absolute',
+            left: `calc(50% + ${buttonOffset.x}px)`,
+            top: `calc(50% + ${buttonOffset.y}px)`,
+            transform: 'translate(-50%, -50%)',
+            width: isMobile ? '180px' : '240px',
+            height: '76px',
+            background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
+            color: '#fff',
+            fontSize: '13.5px',
+            fontWeight: 'bold',
+            borderRadius: '12px',
+            border: 'none',
+            boxShadow: '0 8px 32px rgba(236, 72, 153, 0.45)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px',
+            transition: 'left 0.08s cubic-bezier(0.1, 0.8, 0.3, 1), top 0.08s cubic-bezier(0.1, 0.8, 0.3, 1), background 0.2s, box-shadow 0.2s',
+            zIndex: 90
+          }}
+        >
+          <Sparkles size={16} className="animate-pulse" />
+          <span>{btnText}</span>
+        </button>
+
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px', ...headerStyle }}>
           <div>
             <span style={{ color: '#f472b6', fontWeight: 'bold', fontSize: '13px', letterSpacing: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Infinity size={14} /> {scrambleActive ? 'Ø1Ø1_ÈÑT_CHAMBER' : 'ABSOLUTE VOID CHAMBER'}
@@ -326,11 +473,20 @@ export default function MeaninglessPage({ onBack, playSound }) {
             </h2>
           </div>
           <button 
-            onClick={onBack} 
+            onClick={handleBackClick} 
+            onMouseEnter={handleMouseEnterBack}
             className="btn btn-secondary"
-            style={{ padding: '8px 16px', fontSize: '13px', borderRadius: '8px', zIndex: 10 }}
+            style={{ 
+              padding: '8px 16px', 
+              fontSize: '13px', 
+              borderRadius: '8px', 
+              zIndex: 10,
+              transform: `translate(${backButtonOffset.x}px, ${backButtonOffset.y}px)`,
+              transition: 'transform 0.08s cubic-bezier(0.1, 0.8, 0.3, 1)',
+              position: 'relative'
+            }}
           >
-            ← ポータルに戻る
+            {backButtonText}
           </button>
         </div>
 
@@ -372,7 +528,8 @@ export default function MeaninglessPage({ onBack, playSound }) {
             alignItems: 'center',
             gap: '20px',
             border: '1px solid var(--border-color)',
-            borderRadius: '16px'
+            borderRadius: '16px',
+            ...leftPanelStyle
           }}>
             <div style={{ textAlign: 'center', width: '100%' }}>
               <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
@@ -437,36 +594,23 @@ export default function MeaninglessPage({ onBack, playSound }) {
             border: '1px solid var(--border-color)',
             borderRadius: '16px',
             position: 'relative',
-            overflow: 'visible', // Allow button to offset outward
-            minHeight: '180px'
+            overflow: 'visible',
+            minHeight: '180px',
+            ...rightPanelStyle
           }}>
-            <button
-              onClick={handleConsumeEntropy}
-              onMouseEnter={handleMouseEnterButton}
-              className="btn"
-              style={{
-                width: '100%',
-                height: '76px',
-                background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
-                color: '#fff',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                borderRadius: '12px',
-                border: 'none',
-                boxShadow: '0 4px 20px rgba(236, 72, 153, 0.35)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                transform: `translate(${buttonOffset.x}px, ${buttonOffset.y}px)`,
-                transition: 'transform 0.08s cubic-bezier(0.1, 0.8, 0.3, 1), background 0.2s, box-shadow 0.2s',
-                zIndex: 20
-              }}
-            >
-              <Sparkles size={16} className="animate-pulse" />
-              <span>{btnText}</span>
-            </button>
+            <div style={{ 
+              color: 'var(--text-muted)', 
+              fontSize: '11px', 
+              textAlign: 'center', 
+              margin: '12px 0', 
+              border: '1px dashed rgba(236, 72, 153, 0.2)', 
+              padding: '10px', 
+              borderRadius: '8px',
+              background: 'rgba(236, 72, 153, 0.02)',
+              lineHeight: '1.4'
+            }}>
+              ⚠️ {scrambleActive ? 'SYS_OFFSET_ERROR' : '【警告】メインスイッチはエントロピー過多により空間浮遊しています。ボタンを追いかけてクリックしてください。'}
+            </div>
 
             <button
               onClick={handleReset}
@@ -499,11 +643,12 @@ export default function MeaninglessPage({ onBack, playSound }) {
           fontSize: '12px',
           color: '#34d399',
           textAlign: 'left',
-          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)'
+          boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)',
+          ...terminalStyle
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px', marginBottom: '10px', color: 'var(--text-muted)' }}>
             <Terminal size={14} />
-            <span>Entropy Console v1.1.0 (Chaos Edition)</span>
+            <span>Entropy Console v1.2.0 (UI/UX Destruction Edition)</span>
           </div>
 
           <div style={{
