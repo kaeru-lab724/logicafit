@@ -34,6 +34,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import DebugLab from './components/DebugLab';
 import Portal from './components/dashboard/Portal';
 import LogiJournal from './components/dashboard/LogiJournal';
+import MeaninglessPage from './components/dashboard/MeaninglessPage';
 import { 
   ArrowLeft,
   Award, 
@@ -271,6 +272,8 @@ export default function App() {
     
     if (currentView === 'logijournal') {
       title = 'LogiJournal (思考整理ノート) | LogicaFit';
+    } else if (currentView === 'meaningless') {
+      title = '虚無の調整室 (Brain Noise) | LogicaFit';
     } else if (activeGame) {
       const gameNames = {
         factsOpinions: '事実と意見',
@@ -1413,6 +1416,13 @@ export default function App() {
             setTheme={setTheme}
             muted={muted}
             toggleMute={toggleMute}
+          />
+        )}
+
+        {currentView === 'meaningless' && (
+          <MeaninglessPage 
+            onBack={() => setCurrentView('portal')}
+            playSound={playSound}
           />
         )}
 

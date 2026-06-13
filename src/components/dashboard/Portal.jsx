@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, BookOpen, Lock, Sparkles } from 'lucide-react';
+import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity } from 'lucide-react';
 
 export default function Portal({ onSelectView, playSound }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -35,6 +35,17 @@ export default function Portal({ onSelectView, playSound }) {
       glowColor: 'rgba(6, 182, 212, 0.25)',
       status: 'ACTIVE',
       actionText: '整理ノートを開く'
+    },
+    {
+      id: 'meaningless',
+      title: 'Brain Noise',
+      subtitle: 'ABSOLUTE VOID: 絶対虚無ルーム',
+      description: 'アクセスしても何もありません。あなたの貴重な時間を完璧に浪費するためだけに設計された、エントロピー100%の全く無意味な部屋。',
+      icon: HelpCircle,
+      themeColor: '#ec4899', // pink-magenta
+      glowColor: 'rgba(236, 72, 153, 0.25)',
+      status: 'ACTIVE',
+      actionText: '絶対虚無ルームに入る'
     }
   ];
 
@@ -201,7 +212,7 @@ export default function Portal({ onSelectView, playSound }) {
                     fontWeight: 'bold',
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    background: isActive ? `rgba(${card.id === 'logicafit' ? '16, 185, 129' : '6, 182, 212'}, 0.1)` : 'rgba(255, 255, 255, 0.03)',
+                    background: isActive ? `rgba(${card.id === 'logicafit' ? '16, 185, 129' : (card.id === 'logijournal' ? '6, 182, 212' : '236, 72, 153')}, 0.1)` : 'rgba(255, 255, 255, 0.03)',
                     color: isActive ? card.themeColor : 'var(--text-muted)',
                     border: `1px solid ${isActive ? 'rgba(255, 255, 255, 0.05)' : 'transparent'}`,
                     letterSpacing: '1px'
