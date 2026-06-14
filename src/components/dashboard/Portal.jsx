@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity } from 'lucide-react';
+import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity, ListTodo } from 'lucide-react';
 
 export default function Portal({ onSelectView, playSound }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -35,6 +35,17 @@ export default function Portal({ onSelectView, playSound }) {
       glowColor: 'rgba(6, 182, 212, 0.25)',
       status: 'ACTIVE',
       actionText: '整理ノートを開く'
+    },
+    {
+      id: 'logicatask',
+      title: 'LogicaTask',
+      subtitle: 'COGNITIVE TASK OPTIMIZER: 思考ハック型タスク管理',
+      description: '優先順位の自動判定、タスクの極小分解、70%リリースの定義など、脳の「先延ばしグセ」や「集中力の乱れ」をシステム的に補正する、仕事で本当に使える実践的タスクマネージャー。',
+      icon: ListTodo,
+      themeColor: '#f59e0b', // amber
+      glowColor: 'rgba(245, 158, 11, 0.25)',
+      status: 'ACTIVE',
+      actionText: 'タスク管理を開く'
     },
     {
       id: 'meaningless',
@@ -212,7 +223,7 @@ export default function Portal({ onSelectView, playSound }) {
                     fontWeight: 'bold',
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    background: isActive ? `rgba(${card.id === 'logicafit' ? '16, 185, 129' : (card.id === 'logijournal' ? '6, 182, 212' : '236, 72, 153')}, 0.1)` : 'rgba(255, 255, 255, 0.03)',
+                    background: isActive ? `rgba(${card.id === 'logicafit' ? '16, 185, 129' : (card.id === 'logijournal' ? '6, 182, 212' : (card.id === 'logicatask' ? '245, 158, 11' : '236, 72, 153'))}, 0.1)` : 'rgba(255, 255, 255, 0.03)',
                     color: isActive ? card.themeColor : 'var(--text-muted)',
                     border: `1px solid ${isActive ? 'rgba(255, 255, 255, 0.05)' : 'transparent'}`,
                     letterSpacing: '1px'
