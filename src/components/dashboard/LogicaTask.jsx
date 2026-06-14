@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, CheckSquare, Square, Trash2, Play, Pause, Plus, X, 
   Download, Upload, Sliders, Clock, Activity, Target, ShieldAlert,
-  ChevronRight, Volume2, VolumeX, RotateCcw, Sparkles, AlertCircle
+  ChevronRight, Volume2, VolumeX, RotateCcw, Sparkles, AlertCircle,
+  HelpCircle
 } from 'lucide-react';
 
 export default function LogicaTask({ onBack, playSound, isMobile }) {
@@ -36,6 +37,10 @@ export default function LogicaTask({ onBack, playSound, isMobile }) {
   const [activeFocusTask, setActiveFocusTask] = useState(null); // Task in Pomodoro Focus Mode
   const [subtaskInput, setSubtaskInput] = useState('');
   const [importError, setImportError] = useState('');
+  const [showGuide, setShowGuide] = useState(() => {
+    return !localStorage.getItem('logicatask_guide_seen');
+  });
+  const [guideTab, setGuideTab] = useState('concept'); // 'concept' | 'matrix' | 'mvp' | 'slicer' | 'timer'
 
   // Pomodoro states
   const [focusTimeLeft, setFocusTimeLeft] = useState(25 * 60);
@@ -569,6 +574,271 @@ export default function LogicaTask({ onBack, playSound, isMobile }) {
         </div>
       )}
 
+      {/* Onboarding Guide Modal */}
+      {showGuide && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(12px)',
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '16px',
+          boxSizing: 'border-box'
+        }}>
+          <div className="glass-panel" style={{
+            maxWidth: '720px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            padding: '32px',
+            background: 'var(--modal-bg)',
+            border: '1px solid rgba(245, 158, 11, 0.3)',
+            borderRadius: '20px',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}>
+            
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Target size={24} style={{ color: 'var(--color-amber)' }} />
+                <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0, fontFamily: 'var(--font-display)' }}>
+                  LogicaTask 使い方ガイド
+                </h3>
+              </div>
+              <button 
+                onClick={() => {
+                  playSound('click');
+                  setShowGuide(false);
+                  localStorage.setItem('logicatask_guide_seen', 'true');
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Navigation Tabs */}
+            <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              {[
+                { id: 'concept', label: '哲学・コンセプト' },
+                { id: 'matrix', label: '① 優先度自動判定' },
+                { id: 'mvp', label: '② 70%成果主義' },
+                { id: 'slicer', label: '③ タスク分割' },
+                { id: 'timer', label: '④ 集中ポモドーロ' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => { playSound('click'); setGuideTab(tab.id); }}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid',
+                    borderColor: guideTab === tab.id ? 'rgba(245, 158, 11, 0.3)' : 'transparent',
+                    background: guideTab === tab.id ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+                    color: guideTab === tab.id ? 'var(--color-amber)' : 'var(--text-muted)',
+                    fontSize: '13px',
+                    fontWeight: guideTab === tab.id ? 'bold' : 'normal',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Tab Contents */}
+            <div style={{ flex: 1, minHeight: '280px', padding: '10px 0' }}>
+              {guideTab === 'concept' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
+                    脳の「弱さ」をシステムでハックする
+                  </h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    私たちは誰しも、「やるべきなのに手をつけられない」「完璧にやろうとしすぎてフリーズする」「何から始めればいいか分からない」といった認知の罠や弱さを持っています。
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    LogicaTaskは、感情論で「頑張る」のではなく、**人間の脳が持つ先延ばしグセや集中力の限界をシステム的なUI設計で補正・バイパスする**ために開発された実践的タスクマネージャーです。
+                  </p>
+                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '13px', color: 'var(--text-primary)' }}>
+                      <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: 'var(--color-amber)', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>特徴 1</span>
+                      優先順位に悩むエネルギーを排除する「自動マトリクス分類」
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '13px', color: 'var(--text-primary)' }}>
+                      <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: 'var(--color-amber)', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>特徴 2</span>
+                      完璧主義の呪縛を解く「70% (MVP) 成果基準の定義」
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '13px', color: 'var(--text-primary)' }}>
+                      <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: 'var(--color-amber)', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>特徴 3</span>
+                      行動の心理的障壁を下げる「5分極小アクションへの分割」
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '13px', color: 'var(--text-primary)' }}>
+                      <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: 'var(--color-amber)', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>特徴 4</span>
+                      雑音を排しシンセサイザー音響で超集中する「ポモドーロASMR」
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {guideTab === 'matrix' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
+                    優先順位を脳に決めさせない
+                  </h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    「今日何からやろう？」と迷うたびに、脳のエネルギー（ウィルパワー）は浪費されます。
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    タスク登録時に**「影響度 (成果へのインパクト)」**と**「緊急度 (締め切り)」**を選択するだけで、アイゼンハワーマトリクスに基づき以下の4つの領域へ自動分類されます。
+                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
+                    <div style={{ background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: '8px', padding: '12px' }}>
+                      <span style={{ color: '#f43f5e', fontWeight: 'bold', fontSize: '13px' }}>1. 最優先 (Do First)</span>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>影響度：高 ＆ 緊急度：高。今日絶対に片付けるべき本質的な重要課題です。</p>
+                    </div>
+                    <div style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '8px', padding: '12px' }}>
+                      <span style={{ color: 'var(--color-amber)', fontWeight: 'bold', fontSize: '13px' }}>2. 計画 (Schedule)</span>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>影響度：高 ＆ 緊急度：低。締め切りは先ですが、最も未来を作る重要タスクです。</p>
+                    </div>
+                    <div style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)', borderRadius: '8px', padding: '12px' }}>
+                      <span style={{ color: 'var(--color-cyan)', fontWeight: 'bold', fontSize: '13px' }}>3. 委譲/スキマ (Delegate/Gap)</span>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>影響度：低 ＆ 緊急度：高。すぐ終わる事務作業や、調整事です。</p>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '12px' }}>
+                      <span style={{ color: 'var(--text-muted)', fontWeight: 'bold', fontSize: '13px' }}>4. 削除 (Eliminate)</span>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>影響度：低 ＆ 緊急度：低。やらなくて良いこと、または完全に後回しにする事柄です。</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {guideTab === 'mvp' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
+                    完璧主義を捨て「70%」で前進する
+                  </h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    先延ばしの最大の原因は「完璧にやらなければならない」というプレッシャーです。
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    LogicaTaskでは、タスクごとに以下の2つのクオリティラインをあらかじめ定義します。
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
+                    <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '8px', padding: '12px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <strong style={{ color: '#10b981', fontSize: '13px' }}>70%の本質価値 (Core Value) - 【必須】</strong>
+                        <span style={{ fontSize: '11px', background: 'rgba(16,185,129,0.15)', color: '#10b981', padding: '2px 6px', borderRadius: '4px' }}>ここだけを最速でやる</span>
+                      </div>
+                      <p style={{ margin: '6px 0 0 0', fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                        「この境界線さえ超えれば、成果として成立する」というギリギリのMVP（最小価値製品）基準。まずはここだけを徹底的に目指します。
+                      </p>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '12px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <strong style={{ color: 'var(--text-muted)', fontSize: '13px' }}>100%へのこだわり (Polish) - 【後回し】</strong>
+                        <span style={{ fontSize: '11px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', padding: '2px 6px', borderRadius: '4px' }}>余裕があればやる</span>
+                      </div>
+                      <p style={{ margin: '6px 0 0 0', fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                        「やってもいいが、やらなくても致命的ではない」見た目の装飾や、細かいこだわり、追加調査など。70%が完了するまでは一切手をつけません。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {guideTab === 'slicer' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
+                    重いタスクを「5分」に切り刻む
+                  </h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    「企画書を書く」「部屋を片付ける」など、タスクの粒度が大きすぎると、脳は何から始めればいいか判断できず、防衛反応として先延ばし（逃避）を開始します。
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    各タスクの右側にある **「細分化 (スライス) ボタン」** を押すと、タスク詳細・スライサーが開きます。ここで「**5分以内に終わる極小のアクション**」にまで細かく分解し、サブタスクに登録します。
+                  </p>
+                  <div style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.15)', borderRadius: '8px', padding: '12px', fontSize: '13px' }}>
+                    <strong style={{ color: 'var(--color-amber)', display: 'block', marginBottom: '4px' }}>💡 スライスの具体例</strong>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: 'var(--text-muted)', fontSize: '12.5px' }}>
+                      <div>❌ <strong>悪い例:</strong> 「企画書を書き始める」 （まだ重い）</div>
+                      <div>⭕ <strong>良い例:</strong> 「企画書のファイルを新規作成する」「タイトルだけ入力する」「目次を3個箇条書きする」</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {guideTab === 'timer' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
+                    シングルタスクとチルサウンドに没頭する
+                  </h4>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    他のタスクや通知が目に入ると、注意力が散漫になります。
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
+                    サブタスクの横にある **「再生ボタン」** を押すと、画面全体のレイアウトが消え去り、**「その1つのタスク」と「ポモドーロタイマー (25分/5分)」だけが表示されるシングルフォーカスモード**になります。
+                  </p>
+                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <Volume2 size={16} style={{ color: 'var(--color-amber)' }} />
+                      <strong style={{ fontSize: '13.5px', color: 'var(--text-primary)' }}>自律ASMRシンセサイザー搭載</strong>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                      タイマー動作中、お好みで「雨の環境音 (ASMR Rain)」や「チルパッド和音 (Chill Pad)」の背景音を再生できます。これらは外部MP3ファイルを一切ロードせず、**Web Audio APIがブラウザ上でその場でオシレーター（発振器）を制御して合成するデジタルチル和音**です。
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px', marginTop: 'auto' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                いつでもヘッダーの「使い方ガイド」ボタンから再確認できます。
+              </span>
+              <button 
+                onClick={() => {
+                  playSound('click');
+                  setShowGuide(false);
+                  localStorage.setItem('logicatask_guide_seen', 'true');
+                }}
+                className="btn btn-primary"
+                style={{
+                  padding: '8px 20px',
+                  borderRadius: '8px',
+                  fontSize: '13.5px',
+                  fontWeight: 'bold',
+                  background: 'var(--color-amber)',
+                  borderColor: 'var(--color-amber)',
+                  color: '#000'
+                }}
+              >
+                使ってみる
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       {/* Task Slicing / Details Modal */}
       {activeSliceTask && (
         <div style={{
@@ -808,15 +1078,31 @@ export default function LogicaTask({ onBack, playSound, isMobile }) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <span style={{ color: 'var(--color-amber)', fontWeight: 'bold', fontSize: '13px', letterSpacing: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Target size={14} /> LOGICATASK OPTIMIZER
-            </span>
-            <h2 style={{ fontFamily: 'var(--font-display)', marginTop: '4px', color: 'var(--text-primary)', fontSize: isMobile ? '22px' : '28px' }}>
-              思考ハックタスク（LogicaTask）
+            <h2 style={{ 
+              fontFamily: 'var(--font-display)', 
+              color: 'var(--text-primary)', 
+              fontSize: isMobile ? '24px' : '32px', 
+              margin: 0, 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '10px' 
+            }}>
+              <Target size={28} style={{ color: 'var(--color-amber)' }} /> LogicaTask
             </h2>
+            <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: 'var(--text-muted)' }}>
+              思考ハック型タスク管理ツール
+            </p>
           </div>
           
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => { playSound('click'); setShowGuide(true); }}
+              className="btn btn-secondary"
+              style={{ padding: '8px 12px', fontSize: '12.5px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              title="使い方ガイドを表示"
+            >
+              <HelpCircle size={14} /> 使い方ガイド
+            </button>
             <button 
               onClick={handleExportData}
               className="btn btn-secondary"

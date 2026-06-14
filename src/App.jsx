@@ -276,7 +276,7 @@ export default function App() {
     } else if (currentView === 'meaningless') {
       title = '虚無の調整室 (Brain Noise) | LogicaFit';
     } else if (currentView === 'logicatask') {
-      title = 'LogicaTask (思考ハックタスク) | LogicaFit';
+      title = 'LogicaTask | LogicaFit';
     } else if (activeGame) {
       const gameNames = {
         factsOpinions: '事実と意見',
