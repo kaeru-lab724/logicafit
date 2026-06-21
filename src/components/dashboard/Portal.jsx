@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity, ListTodo } from 'lucide-react';
+import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity, ListTodo, Mail } from 'lucide-react';
 
 export default function Portal({ onSelectView, playSound }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -48,6 +48,17 @@ export default function Portal({ onSelectView, playSound }) {
       actionText: 'タスク管理を開く'
     },
     {
+      id: 'glo',
+      title: 'LogicaFit Mail (GLO)',
+      subtitle: 'DECISION & GTD ORGANIZER: 意思決定＆ロジカル仕分けメール',
+      description: 'AIが受信トレイのメールを[見るべきもの（FOCUS）]と[見なくて良いログ（LOG）]に論理選別し、三段論法の可視化や3行要約、安全な一括断捨離まで行える、ロジカル思考型Gmail organizer。',
+      icon: Mail,
+      themeColor: '#6366f1', // indigo
+      glowColor: 'rgba(99, 102, 241, 0.25)',
+      status: 'ACTIVE',
+      actionText: 'メール整理ルームを開く'
+    },
+    {
       id: 'meaningless',
       title: 'Brain Noise',
       subtitle: 'ABSOLUTE VOID: 絶対虚無ルーム',
@@ -62,6 +73,11 @@ export default function Portal({ onSelectView, playSound }) {
 
   const handleSelect = (id) => {
     if (id === 'research') return;
+    if (id === 'glo') {
+      playSound('click');
+      window.open('https://logicafit-mail-glo.vercel.app', '_blank');
+      return;
+    }
     playSound('click');
     onSelectView(id);
   };
