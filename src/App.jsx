@@ -398,12 +398,15 @@ export default function App() {
     // 簡易スキャナー起動時はチュートリアルガイドの自動ポップアップを抑制
     if (activeGame === 'harassmentScanner') return;
 
+    // LogicaFit（思考トレーニング＆診断）を開いた時にのみガイドを表示
+    if (currentView !== 'logicafit') return;
+
     const seen = localStorage.getItem('logicafit_seen_guide');
     if (gameState.xp === 0 && !seen) {
       setShowGuideModal(true);
       localStorage.setItem('logicafit_seen_guide', 'true');
     }
-  }, [gameState.xp, activeGame]);
+  }, [gameState.xp, activeGame, currentView]);
 
   // Google Analytics ゲーム開始の計測
   useEffect(() => {
