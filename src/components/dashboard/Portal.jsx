@@ -27,7 +27,7 @@ export default function Portal({ onSelectView, playSound }) {
     },
     {
       id: 'logijournal',
-      title: 'LogiJournal',
+      title: 'LogicaJournal',
       subtitle: 'MIND WRITING & TUNING: 思考の書き出し＆整理ノート',
       description: '頭の中のモヤモヤや悩み事をそのまま書き出し、客観的な事実と次のアクションにスッキリ整理するノート。心のバランスを整え、次の一歩をサポートします。',
       icon: BookOpen,
@@ -49,7 +49,7 @@ export default function Portal({ onSelectView, playSound }) {
     },
     {
       id: 'glo',
-      title: 'LogicaFit Mail (GLO)',
+      title: 'LogicaMail',
       subtitle: 'DECISION & GTD ORGANIZER: 意思決定＆ロジカル仕分けメール',
       description: 'AIが受信トレイのメールを[見るべきもの（FOCUS）]と[見なくて良いログ（LOG）]に論理選別し、三段論法の可視化や3行要約、安全な一括断捨離まで行える、ロジカル思考型Gmail organizer。',
       icon: Mail,
@@ -147,7 +147,7 @@ export default function Portal({ onSelectView, playSound }) {
           lineHeight: '1.6',
           padding: '0 4px'
         }}>
-          クイズ形式で考え方の偏りを鍛える「思考トレーニング＆診断（LogicaFit）」と、頭のモヤモヤを書き出してスッキリ整理する「思考整理ノート（LogiJournal）」。2つのアプローチで、あなたの思考の調律をサポートします。
+          クイズ形式で考え方の偏りを鍛える「思考トレーニング＆診断（LogicaFit）」と、頭のモヤモヤを書き出してスッキリ整理する「思考整理ノート（LogicaJournal）」。2つのアプローチで、あなたの思考の調律をサポートします。
         </p>
       </div>
 

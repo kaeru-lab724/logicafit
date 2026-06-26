@@ -33,7 +33,7 @@ import RakutenWidget from './components/common/RakutenWidget';
 import Dashboard from './components/dashboard/Dashboard';
 import DebugLab from './components/DebugLab';
 import Portal from './components/dashboard/Portal';
-import LogiJournal from './components/dashboard/LogiJournal';
+import LogicaJournal from './components/dashboard/LogiJournal';
 import MeaninglessPage from './components/dashboard/MeaninglessPage';
 import LogicaTask from './components/dashboard/LogicaTask';
 import { 
@@ -272,7 +272,7 @@ export default function App() {
     let title = 'LogicaFit | 前提知識ゼロから始める論理的思考トレーニングジム';
     
     if (currentView === 'logijournal') {
-      title = 'LogiJournal (思考整理ノート) | LogicaFit';
+      title = 'LogicaJournal (思考整理ノート) | LogicaFit';
     } else if (currentView === 'meaningless') {
       title = '虚無の調整室 (Brain Noise) | LogicaFit';
     } else if (currentView === 'logicatask') {
@@ -1409,7 +1409,7 @@ export default function App() {
         )}
 
         {currentView === 'logijournal' && (
-          <LogiJournal 
+          <LogicaJournal 
             gameState={gameState} 
             onSaveLog={handleSaveTuningLog} 
             onUpdateLog={handleUpdateTuningLog}

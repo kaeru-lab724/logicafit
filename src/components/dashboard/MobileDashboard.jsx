@@ -771,10 +771,10 @@ export default function MobileDashboard({
                   </div>
                   <div>
                     <h4 style={{ fontSize: '13px', fontWeight: 'bold', margin: '0 0 4px 0', color: 'var(--text-primary)', textAlign: 'left' }}>
-                      思考調律は「LogiJournal（整理ノート）」へ移行しました
+                      思考調律は「LogicaJournal（整理ノート）」へ移行しました
                     </h4>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '11px', lineHeight: '1.4', margin: 0, textAlign: 'left' }}>
-                      思考のモヤモヤを整理・デバッグする「思考調律」機能は、より高度なメタ認知分析が可能な専用ツール<b>「LogiJournal（思考整理ノート）」</b>として一本化されました。
+                      思考のモヤモヤを整理・デバッグする「思考調律」機能は、より高度なメタ認知分析が可能な専用ツール<b>「LogicaJournal（思考整理ノート）」</b>として一本化されました。
                       ジャーナリングや思考の整理を行いたい場合は、ポータル画面から「整理ノートを開く」を選択してください。
                     </p>
                   </div>

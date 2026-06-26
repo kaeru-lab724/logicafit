@@ -48,7 +48,7 @@ const VIBE_DATA = {
   flat: { label: '低活性（億劫・思考フリーズ）', emoji: '🍵', themeColor: '#10b981', glowColor: 'rgba(16, 185, 129, 0.3)', question: '日常の中で、少しだけ「面倒だな」と感じた瞬間や思考が滞ったポイントを思い出して記述してください。' }
 };
 
-export default function LogiJournal({ 
+export default function LogicaJournal({ 
   gameState, onSaveLog, onUpdateLog, onExportData, onImportData, onBack, playSound, isMobile,
   theme, setTheme, muted, toggleMute
 }) {
@@ -361,7 +361,7 @@ export default function LogiJournal({
                     fontFamily: 'var(--font-display)',
                     whiteSpace: 'nowrap'
                   }}>
-                    LogiJournal
+                    LogicaJournal
                   </h2>
                 </div>
                 <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
@@ -448,7 +448,7 @@ export default function LogiJournal({
                   fontFamily: 'var(--font-display)',
                   whiteSpace: 'nowrap'
                 }}>
-                  LogiJournal
+                  LogicaJournal
                 </h2>
               </div>
             </>
@@ -703,7 +703,7 @@ export default function LogiJournal({
                   <button 
                     onClick={() => {
                       playSound('click');
-                      const shareText = encodeURIComponent("頭の中のモヤモヤを整理して客観的な事実とアクションに分解できる思考調律ツール『LogiJournal』がすごくスッキリするからおすすめ！\n");
+                      const shareText = encodeURIComponent("頭の中のモヤモヤを整理して客観的な事実とアクションに分解できる思考調律ツール『LogicaJournal』がすごくスッキリするからおすすめ！\n");
                       const shareUrl = encodeURIComponent("https://www.logicafit.site/");
                       window.open(`https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}`, '_blank');
                     }}
@@ -715,7 +715,7 @@ export default function LogiJournal({
                   <button 
                     onClick={() => {
                       playSound('click');
-                      const shareText = "頭の中のモヤモヤを整理して客観的な事実とアクションに分解できる思考調律ツール『LogiJournal』がすごくスッキリするからおすすめ！";
+                      const shareText = "頭の中のモヤモヤを整理して客観的な事実とアクションに分解できる思考調律ツール『LogicaJournal』がすごくスッキリするからおすすめ！";
                       navigator.clipboard.writeText(shareText).then(() => {
                         alert("紹介テキストをクリップボードにコピーしました！\nFacebookの投稿画面にペースト（貼り付け）してシェアしてください。");
                         const shareUrl = encodeURIComponent("https://www.logicafit.site/");
@@ -1180,7 +1180,7 @@ export default function LogiJournal({
               <div className="glass-panel" style={{ padding: '80px 40px', borderRadius: '12px', background: 'var(--hero-bg)', border: '1px solid var(--border-color)', textAlign: 'center' }}>
                 <Brain size={48} style={{ color: 'var(--text-muted)', opacity: 0.5, margin: '0 auto 16px' }} />
                 <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '8px' }}>
-                  LogiJournal 思考整理ノートへようこそ
+                  LogicaJournal 思考整理ノートへようこそ
                 </h3>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto 24px' }}>
                   日常のモヤモヤを書き出して整理し、客観的な事実と次のアクションに整えるノートです。最初のログを作成してみましょう。
@@ -1213,7 +1213,7 @@ export default function LogiJournal({
             <span>思考クセ分析スタッツ</span>
           </h3>
           <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
-            これまでにLogiJournalで整理されたモヤモヤと、無意識の思考パターンを集計データです。
+            これまでにLogicaJournalで整理されたモヤモヤと、無意識の思考パターンを集計データです。
           </p>
 
           {/* Quick Metrics */}
@@ -1279,7 +1279,7 @@ export default function LogiJournal({
               
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6', margin: 0 }}>
                 {totalEntries === 0 ? (
-                  "まずは今日の終わりにLogiJournalでモヤモヤを書き出し、最初のデータを蓄積してください。思考の癖が見えてくることで、客観視が容易になります。"
+                  "まずは今日の終わりにLogicaJournalでモヤモヤを書き出し、最初のデータを蓄積してください。思考の癖が見えてくることで、客観視が容易になります。"
                 ) : Object.keys(biasCounts).length > 0 ? (
                   `現在、あなたのログからは「${Object.entries(biasCounts).sort((a,b) => b[1]-a[1])[0][0]}」の傾向が最も高く検出されています。このパターンが現れたときは、まず「その決めつけを証明する『客観的な証拠』が本当にそこにあるか？」と自分に問いかける習慣をつけてみましょう。`
                 ) : (
