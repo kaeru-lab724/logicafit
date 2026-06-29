@@ -25,8 +25,8 @@ export const parentingData = [
     recommendation: {
       itemTitle: "出し入れしやすい傾斜付きトイハウスラック",
       description: "『コトバ（声かけ）』を変えるのと同時に、『子どもが片付けやすい部屋の仕組み（ハード面）』を整えると、お片付け習慣は劇的に定着します。",
-      rakutenUrl: "https://hb.afl.rakuten.co.jp/hgc/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsmile-price%2Fa10595%2F",
-      aetheriaUrl: "https://affiliates.michellle.info/blog/toy-shelf-review"
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%81%88%E3%81%A1%E3%81%94%E3%81%93%E3%81%9D%E3%81%A0%E3%81%A6%2B%E3%81%8A%E3%82%82%E3%81%A1%E3%82%83%E5%8F%8E%E7%B4%8D%2B%E3%83%88%E3%82%A4%E3%83%8F%E3%82%A6%E3%82%B9%E3%83%A9%E3%83%83%E3%82%AF%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/toy-shelf-review"
     }
   },
   {
@@ -55,8 +55,8 @@ export const parentingData = [
     recommendation: {
       itemTitle: "ひっくり返らない！吸盤付きシリコンベビー食器",
       description: "食器が動いたりひっくり返るストレスを物理的になくすことで、子どもが自分でスプーンを使うことに集中でき、食事そのものを楽しめるようになります。",
-      rakutenUrl: "https://hb.afl.rakuten.co.jp/hgc/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fangers%2F158788%2F",
-      aetheriaUrl: "https://affiliates.michellle.info/blog/suction-plate-review"
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%81%B2%E3%81%A3%E3%81%8F%E3%82%8A%E8%BF%94%E3%82%89%E3%81%AA%E3%81%84%2B%E3%83%99%E3%83%93%E3%83%BC%E9%A3%9F%E5%99%A8%2B%E5%90%B8%E7%9B%A4%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/suction-plate-review"
     }
   },
   {
@@ -85,8 +85,8 @@ export const parentingData = [
     recommendation: {
       itemTitle: "残り時間が色で見える視覚的タイムタイマー",
       description: "時間という抽象的な概念がまだ分からない子どもにとって、『帰る時間』は目に見えません。色が減るタイマーを使うことで、視覚的に納得しやすくなります。",
-      rakutenUrl: "https://hb.afl.rakuten.co.jp/hgc/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F3146407011%2F",
-      aetheriaUrl: "https://affiliates.michellle.info/blog/time-timer-review"
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BF%E3%82%A4%E3%83%9E%E3%83%BC%2BTime%2BTimer%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/time-timer-review"
     }
   }
 ];

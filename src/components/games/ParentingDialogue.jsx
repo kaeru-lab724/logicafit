@@ -6,6 +6,7 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
   const [gameState, setGameState] = useState('welcome'); // welcome | quiz | result
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState(null);
+  const [firstSelectedIdx, setFirstSelectedIdx] = useState(null); // 最初に選んだ回答
   const [isAnswered, setIsAnswered] = useState(false);
   const [answers, setAnswers] = useState([]); // ユーザーの選択履歴
   const [score, setScore] = useState(0);
@@ -23,23 +24,31 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
     setGameState('quiz');
     setCurrentIdx(0);
     setSelectedIdx(null);
+    setFirstSelectedIdx(null);
     setIsAnswered(false);
     setAnswers([]);
     setScore(0);
   };
 
   const handleSelect = (idx) => {
-    if (isAnswered) return;
     playSound('click');
-    setSelectedIdx(idx);
-    setIsAnswered(true);
     
-    const question = parentingData[currentIdx];
-    const isCorrect = question.options[idx].isCorrect;
-    if (isCorrect) {
-      setScore(prev => prev + 1);
+    // まだ未回答の場合
+    if (firstSelectedIdx === null) {
+      setFirstSelectedIdx(idx);
+      setSelectedIdx(idx);
+      setIsAnswered(true);
+      
+      const question = parentingData[currentIdx];
+      const isCorrect = question.options[idx].isCorrect;
+      if (isCorrect) {
+        setScore(prev => prev + 1);
+      }
+      setAnswers(prev => [...prev, { questionId: question.id, selectedIdx: idx, isCorrect }]);
+    } else {
+      // 回答済みの場合は解説の切り替え表示のみ行う
+      setSelectedIdx(idx);
     }
-    setAnswers(prev => [...prev, { questionId: question.id, selectedIdx: idx, isCorrect }]);
   };
 
   const handleNext = () => {
@@ -47,6 +56,7 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
     if (currentIdx + 1 < parentingData.length) {
       setCurrentIdx(prev => prev + 1);
       setSelectedIdx(null);
+      setFirstSelectedIdx(null);
       setIsAnswered(false);
     } else {
       setGameState('result');
@@ -312,6 +322,7 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
         }}>
           {currentQuestion.options.map((option, idx) => {
             const isSelected = selectedIdx === idx;
+            const isFirstSelected = firstSelectedIdx === idx;
             let btnStyle = {
               width: '100%',
               padding: '16px 20px',
@@ -322,7 +333,7 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
               textAlign: 'left',
               fontSize: '14.5px',
               fontWeight: '500',
-              cursor: isAnswered ? 'default' : 'pointer',
+              cursor: 'pointer',
               transition: 'all 0.2s ease',
               display: 'flex',
               alignItems: 'center',
@@ -332,13 +343,16 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
             };
 
             if (isAnswered) {
+              if (isSelected) {
+                btnStyle.borderColor = colors.primary;
+                btnStyle.background = 'rgba(224, 122, 95, 0.08)';
+              }
               if (option.isCorrect) {
                 btnStyle.background = colors.successBg;
-                btnStyle.borderColor = colors.secondary;
-                btnStyle.color = '#fff';
-              } else if (isSelected) {
+                btnStyle.borderColor = isSelected ? colors.primary : colors.secondary;
+              } else if (isFirstSelected && !option.isCorrect) {
                 btnStyle.background = 'rgba(255, 75, 75, 0.05)';
-                btnStyle.borderColor = 'rgba(255, 75, 75, 0.3)';
+                btnStyle.borderColor = isSelected ? colors.primary : 'rgba(255, 75, 75, 0.3)';
               }
             } else {
               btnStyle[':hover'] = {
@@ -350,14 +364,43 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
             return (
               <button
                 key={idx}
-                disabled={isAnswered}
                 onClick={() => handleSelect(idx)}
                 style={btnStyle}
                 className={!isAnswered ? "option-button-hover" : ""}
               >
-                <span>{option.text}</span>
-                {isAnswered && option.isCorrect && (
-                  <CheckCircle2 size={18} style={{ color: colors.secondary, flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {isAnswered && option.isCorrect && (
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 'bold',
+                      background: colors.secondary,
+                      color: '#fff',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      marginRight: '4px'
+                    }}>調律</span>
+                  )}
+                  {isAnswered && isFirstSelected && !option.isCorrect && (
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 'bold',
+                      background: '#ff4b4b',
+                      color: '#fff',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      marginRight: '4px'
+                    }}>あなたの選択</span>
+                  )}
+                  <span>{option.text}</span>
+                </div>
+                {isAnswered && (
+                  isSelected ? (
+                    <span style={{ fontSize: '11px', color: colors.primary, fontWeight: 'bold' }}>解説表示中</span>
+                  ) : (
+                    option.isCorrect ? (
+                      <CheckCircle2 size={16} style={{ color: colors.secondary, flexShrink: 0 }} />
+                    ) : null
+                  )
                 )}
               </button>
             );
