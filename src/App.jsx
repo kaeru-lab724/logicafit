@@ -265,8 +265,10 @@ export default function App() {
     const params = new URLSearchParams(search || (hash.includes('?') ? hash.substring(hash.indexOf('?')) : ''));
     if (params.get('mode') === 'scan' || params.has('scan')) {
       setActiveGame('harassmentScanner');
+      setCurrentView('logicafit');
     } else if (params.get('game') === 'parentingDialogue' || params.has('parentingDialogue')) {
       setActiveGame('parentingDialogue');
+      setCurrentView('logicafit');
     }
   }, []);
 
