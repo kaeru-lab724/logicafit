@@ -19,6 +19,7 @@ import LogicalValidity from './components/games/LogicalValidity';
 import LogicTreeAssembler from './components/games/LogicTreeAssembler';
 import FallacyDetective from './components/games/FallacyDetective';
 import EmpathyDialogue from './components/games/EmpathyDialogue';
+import ParentingDialogue from './components/games/ParentingDialogue';
 import HiddenAssumption from './components/games/HiddenAssumption';
 import CausalLoop from './components/games/CausalLoop';
 import AssertiveRewrite from './components/games/AssertiveRewrite';
@@ -264,6 +265,8 @@ export default function App() {
     const params = new URLSearchParams(search || (hash.includes('?') ? hash.substring(hash.indexOf('?')) : ''));
     if (params.get('mode') === 'scan' || params.has('scan')) {
       setActiveGame('harassmentScanner');
+    } else if (params.get('game') === 'parentingDialogue' || params.has('parentingDialogue')) {
+      setActiveGame('parentingDialogue');
     }
   }, []);
 
@@ -288,6 +291,7 @@ export default function App() {
         causalLoop: '因果ループ図',
         assertiveRewrite: 'アサーティブ書き換え',
         hiddenAssumption: '隠れた前提',
+        parentingDialogue: 'こそだて言葉かけ調律',
         strategicCompiler: '戦略的コンパイラー',
         harassmentScanner: 'ハラスメントスキャナー',
         treeQuest: 'ツリークエスト',
@@ -1051,6 +1055,14 @@ export default function App() {
             ? '友達や家族に対する攻撃的・受動的な会話を、DESC法を用いて誠実かつ対等な表現にリライトする。'
             : '部下への指導や顧客からの無理な要望への対応を、対立を避けて建設的に合意する表現にコンパイルする。',
           difficulty: mode === 'daily' ? '初級' : '中級'
+        },
+        {
+          id: 'parentingDialogue',
+          scoreKey: 'parentingDialogue',
+          moduleNum: 'MODULE 05 [3rd]',
+          name: 'こそだて言葉かけ調律',
+          desc: '脅しや取引といった非論理的な声かけを、子どもの自発性と自律性を育むコトバへと調律する。',
+          difficulty: '中級'
         }
       ]
     },
@@ -1500,6 +1512,19 @@ export default function App() {
             onLogBug={handleLogBug}
             reviewQuestionId={reviewQuestionId}
             onFinishReview={handleFinishReview}
+          />
+        )}
+        {activeGame === 'parentingDialogue' && (
+          <ParentingDialogue
+            onFinish={handleGameFinish}
+            playSound={playSound}
+            muted={muted}
+            toggleMute={toggleMute}
+            onFinishReview={() => {
+              playSound('click');
+              setActiveGame(null);
+              setCurrentView('portal');
+            }}
           />
         )}
         {activeGame === 'hiddenAssumption' && (

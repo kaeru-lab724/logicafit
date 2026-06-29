@@ -37,7 +37,7 @@ import CyberConsole from '../common/CyberConsole';
 
 // 自動推奨ゲームのキー選定
 const getRecommendedGameKey = (scores) => {
-  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory'];
+  const keys = ['factsOpinions', 'logicalValidity', 'logicTree', 'fallacy', 'empathyDialogue', 'hiddenAssumption', 'causalLoop', 'assertiveRewrite', 'strategic', 'gameTheory', 'parentingDialogue'];
   
   // 1. 未プレイ（0%）を優先
   for (const key of keys) {
@@ -82,7 +82,8 @@ const getGameName = (key) => {
     assertiveRewrite: 'アサーティブ',
     strategic: '戦略介入シミュレーター',
     gameTheory: 'ゲーム理論・戦略的選択',
-    empathyDialogue: '共感対話'
+    empathyDialogue: '共感対話',
+    parentingDialogue: 'こそだて言葉かけ調律'
   };
   return names[key] || '';
 };
@@ -807,6 +808,7 @@ export default function Dashboard({
                             case 'empathyDialogue':
                             case 'assertiveRewrite':
                             case 'eqSimulator':
+                            case 'parentingDialogue':
                               return { name: 'エモーショナル思考', color: 'var(--color-primary)', room: 'emotional' };
                             case 'strategic':
                             case 'gameTheory':
@@ -840,6 +842,7 @@ export default function Dashboard({
                           logicTree: 'ロジックツリー',
                           fallacy: '論理的誤謬の特定',
                           empathyDialogue: '共感対話',
+                          parentingDialogue: 'こそだて言葉かけ調律',
                           hiddenAssumption: '前提のデバッグ',
                           causalLoop: '因果ループ',
                           assertiveRewrite: 'アサーティブ',
