@@ -1727,7 +1727,10 @@ export default function Dashboard({
               setTheme={setTheme}
               muted={muted}
               toggleMute={toggleMute}
- />
+              parentingMission={parentingMission}
+              parentingStampLog={parentingStampLog}
+              handleToggleParentingStamp={handleToggleParentingStamp}
+            />
           </div>
 
         </>
