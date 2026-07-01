@@ -145,6 +145,13 @@ export default function Dashboard({
     reader.readAsText(file);
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const [showToast, setShowToast] = useState(false);
   const [opponentSpell, setOpponentSpell] = useState('');
   const [matchResult, setMatchResult] = useState(null);
