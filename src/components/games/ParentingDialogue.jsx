@@ -59,9 +59,10 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
       setFirstSelectedIdx(null);
       setIsAnswered(false);
     } else {
+      const finalScore = Math.round((score / parentingData.length) * 100);
       setGameState('result');
       if (onFinish) {
-        onFinish(score * 33); // スコアをパーセントに換算して親コンポーネントに通知
+        onFinish('parentingDialogue', finalScore, false, currentQuestion);
       }
     }
   };
@@ -441,6 +442,44 @@ export default function ParentingDialogue({ onFinish, playSound, muted, toggleMu
               <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
                 {currentQuestion.evidence}
               </p>
+            </div>
+
+            {/* Logic Room Link */}
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: `1px solid ${colors.border}`,
+              padding: '12px',
+              borderRadius: '10px',
+              fontSize: '12.5px',
+              color: 'var(--text-secondary)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6px'
+            }}>
+              <div style={{ lineHeight: '1.4' }}>
+                💡 <b>論理を深く学ぶ</b>: この『{currentQuestion.id === 'childseat-refusal' ? '感情の共感' : '自己決定理論'}』の対話テクニックは、トレーニングジムの<b>「共感対話トレーニング」</b>や<b>「アサーティブ・リライター」</b>で本格的に鍛えられます。
+              </div>
+              <button
+                onClick={() => {
+                  playSound('click');
+                  if (onFinishReview) onFinishReview();
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: colors.primary,
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontSize: '12.5px'
+                }}
+              >
+                論理トレーニングルームを開く ➔
+              </button>
             </div>
 
             {/* Tonight's Action Plan */}

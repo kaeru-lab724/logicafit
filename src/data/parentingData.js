@@ -85,8 +85,128 @@ export const parentingData = [
     recommendation: {
       itemTitle: "残り時間が色で見える視覚的タイムタイマー",
       description: "時間という抽象的な概念がまだ分からない子どもにとって、『帰る時間』は目に見えません。色が減るタイマーを使うことで、視覚的に納得しやすくなります。",
-      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BF%E3%82%A4%E3%83%9E%E3%83%BC%2BTime%2BTimer%2F",
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BF%E3%82%A4%E3%83%9E%E3%83%BC%2BTime%2BTimer%2F",
       aetheriaUrl: "https://www.michellle.info/posts/time-timer-review"
+    }
+  },
+  {
+    id: "toothbrush-refusal",
+    situation: "ハミガキの時間になっても口を開けず、歯ブラシから逃げ回るとき",
+    ngPhrase: "早く磨かないと虫歯になって、痛い注射されるよ！",
+    options: [
+      {
+        text: "磨かないなら、もうおやつは一生あげないからね！",
+        isCorrect: false,
+        feedback: "おやつ禁止という強い脅しは、恐怖による一時的な従順を生むだけで、「歯を守る大切さ」への理解には繋がらず、親子関係を悪化させます。"
+      },
+      {
+        text: "ちゃんと磨けたら、YouTube見せてあげるよ",
+        isCorrect: false,
+        feedback: "ご褒美（取引）で釣る方法は、依存度を高め、「ご褒美がないなら磨かない」という状態を招いて習慣化を阻害します。"
+      },
+      {
+        text: "お口の中にバイキンさんがかくれんぼしてるね。赤と青、どっちの歯ブラシでやっつけに行く？",
+        isCorrect: true,
+        feedback: "素晴らしい調律です！歯磨きを「バイキン退治」というゲームに見立て、さらに道具の選択権（赤か青か）を子どもに渡すことで、自発的な行動を促します。"
+      }
+    ],
+    evidence: "自己決定理論において、自律性（自分で選ぶ権利）を尊重されると、子どもの行動への納得度が高まります。また、幼児期は「見立て遊び」が有効であり、強制的な義務感を「バイキン退治」というファンタジーにフレーミング転換することで、抵抗感が激減します。",
+    actionPlan: "ハミガキの時間になったら、『バイキンさんが隠れてるぞー！』と楽しく声をかけ、2種類の異なる色やキャラの歯ブラシ（またはジェル）を提示して、『今日はどっちでやっつける？』と選ばせましょう。",
+    recommendation: {
+      itemTitle: "ピカピカ光る子ども用LED音波電動歯ブラシ",
+      description: "歯ブラシ自体がカラフルに光ったり振動したりするガジェット感は、子どもの好奇心を刺激し、『自分から口を開けたくなる』きっかけを作ります。",
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%81%93%E3%81%A9%E3%82%82%2B%E9%9B%BB%E5%8B%95%E6%AD%AF%E3%83%96%E3%83%A9%E3%82%B7%2B%E5%85%89%E3%82%8B%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/kids-toothbrush-review"
+    }
+  },
+  {
+    id: "bath-refusal",
+    situation: "遊びに夢中で、お風呂の時間になっても『まだ入らない！お風呂きらい！』と逃げ回るとき",
+    ngPhrase: "もうお風呂入れないからね！汚いまま寝なさい！",
+    options: [
+      {
+        text: "お風呂に入らないなら、明日のプールはなしだからね",
+        isCorrect: false,
+        feedback: "無関係なペナルティによるコントロールは、反発を生むだけでなく、親の言うことを「罰を避けるための恐怖」として処理するようになります。"
+      },
+      {
+        text: "お風呂入ったら、美味しいジュースをあげるから入ろう？",
+        isCorrect: false,
+        feedback: "物で釣る取引は、一時的には動きますが、「ジュースがもらえないなら入らない」という交渉態度を強化してしまいます。"
+      },
+      {
+        text: "お風呂の壁に不思議な絵が浮き出るんだって！どっちのオモチャを一緒に泳がせに行く？",
+        isCorrect: true,
+        feedback: "完璧な調律です！お風呂を「面倒な作業」から「楽しい実験・遊びの場」へとフレーミングを切り替えつつ、持ち込むオモチャを自分で選ばせることで自律性を満たしています。"
+      }
+    ],
+    evidence: "子どもの「切り替えの難しさ」に対し、「遊びを断ち切る」のではなく「お風呂という新しい遊びに接続する」アプローチです。自己決定理論の自律性サポート（おもちゃの選択）を組み合わせることで、子どもはコントロールされていると感じずに主体的に動けます。",
+    actionPlan: "『お風呂だよ』と強制する代わりに、『お風呂でおもちゃを泳がせる実験をするよ。AとB、どっちのオモチャを持っていく？』と聞き、選ばせたおもちゃを自分で持たせてお風呂へ誘導しましょう。",
+    recommendation: {
+      itemTitle: "お風呂で学べる！壁貼り防水知育ポスター・シート",
+      description: "水で壁に貼れるひらがなや数字、動物のポスターは、お風呂を『退屈な場所』から『楽しい学習と遊びの空間』に変える強力なアイテムです。",
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%81%8A%E9%A2%A8%E5%91%82%2B%E3%83%9D%E3%82%B9%E3%82%BF%E3%83%BC%2B%E7%9F%A5%E8%82%B2%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/bath-toy-review"
+    }
+  },
+  {
+    id: "childseat-refusal",
+    situation: "車に乗せようとすると、体をよじってのけぞり、チャイルドシートに座るのを頑なに拒否するとき",
+    ngPhrase: "乗らないなら、ここに置いていっちゃうからね！",
+    options: [
+      {
+        text: "危ないから座りなさい！と無理やり押さえつけてベルトを締める",
+        isCorrect: false,
+        feedback: "安全確保のためにやむを得ない場合もありますが、毎回力づくで解決しようとすると、「車＝恐怖・束縛の場所」となり、乗車拒否がさらに悪化します。"
+      },
+      {
+        text: "シートが狭くて動けないのが嫌んだね。今日の運転手さんはあなただよ。このハンドルでお出かけ準備してくれる？",
+        isCorrect: true,
+        feedback: "素晴らしい調律です！まずは「動けなくて嫌だ」という不快な感情にしっかりと共感（愛着の安全基地）を示した上で、「運転手さん」という誇らしい役割（ロールプレイ）を与えることで主体性を引き出しています。"
+      },
+      {
+        text: "言うこと聞かないなら、もうお出かけしないよ！",
+        isCorrect: false,
+        feedback: "お出かけ中止というペナルティで脅すことは、楽しみを奪われる不満と反発を生み、親への信頼感を損ねてしまいます。"
+      }
+    ],
+    evidence: "アタッチメント理論において、子どもが不安や窮屈さを訴えた際は、まずその感情を受け止めて「安全基地」としての安心感を与えることが最優先です。その上で、主体的になれる役割（運転手役）を与えることで、拘束される受動的な感覚から、運転する能動的な感覚へと意識を切り替えます。",
+    actionPlan: "暴れたら無理に乗せず、一度『ぎゅーっと動けなくなるのが嫌なんだね』と共感して抱きしめましょう。落ち着いたら、『今日の運転手さん、車のエンジンかけるの手伝ってくれる？』とハンドルのおもちゃを渡し、自分でシートに座るよう促しましょう。",
+    recommendation: {
+      itemTitle: "チャイルドシート装着型ミニ運転ハンドルおもちゃ",
+      description: "チャイルドシートの前に固定できるハンドル型のおもちゃは、子どもに『自分も運転している』という当事者意識を与え、退屈と拘束のストレスを解消します。",
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%81%E3%83%A3%E3%82%A4%E3%83%AB%E3%83%89%E3%82%B7%E3%83%BC%E3%83%88%2B%E3%81%8A%E3%82%82%E3%81%A1%E3%82%83%2B%E3%83%8F%E3%83%B3%E3%83%89%E3%83%AB%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/childseat-toy-review"
+    }
+  },
+  {
+    id: "morning-dressing",
+    situation: "朝の忙しい時間なのに『早く着替えたくない！』とパジャマのまま遊び続けているとき",
+    ngPhrase: "早く着替えないと、置いていくよ！保育園に遅刻しちゃうでしょ！",
+    options: [
+      {
+        text: "着替えないなら、パジャマのまま保育園に行かせるよ",
+        isCorrect: false,
+        feedback: "恥をかかせるなどの羞羞心を使った脅しやコントロールは、子どもの自己肯定感を低下させ、自発的な行動には繋がりません。"
+      },
+      {
+        text: "着替えたら、後でお菓子（ご褒美）をあげるね",
+        isCorrect: false,
+        feedback: "物で釣るアプローチは「お菓子がないなら着替えない」という取引を生み、自立的な生活習慣の定着を妨げます。"
+      },
+      {
+        text: "今日の服、どっちにする？赤のTシャツと青のTシャツ、どっちを着ていく？",
+        isCorrect: true,
+        feedback: "完璧な調律です！「着替えるか否か」ではなく「どちらの服を着るか」に焦点を当て、子どもに選ばせることで、自律性を尊重しながらスムーズに行動へ導くことができます。"
+      }
+    ],
+    evidence: "自己決定理論の自律性サポート。朝の準備を「親からの命令」から「自分の選択」へと切り替えることで、イヤイヤを回避します。また、選択肢を2つに絞ることで、子どもが迷いすぎずに決定できる認认知的なサポートも同時に行っています。",
+    actionPlan: "朝お着替えを拒否されたら、怒る前に2つの服を取り出して『今日はウサギさんの服と、クマさんの服、どっちを着ていく？』と選択肢を提示し、子ども自身に選ばせてみましょう。",
+    recommendation: {
+      itemTitle: "自分で選びやすいオープン型キッズハンガーラック",
+      description: "子ども自身の目線の高さに服が並び、自分で手に取れる環境（ハード面）を整えることで、「自分で選んで着る」という自立心を視覚的にもサポートします。",
+      rakutenUrl: "https://hb.afl.rakuten.co.jp/ichiba/13d7e480.d3ca8031.13d7e481.fbbf2c18/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%82%A5%E3%83%83%E3%82%BA%E3%83%8F%E3%83%B3%E3%82%AC%E3%83%BC%E3%83%A9%E3%83%83%E3%82%AF%2B%E8%87%AA%E7%AB%8B%2F",
+      aetheriaUrl: "https://www.michellle.info/posts/kids-dresser-review"
     }
   }
 ];

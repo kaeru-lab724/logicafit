@@ -112,7 +112,10 @@ export default function MobileDashboard({
   muted,
   toggleMute,
   handleExportData,
-  handleImportData
+  handleImportData,
+  parentingMission,
+  parentingStampLog,
+  handleToggleParentingStamp
 }) {
   const fileInputRef = useRef(null);
   const handleFileChange = (e) => {
@@ -403,6 +406,164 @@ export default function MobileDashboard({
                   <div className="tenant-footer" style={{ paddingTop: '8px' }}>
                     <span className="tenant-action-text" style={{ fontSize: '11.5px' }}>データベースを表示 <ChevronRight size={12} /></span>
                   </div>
+                </div>
+              </div>
+
+              {/* MODULE 05: parentingDialogue (Mobile Optimised) */}
+              <div 
+                className="glass-panel"
+                style={{
+                  marginTop: '16px',
+                  padding: '16px',
+                  background: 'linear-gradient(135deg, rgba(224, 122, 95, 0.05) 0%, rgba(129, 178, 154, 0.02) 100%)',
+                  border: '1px solid rgba(224, 122, 95, 0.2)',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  textAlign: 'left',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Glow effect */}
+                <div style={{
+                  position: 'absolute',
+                  top: '-30px',
+                  right: '-30px',
+                  width: '100px',
+                  height: '100px',
+                  background: '#e07a5f',
+                  filter: 'blur(50px)',
+                  opacity: 0.1,
+                  pointerEvents: 'none'
+                }} />
+
+                {/* Info */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', zIndex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '16px' }}>🧸</span>
+                    <span style={{
+                      fontSize: '8px',
+                      fontWeight: 'bold',
+                      color: '#e07a5f',
+                      letterSpacing: '1px'
+                    }}>
+                      MODULE 05 (常時アンロック)
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: '15px', fontWeight: 'bold', margin: '2px 0 0 0', color: 'var(--text-primary)' }}>
+                    こそだて言葉かけ調律
+                  </h3>
+                  <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.5', margin: '2px 0 0 0' }}>
+                    「〜しなさい！」から「どっちにする？」へ。子どもの自発的な行動と自律性を引き出す優しい表現に調律するプログラム。
+                  </p>
+
+                  {/* 最後にクリアしたミッションのリマインダー */}
+                  {parentingMission && (
+                    <div style={{
+                      background: 'rgba(224, 122, 95, 0.04)',
+                      borderLeft: '3px solid #e07a5f',
+                      padding: '10px 12px',
+                      borderRadius: '0 8px 8px 0',
+                      marginTop: '6px',
+                      fontSize: '11.5px'
+                    }}>
+                      <div style={{ fontSize: '9px', color: '#e07a5f', fontWeight: 'bold', marginBottom: '2px' }}>
+                        📌 今夜の実践ミッション（リマインド）
+                      </div>
+                      <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>
+                        {parentingMission.title}
+                      </div>
+                      <div style={{ color: 'var(--text-secondary)', marginTop: '2px', fontSize: '11px', lineHeight: '1.3' }}>
+                        「{parentingMission.actionPlan}」
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Stamp Log & CTA */}
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '12px',
+                  borderTop: '1px solid var(--border-color)',
+                  paddingTop: '12px',
+                  zIndex: 1
+                }}>
+                  {/* Stamp Calendar */}
+                  <div>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: 'bold', marginBottom: '6px' }}>
+                      🗓️ 直近7日間の実践スタンプ
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', justifyContent: 'space-between' }}>
+                      {Array.from({ length: 7 }).map((_, i) => {
+                        const d = new Date();
+                        d.setDate(d.getDate() - (6 - i));
+                        const dateStr = d.toLocaleDateString('sv'); // YYYY-MM-DD
+                        const isStamped = (parentingStampLog || []).includes(dateStr);
+                        const dayLabels = ['日', '月', '火', '水', '木', '金', '土'];
+                        const dayLabel = dayLabels[d.getDay()];
+
+                        return (
+                          <div 
+                            key={i} 
+                            onClick={() => handleToggleParentingStamp(dateStr)}
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              gap: '2px',
+                              cursor: 'pointer',
+                              flex: 1
+                            }}
+                          >
+                            <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>{dayLabel}</span>
+                            <div style={{
+                              width: '20px',
+                              height: '20px',
+                              borderRadius: '50%',
+                              background: isStamped ? '#81b29a' : 'rgba(255,255,255,0.02)',
+                              border: `1px solid ${isStamped ? '#81b29a' : 'var(--border-color)'}`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '9px',
+                              color: isStamped ? '#fff' : 'var(--text-muted)',
+                              fontWeight: 'bold',
+                              transition: 'all 0.2s'
+                            }}>
+                              {isStamped ? '✓' : ''}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <button
+                    onClick={() => { playSound('click'); setActiveGame('parentingDialogue'); }}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      borderRadius: '8px',
+                      background: '#e07a5f',
+                      border: 'none',
+                      color: '#fff',
+                      fontSize: '12.5px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px',
+                      boxShadow: '0 4px 10px rgba(224, 122, 95, 0.2)'
+                    }}
+                  >
+                    プログラムを起動する
+                    <ChevronRight size={12} />
+                  </button>
                 </div>
               </div>
             </div>

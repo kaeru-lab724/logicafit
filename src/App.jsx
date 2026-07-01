@@ -93,7 +93,9 @@ const DEFAULT_STATE = {
   unlockedTypes: ["balancedThinker"],
   bugNote: [],
   tuningLog: [],
-  lastTuningDate: null
+  lastTuningDate: null,
+  parentingMission: null,
+  parentingStampLog: []
 };
 
 // クラス進化（肩書き）の判定
@@ -377,7 +379,9 @@ export default function App() {
           return updatedBug;
         }),
         tuningLog: parsed.tuningLog || [],
-        lastTuningDate: parsed.lastTuningDate || null
+        lastTuningDate: parsed.lastTuningDate || null,
+        parentingMission: parsed.parentingMission || null,
+        parentingStampLog: parsed.parentingStampLog || []
       };
     }
     
@@ -655,7 +659,7 @@ export default function App() {
   };
 
   // ゲーム終了時のスコア・XP更新、レベルアップ・バッジ判定
-  const handleGameFinish = (gameKey, score, shouldExit = true) => {
+  const handleGameFinish = (gameKey, score, shouldExit = true, lastQuestion = null) => {
     playSound('click');
     
     setGameState(prev => {
@@ -663,6 +667,16 @@ export default function App() {
       const isBusiness = !isLabGame && mode === 'business';
       const prevScores = isBusiness ? (prev.businessScores || {}) : prev.scores;
       const prevBest = prevScores[gameKey] || 0;
+
+      let updatedMission = prev.parentingMission;
+      if (gameKey === 'parentingDialogue' && lastQuestion) {
+        updatedMission = {
+          id: lastQuestion.id,
+          title: lastQuestion.recommendation.itemTitle,
+          actionPlan: lastQuestion.actionPlan,
+          timestamp: Date.now()
+        };
+      }
       
       const newBest = Math.max(prevBest, score);
       const updatedScores = {
@@ -706,7 +720,8 @@ export default function App() {
         businessScores: isBusiness ? updatedScores : (prev.businessScores || {}),
         xp: newXp,
         level: newLevel,
-        badges: mergedBadges
+        badges: mergedBadges,
+        parentingMission: updatedMission
       };
 
       localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
@@ -779,6 +794,22 @@ export default function App() {
       const updatedState = {
         ...prev,
         unlockedTypes: updatedUnlocked
+      };
+      localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
+      return updatedState;
+    });
+  };
+
+  const handleToggleParentingStamp = (dateStr) => {
+    playSound('click');
+    setGameState(prev => {
+      const currentLog = prev.parentingStampLog || [];
+      const updatedLog = currentLog.includes(dateStr)
+        ? currentLog.filter(d => d !== dateStr)
+        : [...currentLog, dateStr];
+      const updatedState = {
+        ...prev,
+        parentingStampLog: updatedLog
       };
       localStorage.setItem('logicafit_save_data', JSON.stringify(updatedState));
       return updatedState;
@@ -1057,14 +1088,6 @@ export default function App() {
             ? '友達や家族に対する攻撃的・受動的な会話を、DESC法を用いて誠実かつ対等な表現にリライトする。'
             : '部下への指導や顧客からの無理な要望への対応を、対立を避けて建設的に合意する表現にコンパイルする。',
           difficulty: mode === 'daily' ? '初級' : '中級'
-        },
-        {
-          id: 'parentingDialogue',
-          scoreKey: 'parentingDialogue',
-          moduleNum: 'MODULE 05 [3rd]',
-          name: 'こそだて言葉かけ調律',
-          desc: '脅しや取引といった非論理的な声かけを、子どもの自発性と自律性を育むコトバへと調律する。',
-          difficulty: '中級'
         }
       ]
     },
@@ -1696,6 +1719,9 @@ export default function App() {
             theme={theme}
             setTheme={setTheme}
             muted={muted}
+            parentingMission={gameState.parentingMission}
+            parentingStampLog={gameState.parentingStampLog}
+            handleToggleParentingStamp={handleToggleParentingStamp}
             toggleMute={toggleMute}
             onStartReview={(gameId, questionId) => {
               playSound('click');
