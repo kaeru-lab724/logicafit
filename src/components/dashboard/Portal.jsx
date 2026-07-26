@@ -48,6 +48,17 @@ export default function Portal({ onSelectView, playSound }) {
       actionText: 'タスク管理を開く'
     },
     {
+      id: 'logicapad',
+      title: 'LogicaPad',
+      subtitle: 'TRIPLE THINKING & TASK NOTE: 思考滞り解除＆タスクメモ',
+      description: 'クリティカル・ラテラル・ロジカル思考の4ステップにより、どんな未知の指示でもフリーズせずに思考を回し、OneNoteへワンプッシュ保存する完全ローカルメモ。',
+      icon: Brain,
+      themeColor: '#3b82f6', // blue
+      glowColor: 'rgba(59, 130, 246, 0.25)',
+      status: 'ACTIVE',
+      actionText: 'ロジカルメモを開く'
+    },
+    {
       id: 'glo',
       title: 'LogicaMail',
       subtitle: 'DECISION & GTD ORGANIZER: 意思決定＆ロジカル仕分けメール',
@@ -73,6 +84,11 @@ export default function Portal({ onSelectView, playSound }) {
 
   const handleSelect = (id) => {
     if (id === 'research') return;
+    if (id === 'logicapad') {
+      playSound('click');
+      window.open('./logica-pad/index.html', '_blank');
+      return;
+    }
     if (id === 'glo') {
       playSound('click');
       window.open('https://logicafit-mail-glo.vercel.app', '_blank');
