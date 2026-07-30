@@ -140,11 +140,24 @@ body {
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1.2;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .brand-title .sub-title {
   font-size: 0.68rem;
   color: var(--text-muted);
+}
+
+.compact-brand {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 /* クイック入力ボックス */
@@ -316,16 +329,7 @@ body {
 }
 
 .backup-actions { display: flex; gap: 4px; }
-.footer-info { display: flex; align-items: center; gap: 8px; }
 .privacy-badge { font-size: 0.68rem; color: var(--accent-green); display: flex; align-items: center; gap: 4px; }
-.app-version-tag {
-  font-size: 0.64rem;
-  color: var(--text-muted);
-  font-family: monospace, sans-serif;
-  opacity: 0.6;
-  letter-spacing: 0.04em;
-  user-select: none;
-}
 
 /* メインコンテンツ */
 .main-content {
