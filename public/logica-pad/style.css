@@ -316,7 +316,16 @@ body {
 }
 
 .backup-actions { display: flex; gap: 4px; }
+.footer-info { display: flex; align-items: center; gap: 8px; }
 .privacy-badge { font-size: 0.68rem; color: var(--accent-green); display: flex; align-items: center; gap: 4px; }
+.app-version-tag {
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  font-family: monospace, sans-serif;
+  opacity: 0.6;
+  letter-spacing: 0.04em;
+  user-select: none;
+}
 
 /* メインコンテンツ */
 .main-content {
