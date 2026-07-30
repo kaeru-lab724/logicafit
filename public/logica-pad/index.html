@@ -2,8 +2,8 @@
 <html lang="ja" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LogicaPad - トリプルシンキング＆タスクメモ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LogicaPad - Universal Logical Note</title>
   <!-- Google Fonts & Lucide Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,24 +13,42 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- サイドバー：案件リスト -->
-    <aside class="sidebar">
+    <!-- サイドバーオーバーレイ（スリム・モバイル用） -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- サイドバー：メモ一覧 & バックアップ -->
+    <aside id="sidebar" class="sidebar">
       <div class="sidebar-header">
         <div class="brand">
           <i data-lucide="brain-circuit" class="brand-icon"></i>
-          <h1>LogicaPad</h1>
+          <div class="brand-title">
+            <h1>LogicaPad</h1>
+            <span class="sub-title">Universal Logical Note</span>
+          </div>
         </div>
-        <span class="privacy-badge" title="外部通信ゼロ・完全ローカル動作">
-          <i data-lucide="shield-check"></i> Pure Local
-        </span>
+        <button id="btn-close-sidebar" class="btn btn-icon btn-ghost mobile-only" title="閉じる">
+          <i data-lucide="x"></i>
+        </button>
       </div>
 
-      <button id="btn-new-item" class="btn btn-primary btn-block">
-        <i data-lucide="plus"></i> 新しい案件を追加
-      </button>
+      <!-- 超速クイック入力エリア -->
+      <div class="quick-capture-box">
+        <div class="quick-input-wrapper">
+          <i data-lucide="zap" class="quick-icon"></i>
+          <input type="text" id="quick-input" placeholder="思いついたことを即保存... (Enter)" autofocus>
+        </div>
+        <div class="quick-hint">例: 新プロジェクト構想 / 今週末の買い物 / 返信タスク</div>
+      </div>
 
+      <div class="list-filter">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="quick">📝 Notes</button>
+        <button class="filter-chip" data-filter="logica">🧠 Logical</button>
+        <button class="filter-chip" data-filter="archive">📦 Archive</button>
+      </div>
+
+      <!-- メモ一覧 -->
       <div class="item-list-container">
-        <div class="list-section-title">案件（タスク）一覧</div>
         <ul id="item-list" class="item-list">
           <!-- JSで動的生成 -->
         </ul>
@@ -38,130 +56,204 @@
 
       <div class="sidebar-footer">
         <div class="backup-actions">
-          <button id="btn-export-json" class="btn btn-sm btn-ghost" title="全案件データをファイルに保存">
-            <i data-lucide="download"></i> バックアップ
+          <button id="btn-export-json" class="btn btn-xs btn-ghost">
+            <i data-lucide="download"></i> 出力
           </button>
-          <label id="btn-import-label" class="btn btn-sm btn-ghost" title="バックアップファイルから復元">
+          <label id="btn-import-label" class="btn btn-xs btn-ghost">
             <i data-lucide="upload"></i> 復元
             <input type="file" id="btn-import-json" accept=".json" style="display: none;">
           </label>
         </div>
-        <button id="btn-theme-toggle" class="btn btn-sm btn-ghost btn-icon" title="テーマ切り替え">
-          <i data-lucide="moon" id="theme-icon"></i>
-        </button>
+        <span class="privacy-badge" title="外部通信ゼロ・完全ローカル動作">
+          <i data-lucide="shield-check"></i> Pure Local
+        </span>
       </div>
     </aside>
 
-    <!-- メインエリア：1案件集中ワークスペース -->
+    <!-- メインエリア：コンパクト常駐 & レスポンシブ -->
     <main class="main-content">
+      <!-- メイントップバー -->
+      <header class="main-top-bar">
+        <div class="top-bar-left">
+          <button id="btn-toggle-sidebar" class="btn btn-icon btn-ghost" title="メモ一覧を開く">
+            <i data-lucide="menu"></i>
+          </button>
+          <span class="compact-brand">LogicaPad</span>
+        </div>
+        
+        <div class="top-bar-right">
+          <button id="btn-theme-toggle" class="btn btn-icon btn-ghost" title="テーマ切り替え">
+            <i data-lucide="moon" id="theme-icon"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- 未選択状態 -->
       <div id="empty-state" class="empty-state">
-        <i data-lucide="sparkles" class="empty-icon"></i>
-        <h2>案件が選択されていません</h2>
-        <p>左側のリストから案件を選択するか、「新しい案件を追加」ボタンを押してトリプルシンキングを開始しましょう。</p>
+        <div class="empty-illustration">
+          <i data-lucide="sparkles"></i>
+        </div>
+        <h2>思いついたことを即入力！</h2>
+        <p>「メニュー(☰)」または左上の入力欄からメモを追加できます。</p>
+        <button id="btn-open-sidebar-empty" class="btn btn-primary btn-sm" style="margin-top: 12px;">
+          <i data-lucide="plus"></i> メモを追加 / 一覧を見る
+        </button>
       </div>
 
+      <!-- 選択中のメモワークスペース -->
       <div id="workspace" class="workspace" style="display: none;">
-        <!-- ヘッダーエリア -->
-        <header class="workspace-header">
-          <div class="title-container">
-            <input type="text" id="item-title" class="input-title" placeholder="案件名（タスクのタイトル）を入力...">
-            <span id="item-status" class="status-pill status-active">進行中</span>
+        
+        <!-- タイトル & 操作ツールバー -->
+        <div class="workspace-header">
+          <div class="title-section">
+            <input type="text" id="item-title" class="input-title" placeholder="メモのタイトル...">
+            <span id="item-status-tag" class="status-pill">メモ</span>
           </div>
-          <div class="header-actions">
-            <button id="btn-copy-onenote" class="btn btn-onenote" title="OneNote用に綺麗に整形してクリップボードにコピー">
-              <i data-lucide="copy"></i> OneNote用にコピー
+
+          <div class="header-tools">
+            <button id="btn-copy-onenote" class="btn btn-export-copy btn-sm" title="整形テキストをコピー">
+              <i data-lucide="copy"></i> <span class="hide-sm">コピー</span>
             </button>
-            <button id="btn-complete-archive" class="btn btn-success" title="完了にしてこの案件をアーカイブ">
-              <i data-lucide="check-circle-2"></i> 完了・アーカイブ
+            <button id="btn-complete-toggle" class="btn btn-success-ghost btn-sm" title="完了/未完了">
+              <i data-lucide="check-circle-2"></i>
             </button>
-            <button id="btn-delete-item" class="btn btn-danger-ghost" title="削除">
+            <button id="btn-delete-item" class="btn btn-danger-ghost btn-sm" title="削除">
               <i data-lucide="trash-2"></i>
             </button>
           </div>
-        </header>
+        </div>
 
-        <!-- トリプルシンキング ワークスペース -->
-        <div class="workspace-grid">
-
-          <!-- START: 元のテーマ・指示書き出し -->
-          <section class="card card-raw-input">
+        <!-- ワークスペーススクロールボディ -->
+        <div class="workspace-body">
+          
+          <!-- 📌 RAW INPUT ── 思考の原案 -->
+          <section class="card card-common-memo">
             <div class="card-header">
-              <span class="card-step step-raw">START</span>
-              <h3><i data-lucide="file-text"></i> テーマ・元のメモ</h3>
+              <h3><i data-lucide="pen-tool"></i> RAW INPUT ── 思考の原案 (メモ)</h3>
             </div>
-            <div class="input-group">
-              <label for="input-raw-task">指示された内容、思い立ったテーマ、書き殴りメモ（ありのまま書く）</label>
-              <textarea id="input-raw-task" class="textarea-input raw-textarea" placeholder="例：マニュアルの5ページを最新の正しい情報に修正する。 / 上司から研修の一次解決率データを報告するよう指示された。"></textarea>
-            </div>
+            <textarea id="input-common-memo" class="textarea-input common-textarea" placeholder="思いつくまま自由に書き出し&#10;&#10;例:&#10;・新プロダクトのリリース計画&#10;・週末の買い物: コーヒー豆, オリーブオイル, 米粉&#10;・プレゼン資料の構成案をまとめる"></textarea>
           </section>
 
-          <!-- STEP 1: クリティカル思考①（ファクトベース：事実と状況） -->
-          <section class="card card-step1">
-            <div class="card-header">
-              <span class="card-step">STEP 1</span>
-              <h3><i data-lucide="search"></i> 🔍 クリティカル思考① ── ファクトベース（事実と状況）</h3>
+          <!-- ⚡️ アクション展開 スイッチナビ -->
+          <div class="action-expansion-header">
+            <span class="expansion-title"><i data-lucide="layers"></i> THINKING DEPTH (思考の深さ):</span>
+            <div class="mode-buttons">
+              <button class="mode-btn active" data-mode="none">
+                <i data-lucide="minus-circle"></i> Simple Note
+              </button>
+              <button class="mode-btn" data-mode="action">
+                <i data-lucide="zap"></i> ⚡️ 10-sec Action
+              </button>
+              <button class="mode-btn" data-mode="logica">
+                <i data-lucide="brain"></i> 🧠 Logical Structuring
+              </button>
             </div>
-            <div class="dual-input-container">
-              <div class="input-group">
-                <label for="input-fact">確定している事実・手元にあるデータ</label>
-                <textarea id="input-fact" class="textarea-input" placeholder="例：5ページ目に旧仕様の記載が残っている。手元に新仕様のデータがある。"></textarea>
+          </div>
+
+          <!-- 1. 初動10秒アクション展開エリア -->
+          <section id="view-action" class="mode-view" style="display: none;">
+            <div class="card card-action">
+              <div class="card-header">
+                <h3><i data-lucide="play-circle"></i> 初動10秒でやること（先延ばし防止）</h3>
               </div>
               <div class="input-group">
-                <label for="input-unknown">不明な点・まだ分かっていない状況</label>
-                <textarea id="input-unknown" class="textarea-input" placeholder="例：修正後の記述フォーマットに指定があるか不明。関係者へのレビューが必要か不明。"></textarea>
+                <label for="input-first-action">⚡️ 思考ゼロで10秒以内にできる最初の一歩</label>
+                <textarea id="input-first-action" class="textarea-input action-textarea" placeholder="例: ブラウザを開いて管理画面を表示する / ノートを開いて1行目を書く"></textarea>
+              </div>
+              <div class="input-group" style="margin-top: 10px;">
+                <label for="input-action-memo">補足メモ（ファイルパスやメモなど）</label>
+                <textarea id="input-action-memo" class="textarea-input sm-textarea" placeholder="例: 関連URL, ファイルパスなど"></textarea>
               </div>
             </div>
           </section>
 
-          <!-- STEP 2: クリティカル思考②（イシュー特定：解くべき問い） -->
-          <section class="card card-step2">
+          <!-- 2. Logica思考展開エリア（直感の4ステップ） -->
+          <section id="view-logica" class="mode-view" style="display: none;">
+            <div class="logica-grid">
+              
+              <!-- STEP 1: 現状整理 -->
+              <div class="card card-step1">
+                <div class="card-header">
+                  <span class="step-tag">STEP 1</span>
+                  <h4>🔍 いまどんな状況？（現状とモヤモヤ）</h4>
+                </div>
+                <div class="dual-inputs">
+                  <div class="input-group">
+                    <label>【わかっている事実】</label>
+                    <textarea id="input-fact" class="textarea-input sm-textarea" placeholder="手元にある事実やデータ"></textarea>
+                  </div>
+                  <div class="input-group">
+                    <label>【まだ不明なこと】</label>
+                    <textarea id="input-unknown" class="textarea-input sm-textarea" placeholder="分からないことや疑問点"></textarea>
+                  </div>
+                </div>
+                <div class="step-guide-box">
+                  💡 例: 「現状PV1万でCVR0.8%」「競合の価格帯が不明」など
+                </div>
+              </div>
+
+              <!-- STEP 2: 目的の明確化 -->
+              <div class="card card-step2">
+                <div class="card-header">
+                  <span class="step-tag">STEP 2</span>
+                  <h4>🎯 結局、何がどうなれば最高？（本当の目標）</h4>
+                </div>
+                <input type="text" id="input-issue" class="text-input" placeholder="解決したい一番重要な問題（1行）">
+                <div class="step-guide-box">
+                  💡 例: 「CVRを1.5%に引き上げるための最優先ボトルネックは何か？」
+                </div>
+              </div>
+
+              <!-- STEP 3: 行動アイデア -->
+              <div class="card card-step3">
+                <div class="card-header">
+                  <span class="step-tag">STEP 3</span>
+                  <h4>💡 どうやる？（アイデア ＆ 最初の10秒動作）</h4>
+                </div>
+                <div class="dual-inputs">
+                  <div class="input-group">
+                    <label>【仮のアイデア・方針】</label>
+                    <textarea id="input-hypothesis" class="textarea-input sm-textarea" placeholder="30点でもいいパッと思いつくやり方"></textarea>
+                  </div>
+                  <div class="input-group">
+                    <label>【最初に着手する10秒の行動】</label>
+                    <textarea id="input-logica-first-action" class="textarea-input sm-textarea" placeholder="思考ゼロで最初にする動作"></textarea>
+                  </div>
+                </div>
+                <div class="step-guide-box">
+                  💡 例: 「CTAボタンの配置を見直す」 ➔ 「まず該当ページのHTMLファイルを開く」
+                </div>
+              </div>
+
+              <!-- STEP 4: 結論・タスクの完成 -->
+              <div class="card card-step4">
+                <div class="card-header">
+                  <span class="step-tag">STEP 4</span>
+                  <h4>⚙️ 生まれたタスク ＆ 成果まとめ（タスクツール連携用）</h4>
+                </div>
+                <textarea id="input-script" class="textarea-input sm-textarea" placeholder="例:&#10;・主要5記事のボタン改善リライトを実施する&#10;・今週末にA/Bテストの計測を開始する"></textarea>
+                <div class="step-guide-box">
+                  💡 改行ごとにタスク化され、ワンタップコピーでどんなToDoツールにもチェックリストとして登録できます！
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- 共通：OUTPUT PREVIEW プレビューカード -->
+          <div class="card card-preview">
             <div class="card-header">
-              <span class="card-step">STEP 2</span>
-              <h3><i data-lucide="target"></i> 🔍 クリティカル思考② ── イシュー特定（解くべき問い）</h3>
-            </div>
-            <div class="input-group">
-              <label for="input-issue">今、自分は何を解決すべきか（本当の問いを1行で絞り込む）</label>
-              <input type="text" id="input-issue" class="text-input" placeholder="例：5ページ目の旧記述Aを新仕様Bにそのまま書き換えるだけでよいか？">
-            </div>
-          </section>
-
-          <!-- STEP 3: ラテラル思考（仮説思考：仮説と行動） -->
-          <section class="card card-step3">
-            <div class="card-header">
-              <span class="card-step">STEP 3</span>
-              <h3><i data-lucide="lightbulb"></i> 💡 ラテラル思考 ── 仮説思考（柔軟な見立て ＆ 初動）</h3>
-            </div>
-            <div class="dual-input-container">
-              <div class="input-group">
-                <label for="input-hypothesis">30点の見立て・仮説（柔軟な発想で立てる仮の方針）</label>
-                <textarea id="input-hypothesis" class="textarea-input" placeholder="例：新仕様Bの箇条書きに差し替えれば完了するはず。"></textarea>
+              <div class="preview-title">
+                <i data-lucide="eye"></i> <span>OUTPUT PREVIEW (成果物プレビュー)</span>
               </div>
-              <div class="input-group">
-                <label for="input-first-action">初動10秒の物理動作（思考不要の一歩）</label>
-                <textarea id="input-first-action" class="textarea-input" placeholder="例：マニュアルのファイル（Word/PDF）を開く"></textarea>
-              </div>
+              <button id="btn-copy-onenote-bottom" class="btn btn-xs btn-export-copy">
+                <i data-lucide="copy"></i> コピー
+              </button>
             </div>
-          </section>
-
-          <!-- STEP 4: ロジカル思考（構造化・ナレッジ化：成果とまとめ） -->
-          <section class="card card-step4">
-            <div class="card-header">
-              <span class="card-step">STEP 4</span>
-              <h3><i data-lucide="check-square"></i> ⚙️ ロジカル思考 ── 構造化・ナレッジ化（成果とまとめ）</h3>
+            <div id="onenote-preview" class="preview-box">
+              <!-- JSでリアルタイム生成 -->
             </div>
-
-            <div class="input-group">
-              <label for="input-script">完成した文章・作業メモ・成果物（OneNote保存用）</label>
-              <textarea id="input-script" class="textarea-input script-textarea" placeholder="【修正完了メモ】&#10;・マニュアル5ページの旧記述Aを新仕様B（2026年最新版）へ書き換え完了。&#10;・関連部署への確認不要、作業完了。"></textarea>
-            </div>
-
-            <div class="input-group" style="margin-top: 12px;">
-              <label>OneNote転記用プレビュー（ワンプッシュコピー対象）</label>
-              <div class="preview-box" id="onenote-preview">
-                <!-- JSでリアルタイム整形表示 -->
-              </div>
-            </div>
-          </section>
+          </div>
 
         </div>
       </div>
@@ -171,7 +263,7 @@
   <!-- トースト通知 -->
   <div id="toast" class="toast">
     <i data-lucide="check" class="toast-icon"></i>
-    <span id="toast-message">OneNote用にコピーしました！</span>
+    <span id="toast-message">成果物テキストをコピーしました！</span>
   </div>
 
   <script src="app.js"></script>
