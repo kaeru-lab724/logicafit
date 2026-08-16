@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LogicaImpact — Task & Impact Designer</title>
+  <!-- Google Fonts: Inter, Outfit, Noto Sans JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">L</div>
+        <div class="brand-text">
+          <div class="brand-title">LogicaImpact</div>
+          <div class="brand-subtitle">Task & Impact Designer</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="theme-selector-wrapper">
+          <select id="select-theme" class="theme-select" title="テーマ切り替え">
+            <option value="dark">🌙 Dark</option>
+            <option value="light">☀️ Light</option>
+            <option value="barragan">🏛️ Barragán</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="daily">
+        <svg class="tab-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <span class="tab-label">タスク設計</span>
+      </button>
+      <button class="nav-tab" data-tab="review">
+        <svg class="tab-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        <span class="tab-label">業績レポート</span>
+      </button>
+      <button class="nav-tab" data-tab="guide">
+        <svg class="tab-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <span class="tab-label">ガイド</span>
+      </button>
+    </nav>
+
+    <!-- Tab 1: Daily Task & Impact Designer -->
+    <main id="tab-daily" class="tab-content active">
+      <!-- Quick Flow Banner -->
+      <div id="flow-banner" class="flow-banner">
+        <div class="flow-steps">
+          <div class="flow-step">
+            <span class="flow-num">1</span>
+            <span>タスク</span>
+          </div>
+          <span class="flow-arrow">/</span>
+          <div class="flow-step">
+            <span class="flow-num">2</span>
+            <span>アクション分解</span>
+          </div>
+          <span class="flow-arrow">/</span>
+          <div class="flow-step">
+            <span class="flow-num">3</span>
+            <span>OneNote貼付</span>
+          </div>
+        </div>
+        <button type="button" id="btn-load-sample" class="btn-sample-mini">
+          サンプル読込
+        </button>
+      </div>
+
+      <!-- Target Goal Selection (Clean Selectable Pills) -->
+      <section class="section-card">
+        <div class="section-header-row">
+          <div class="section-label">
+            <span class="label-dot"></span>
+            <span class="label-title">紐付ける業績目標</span>
+          </div>
+          <button type="button" id="btn-edit-goals-inline" class="btn-edit-link">設定 ⚙️</button>
+        </div>
+        <div id="goal-pills" class="goal-pills-container">
+          <!-- Dynamic goal selection pills -->
+        </div>
+      </section>
+
+      <!-- Task & Project (Integrated Context) -->
+      <section class="section-card">
+        <div class="section-header-row">
+          <div class="section-label">
+            <span class="label-dot"></span>
+            <span class="label-title">案件 & 業務タスク</span>
+          </div>
+          <button type="button" id="btn-edit-projects-inline" class="btn-edit-link">案件設定 ⚙️</button>
+        </div>
+
+        <!-- Project / Context Input with Datalist -->
+        <div class="project-input-group">
+          <div class="input-prefix-label">📁 案件 / PJ</div>
+          <input type="text" id="input-project-name" list="project-history-list" class="project-input" placeholder="例: 2026年新卒研修、CC運用改善" autocomplete="off">
+          <datalist id="project-history-list">
+            <!-- Dynamic history options -->
+          </datalist>
+        </div>
+
+        <!-- Quick Project Chips (Managed Visibility) -->
+        <div id="project-chips" class="quick-tags-container">
+          <!-- Dynamic project chips from history -->
+        </div>
+
+        <!-- Main Task Title -->
+        <div class="input-wrapper">
+          <input type="text" id="input-task-title" placeholder="📌 タスク名（例: 研修スクリプトの作成・型化）" autocomplete="off">
+        </div>
+      </section>
+
+      <!-- Action Breakdown -->
+      <section class="section-card">
+        <div class="section-header-row">
+          <div class="section-label">
+            <span class="label-dot"></span>
+            <span class="label-title">アクション</span>
+          </div>
+          <span class="helper-subtext">実行手順（Enterで追加）</span>
+        </div>
+
+        <div id="action-list" class="action-list">
+          <!-- Action rows will be dynamically created -->
+        </div>
+      </section>
+
+      <!-- Outcome & Review Design -->
+      <section class="section-card">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-title">成果観測 & レビュー設計</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-sublabel">観測ポイント（狙う変化・指標）</label>
+          <div class="quick-tags-container" id="perspective-tags">
+            <button type="button" class="tag-chip" data-tag="通話・作業時間の短縮">時間短縮</button>
+            <button type="button" class="tag-chip" data-tag="周囲からの質問・問い合わせ減少">質問減少</button>
+            <button type="button" class="tag-chip" data-tag="作業ミス・手戻り防止">ミス防止</button>
+            <button type="button" class="tag-chip" data-tag="誰でもできる標準化・テンプレ化">標準化</button>
+            <button type="button" class="tag-chip" data-tag="受講者・他部署の満足度向上">満足度UP</button>
+          </div>
+          <textarea id="input-perspective" rows="2" placeholder="例: スクリプト導入後の問い合わせ件数・保留時間の変化"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-sublabel">事後レビュー日（結果を回収する時期）</label>
+          <div class="quick-date-chips">
+            <button type="button" class="date-chip" data-days="0">なし</button>
+            <button type="button" class="date-chip" data-days="7">+1週</button>
+            <button type="button" class="date-chip" data-days="14">+2週</button>
+            <button type="button" class="date-chip active" data-days="21">+3週</button>
+            <button type="button" class="date-chip" data-days="30">+1ヶ月</button>
+          </div>
+          <input type="date" id="input-review-date" class="date-input">
+        </div>
+      </section>
+
+      <!-- Action & Output Bar -->
+      <div class="output-action-bar">
+        <button type="button" id="btn-copy-onenote" class="btn-primary btn-block">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          OneNote 表形式でコピー
+        </button>
+        <button type="button" id="btn-copy-todo" class="btn-secondary btn-block">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          To Do テキストでコピー
+        </button>
+        <div class="button-sub-row">
+          <button type="button" id="btn-clear-all" class="btn-ghost text-danger">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            入力をクリア
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Tab 2: End of Quarter Evaluation (Copilot Prompt Generator) -->
+    <main id="tab-review" class="tab-content">
+      <section class="section-card">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-title">期末自己評価ドラフト生成</span>
+        </div>
+        <p class="section-description">
+          OneNoteに溜まった成果表を貼り付けると、社内CopilotがSTAR法（課題・行動・結果）で評価レポートを自動構成するプロンプトを生成します。
+        </p>
+
+        <div class="form-group">
+          <label class="form-sublabel">OneNoteの成果記録（テキストをそのまま貼付）</label>
+          <textarea id="prompt-review-table" rows="5" placeholder="OneNoteの表やテキストをコピーしてここに貼り付けてください..."></textarea>
+        </div>
+
+        <button type="button" id="btn-generate-review-prompt" class="btn-primary btn-block">
+          評価作成プロンプトを生成
+        </button>
+      </section>
+
+      <section id="review-prompt-output-section" class="section-card hidden">
+        <div class="section-header-row">
+          <div class="section-label">
+            <span class="label-dot"></span>
+            <span class="label-title">生成された評価プロンプト</span>
+          </div>
+          <button type="button" id="btn-copy-review-prompt" class="btn-copy-mini">コピー</button>
+        </div>
+        <div class="prompt-box" id="review-prompt-output"></div>
+        <div class="copilot-guide">
+          <strong>利用手順:</strong> 上記をコピーして社内Copilotに送信すると、上長面談用の具体的な自己評価ドラフトが出力されます。
+        </div>
+      </section>
+    </main>
+
+    <!-- Tab 3: Guide & Concept -->
+    <main id="tab-guide" class="tab-content">
+      <section class="section-card">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-title">LogicaImpact の設計思想</span>
+        </div>
+        <p class="section-description">
+          日々の業務実行（Microsoft To Do）と、四半期面談で評価される実績（OneNote 成果台帳）を最小の手間で接続するパーソナル業績管理ツールです。
+        </p>
+      </section>
+
+      <section class="section-card">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-title">3つの運用サイクル</span>
+        </div>
+        <div class="guide-steps-list">
+          <div class="guide-step-item">
+            <div class="guide-step-header">
+              <span class="guide-badge">STAGE 1</span>
+              <strong>タスク分解とTo Do投入（日常）</strong>
+            </div>
+            <p class="guide-text">「タスク設計」で目標を選び、案件・手順・後追い日を設計して「To Do テキストでコピー」からMicrosoft To Doに登録して業務を実行します。</p>
+          </div>
+
+          <div class="guide-step-item">
+            <div class="guide-step-header">
+              <span class="guide-badge">STAGE 2</span>
+              <strong>後追い確認とOneNote記録（完了時）</strong>
+            </div>
+            <p class="guide-text">To Doのリマインダーに従い後追い結果を確認。起きた事実・数値をOneNoteの成果台帳に記録し、To Doタスクを完了にします。</p>
+          </div>
+
+          <div class="guide-step-item">
+            <div class="guide-step-header">
+              <span class="guide-badge">STAGE 3</span>
+              <strong>評価シート出力（期末）</strong>
+            </div>
+            <p class="guide-text">「業績レポート」タブにOneNoteの確定成果ログを貼り付け、社内Copilotで客観的ファクトに基づく自己評価ドラフトを生成します。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-title">セキュリティ規程への適合</span>
+        </div>
+        <p class="guide-text">
+          ・完全ローカル（クライアントサイド）動作<br>
+          ・外部通信・サーバー保存・ログイン一切なし<br>
+          ・ブラウザの右サイドパネルに常駐して快適に稼働
+        </p>
+      </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <span id="toast-icon">✓</span>
+      <span id="toast-msg">OneNote用テーブルをコピーしました</span>
+    </div>
+
+    <!-- Settings Modal (Edit Goals & Projects) -->
+    <div id="settings-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>⚙️ マスター設定</h3>
+          <button type="button" id="btn-close-modal" class="icon-button">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Section 1: Goals -->
+          <div class="modal-section">
+            <h4 class="modal-section-title">🎯 個人業績目標（期初設定）</h4>
+            <div class="form-group">
+              <label class="form-sublabel">目標 1</label>
+              <input type="text" id="goal-input-1" class="goal-input" placeholder="例: CC部門の生産性向上">
+            </div>
+            <div class="form-group">
+              <label class="form-sublabel">目標 2</label>
+              <input type="text" id="goal-input-2" class="goal-input" placeholder="例: 研修スクリプトの型化">
+            </div>
+            <div class="form-group">
+              <label class="form-sublabel">目標 3</label>
+              <input type="text" id="goal-input-3" class="goal-input" placeholder="例: 業務可視化とミスゼロ化">
+            </div>
+            <div class="form-group">
+              <label class="form-sublabel">目標 4（任意）</label>
+              <input type="text" id="goal-input-4" class="goal-input" placeholder="例: 新規受託の定着">
+            </div>
+          </div>
+
+          <hr class="modal-divider">
+
+          <!-- Section 2: Projects Master -->
+          <div class="modal-section">
+            <div class="section-header-row">
+              <h4 class="modal-section-title">📁 案件 / プロジェクトマスター</h4>
+              <span class="helper-subtext">表示・非表示・削除</span>
+            </div>
+            <div id="modal-project-list" class="modal-project-list">
+              <!-- Dynamic editable project list with visibility checkboxes -->
+            </div>
+            <div class="modal-add-project-row">
+              <input type="text" id="modal-new-project-input" placeholder="新しいPJ名を追加..." autocomplete="off">
+              <button type="button" id="btn-modal-add-project" class="btn-secondary">＋追加</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-save-settings" class="btn-primary btn-block">設定を保存する</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity, ListTodo, Mail } from 'lucide-react';
+import { Brain, BookOpen, Lock, Sparkles, HelpCircle, Infinity, ListTodo, Mail, Target } from 'lucide-react';
 
 export default function Portal({ onSelectView, playSound }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -24,6 +24,17 @@ export default function Portal({ onSelectView, playSound }) {
       glowColor: 'rgba(16, 185, 129, 0.25)',
       status: 'ACTIVE',
       actionText: 'トレーニング＆診断ルームへ'
+    },
+    {
+      id: 'logicaimpact',
+      title: 'LogicaImpact',
+      subtitle: 'PERFORMANCE & TASK STUDIO: 業績マネジメント＆タスク設計メモ',
+      description: '日々のタスクを4階層（目標・案件・タスク・手順）でロジカルに分解し、事後成果をOneNoteに蓄積して期末のCopilot満点評価ドラフトに変換するスマートメモ帳。',
+      icon: Target,
+      themeColor: '#8b5cf6', // purple-violet
+      glowColor: 'rgba(139, 92, 246, 0.25)',
+      status: 'ACTIVE',
+      actionText: '業績マネジメントメモを開く'
     },
     {
       id: 'logijournal',
@@ -84,6 +95,11 @@ export default function Portal({ onSelectView, playSound }) {
 
   const handleSelect = (id) => {
     if (id === 'research') return;
+    if (id === 'logicaimpact') {
+      playSound('click');
+      window.open('./logica-impact/index.html', '_blank');
+      return;
+    }
     if (id === 'logicapad') {
       playSound('click');
       window.open('./logica-pad/index.html', '_blank');
